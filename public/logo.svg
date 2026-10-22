@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="300 190 660 790" role="img" aria-label="Something Clicks">
+  <defs>
+    <linearGradient id="sc-pin" gradientUnits="userSpaceOnUse" x1="560" y1="200" x2="720" y2="970">
+      <stop offset="0" stop-color="#2D55FF"/>
+      <stop offset="1" stop-color="#2545EE"/>
+    </linearGradient>
+  </defs>
+  <path d="M866 458 A252 252 0 1 0 586 753" fill="none" stroke="url(#sc-pin)" stroke-width="90" stroke-linecap="round"/>
+  <path d="M373 653 L422 602 L468 641 A212 212 0 0 0 604 715 Q626 716 636 732 L688 846 Q694 860 684 874 L624 948 Q600 972 578 948 L366 664 Z" fill="url(#sc-pin)"/>
+  <path d="M628 530 L920 612 Q936 624 922 640 L830 676 Q818 684 828 694 L918 790 Q932 820 905 838 Q884 848 870 836 L788 752 Q778 744 772 756 L748 812 Q734 830 720 812 L618 552 Q614 534 628 530 Z" fill="#1E9BFF" stroke="#1E9BFF" stroke-width="10" stroke-linejoin="round"/>
+</svg>
