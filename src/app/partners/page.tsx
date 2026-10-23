@@ -1,31 +1,17 @@
 import type { Metadata } from "next";
 import { PageHeader } from "@/components/site-chrome";
-import { isSupabaseConfigured } from "@/lib/env";
-import { formatCents } from "@/lib/format";
-import { supabaseAdmin } from "@/lib/supabase/admin";
 import { PartnerApplicationForm } from "./application-form";
 
 export const metadata: Metadata = { title: "Become a referral partner" };
-export const dynamic = "force-dynamic";
 
-async function commissionAmount(): Promise<number | null> {
-  if (!isSupabaseConfigured()) return null;
-  try {
-    const { data } = await supabaseAdmin().from("settings").select("commission_amount_cents").maybeSingle();
-    return data?.commission_amount_cents ?? null;
-  } catch {
-    return null;
-  }
-}
-
-export default async function PartnersPage() {
-  const commission = await commissionAmount();
-
+// The partner program is not open yet. Reward details are deliberately not read from settings, so
+// configuring a commission amount in admin cannot publish a reward before the program launches.
+export default function PartnersPage() {
   return (
     <div className="mx-auto max-w-5xl px-4 py-12">
       <PageHeader
         title="Become a referral partner"
-        intro="You already hear when a business is moving, expanding, or unhappy with its cleaning company. Point them to us, and earn a referral fee when the walkthrough happens."
+        intro="You already hear when a business is moving, expanding, or unhappy with its cleaning company. We're preparing a referral partner program for the people who hear about these needs first. Apply now, and we'll be in touch before it opens."
       />
 
       <div className="grid gap-10 lg:grid-cols-5">
@@ -46,31 +32,35 @@ export default async function PartnersPage() {
             warehouses, schools, gyms — and have agreed that you can pass their details to us.
           </p>
 
-          <h2>What you earn</h2>
+          <h2>Rewards</h2>
           <p>
-            {commission
-              ? `${formatCents(commission)} for each completed walkthrough.`
-              : "A flat referral fee for each completed walkthrough. We'll confirm the amount when you're approved."}
+            Partner rewards are planned for referrals that lead to a completed walkthrough. The amount, eligibility, and
+            payout terms will be confirmed in writing before you refer anyone.
           </p>
 
-          <h2>When it&apos;s earned</h2>
+          <h2>When a reward would be earned</h2>
           <p>
-            A commission is earned after the cleaning company completes the walkthrough with the business you referred
-            and the short dispute window (normally 72 hours) has passed. You won&apos;t be paid for referrals that
-            don&apos;t book, don&apos;t show up, or are already in our system.
+            When the program opens, a reward will only be earned after the cleaning company completes the walkthrough with
+            the business you referred and the dispute window has passed. Referrals that don&apos;t book, don&apos;t show
+            up, or are already in our system won&apos;t qualify.
           </p>
 
           <h2>How it works</h2>
           <ul>
             <li>Apply below. We review every application by hand.</li>
-            <li>Once approved, you get a personal referral link, a QR code, and a partner portal to track referrals and payouts.</li>
-            <li>Share your link, or submit a business directly. The business confirms its own details and books.</li>
+            <li>If you&apos;re approved, we&apos;ll contact you with next steps before the program opens.</li>
+            <li>
+              Businesses always confirm their own details and give their own consent before anything is shared with a
+              cleaning company.
+            </li>
           </ul>
         </div>
 
         <div className="card self-start lg:col-span-3">
           <h2 className="text-xl font-semibold">Apply to be a partner</h2>
-          <p className="mt-1 mb-6 text-sm text-zinc-600">Takes about two minutes.</p>
+          <p className="mt-1 mb-6 text-sm text-zinc-600">
+            Takes about two minutes. The program is not open yet; we&apos;ll confirm the details before referrals begin.
+          </p>
           <PartnerApplicationForm />
         </div>
       </div>

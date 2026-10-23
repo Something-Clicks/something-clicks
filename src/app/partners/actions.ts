@@ -54,8 +54,8 @@ export async function applyAsPartner(_prev: FormState, form: FormData): Promise<
       `Hi ${a.full_name},\n\n` +
       "Thanks for applying to the Something Clicks referral partner program. We review every application by hand " +
       "and will email you within two business days.\n\n" +
-      "Once you're approved, you'll get your personal referral link, a QR code, and access to your partner portal, " +
-      "where you can track referrals and commissions.\n\n" +
+      "The partner program is not open yet. If you're approved, we'll contact you with next steps and the program " +
+      "details before you start referring.\n\n" +
       "— Something Clicks",
   });
   await notifyAdmin(

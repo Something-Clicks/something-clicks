@@ -26,7 +26,8 @@ export default function PartnerTermsPage() {
         </p>
         <p>
           You apply through our partner page and agree to these terms when you apply. We record the version you agreed to
-          and when. We review every application and may decline one. Approved partners receive a personal referral link.
+          and when. We review every application and may decline one. When the program opens, approved partners will receive
+          instructions for referring businesses.
         </p>
         <OwnerDecision id="terms-changes" decisions={pending} />
 
@@ -87,9 +88,7 @@ export default function PartnerTermsPage() {
           can be referred again.
         </p>
         <p>
-          <strong>Referring a business directly.</strong> When you submit a business yourself, we email the business so it
-          can confirm its details and book. A submission alone never creates an appointment, and an unconfirmed submission
-          expires after 14 days, with one reminder to the business before then.
+          <strong>Referring a business directly.</strong> Submitting a business directly is not available yet.
         </p>
         <p>
           Where attribution is unclear or two referrals conflict, we resolve it individually and record the decision.
@@ -140,8 +139,8 @@ export default function PartnerTermsPage() {
 
         <h2>8. What you can see</h2>
         <p>
-          On our site you can see the business name and status of each of your referrals. We do not share a referred
-          business&apos;s contact details with you unless the business agrees.
+          Partner accounts are not available yet. We do not share a referred business&apos;s contact details with you
+          unless the business agrees.
         </p>
         <OwnerDecision id="partner-portal-data" decisions={pending} />
 

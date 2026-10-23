@@ -61,11 +61,12 @@ export default function HomePage() {
       <section className="border-t border-zinc-200 bg-zinc-50">
         <div className="mx-auto grid max-w-6xl gap-8 px-4 py-16 md:grid-cols-2">
           <div className="card">
-            <h2 className="text-xl font-bold">Refer businesses, earn a referral fee</h2>
+            <h2 className="text-xl font-bold">Know a business that needs cleaning?</h2>
             <p className="mt-3 text-zinc-600">
               Commercial realtors, leasing agents, property managers, commercial movers, office furniture installers,
-              and property maintenance companies hear about cleaning needs first. Send those businesses our way and
-              earn a fee for every completed walkthrough.
+              and property maintenance companies hear about cleaning needs first. We&apos;re preparing a referral
+              partner program for them. Applications are open, and we&apos;ll confirm the program details, including any
+              rewards, before referrals begin.
             </p>
             <Link href="/partners" className="btn mt-5">
               Learn about the partner program
