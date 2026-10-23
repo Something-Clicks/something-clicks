@@ -13,10 +13,10 @@ export const metadata: Metadata = { title: "Dashboard" };
 const NOTICES: Record<string, { tone: "ok" | "warn"; text: string }> = {
   success: {
     tone: "ok",
-    text: "Thanks! Your payment is being confirmed with Stripe. Credits appear here as soon as Stripe confirms it — for bank payments that can take a few business days.",
+    text: "Thanks. Stripe is confirming your payment, and your credits will appear here once it's confirmed. Bank payments can take a few business days.",
   },
   cancelled: { tone: "warn", text: "Checkout was cancelled. You have not been charged." },
-  not_approved: { tone: "warn", text: "Your company needs to be approved before you can buy credits." },
+  not_approved: { tone: "warn", text: "Your company needs to be approved before you can buy the pilot." },
   pack_unavailable: { tone: "warn", text: "That credit pack is no longer available." },
   checkout_failed: { tone: "warn", text: "We couldn't start checkout. Please try again, or contact us if it keeps happening." },
   saved: { tone: "ok", text: "Your company details were saved." },
@@ -75,7 +75,7 @@ export default async function DashboardPage({
       {buyer.status !== "approved" ? (
         <div className="mb-6 rounded-md border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900">
           {buyer.status === "pending"
-            ? "Thanks for signing up. We're reviewing your company and will email you once it's approved — then you can buy appointment credits."
+            ? "We're reviewing your company. We'll email you when it's approved, and then you can buy the pilot."
             : buyer.status === "suspended"
               ? "Your account is suspended. Contact us for details."
               : "Your company was not approved. Contact us if you have questions."}
@@ -84,13 +84,21 @@ export default async function DashboardPage({
 
       <section className="grid gap-4 sm:grid-cols-3">
         <Stat label="Available credits" value={balance.available} />
-        <Stat label="Held for booked appointments" value={balance.reserved} />
+        <Stat label="Held for scheduled walkthroughs" value={balance.reserved} />
         <Stat label="Walkthroughs completed" value={balance.consumed} />
       </section>
 
       {buyer.status === "approved" ? (
         <section className="mt-10">
-          <h2 className="text-xl font-semibold">Buy appointment credits</h2>
+          <h2 className="text-xl font-semibold">Buy walkthrough credits</h2>
+          <p className="mt-1 text-sm text-zinc-600">
+            Each credit pays for one qualifying completed walkthrough. A scheduled walkthrough on its own doesn&apos;t
+            count. The{" "}
+            <Link href="/terms/buyer" className="font-medium text-brand-700 underline underline-offset-4">
+              buyer terms
+            </Link>{" "}
+            (draft) explain what qualifies and how credits are held, used, and returned.
+          </p>
           {packs.length === 0 ? (
             <p className="mt-3 text-sm text-zinc-600">No credit packs are on sale right now. Please check back soon.</p>
           ) : (
@@ -100,12 +108,14 @@ export default async function DashboardPage({
                   <input type="hidden" name="pack_id" value={pack.id} />
                   <h3 className="font-semibold">{pack.name}</h3>
                   <p className="mt-1 text-sm text-zinc-600">
-                    {pack.credits} walkthrough appointment{pack.credits === 1 ? "" : "s"}
+                    {pack.credits} walkthrough credit{pack.credits === 1 ? "" : "s"}
                   </p>
                   <p className="mt-3 text-2xl font-bold">{formatCents(pack.price_cents)}</p>
-                  <p className="text-xs text-zinc-500">{formatCents(Math.round(pack.price_cents / pack.credits))} per appointment</p>
+                  <p className="text-xs text-zinc-500">
+                    {formatCents(Math.round(pack.price_cents / pack.credits))} per qualifying completed walkthrough
+                  </p>
                   <div className="mt-4">
-                    <SubmitButton pendingText="Opening checkout…">Buy with Stripe</SubmitButton>
+                    <SubmitButton pendingText="Opening checkout…">Continue to secure checkout</SubmitButton>
                   </div>
                 </form>
               ))}
@@ -150,9 +160,10 @@ export default async function DashboardPage({
       </section>
 
       <section className="mt-10">
-        <h2 className="text-xl font-semibold">Appointments</h2>
+        <h2 className="text-xl font-semibold">Walkthroughs</h2>
         <p className="mt-3 text-sm text-zinc-600">
-          Booked walkthroughs will appear here. Appointment matching and booking are not live yet.
+          For now, walkthroughs are arranged with you directly by the Something Clicks team. Tracking them on this page
+          isn&apos;t available yet.
         </p>
       </section>
     </div>

@@ -31,7 +31,7 @@ export default async function OnboardingPage() {
     <div className="mx-auto max-w-3xl px-4 py-12">
       <PageHeader
         title={buyer ? "Company settings" : "Set up your cleaning company"}
-        intro="We use this to match you only with businesses you can serve. We review every company before it can buy appointment credits."
+        intro="Tell us where you work and what you clean. We use this to decide which walkthrough requests to offer you, and we review every company before it can buy the pilot."
       />
       <div className="card">
         <OnboardingForm defaults={defaults} isNew={!buyer} />

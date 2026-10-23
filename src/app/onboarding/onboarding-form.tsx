@@ -117,7 +117,7 @@ export function OnboardingForm({ defaults, isNew }: { defaults: OnboardingDefaul
         </ConsentCheckbox>
       ) : null}
 
-      <SubmitButton pendingText="Saving…">{isNew ? "Submit for approval" : "Save changes"}</SubmitButton>
+      <SubmitButton pendingText="Saving…">{isNew ? "Submit for review" : "Save changes"}</SubmitButton>
     </form>
   );
 }

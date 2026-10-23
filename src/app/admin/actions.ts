@@ -42,8 +42,8 @@ export async function setBuyerStatus(form: FormData) {
         to: buyer.email,
         subject: "Your Something Clicks account is approved",
         text:
-          `Hi ${buyer.contact_name},\n\nYour company is approved. You can now buy walkthrough appointment credits from ` +
-          `your dashboard: ${siteUrl()}/dashboard\n\n— Something Clicks`,
+          `Hi ${buyer.contact_name},\n\nYour company is approved. Next step: buy the pilot from your dashboard: ` +
+          `${siteUrl()}/dashboard\n\n— Something Clicks`,
       });
     }
   }
