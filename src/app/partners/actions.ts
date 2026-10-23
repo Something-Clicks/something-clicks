@@ -9,7 +9,8 @@ import { fieldErrors, formToObject, partnerApplicationSchema } from "@/lib/valid
 
 export async function applyAsPartner(_prev: FormState, form: FormData): Promise<FormState> {
   const successMessage =
-    "Thanks — your application is in. We review every application by hand and will email you within two business days.";
+    "Thanks — your application is in. We review every application by hand. The partner program is not open yet. " +
+    "If you're approved, we'll contact you with next steps and the program details before you start referring.";
 
   // Bots fill the hidden field; pretend success and store nothing.
   if (form.get("company_website")) return { status: "success", message: successMessage };
@@ -52,8 +53,7 @@ export async function applyAsPartner(_prev: FormState, form: FormData): Promise<
     subject: "We received your Something Clicks partner application",
     text:
       `Hi ${a.full_name},\n\n` +
-      "Thanks for applying to the Something Clicks referral partner program. We review every application by hand " +
-      "and will email you within two business days.\n\n" +
+      "Thanks for applying to the Something Clicks referral partner program. We review every application by hand.\n\n" +
       "The partner program is not open yet. If you're approved, we'll contact you with next steps and the program " +
       "details before you start referring.\n\n" +
       "— Something Clicks",

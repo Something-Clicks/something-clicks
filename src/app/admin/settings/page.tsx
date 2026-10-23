@@ -22,7 +22,7 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
         <label className="block text-sm">
           Partner commission per completed walkthrough (USD)
           <input name="commission_amount" type="number" step="0.01" min="0.01" defaultValue={dollars(s?.commission_amount_cents ?? null)} className="input mt-1" />
-          <span className="text-xs text-zinc-500">Leave blank to keep commissions blocked. Shown on the partner page once set.</span>
+          <span className="text-xs text-zinc-500">Leave blank to keep commissions blocked. Internal setting only: it is not shown on the public site and does not publish a reward or open the partner program.</span>
         </label>
         <label className="block text-sm">
           Dispute window (hours)

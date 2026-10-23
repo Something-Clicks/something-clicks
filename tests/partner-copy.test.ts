@@ -44,6 +44,18 @@ describe("partner copy", () => {
     expect(page).not.toMatch(/commission_amount_cents|supabaseAdmin|formatCents/);
   });
 
+  it("makes no response-time promise in the application message or email", () => {
+    const source = read(files.applicationEmail);
+    expect(source).not.toMatch(/business days?/i);
+    expect(source).toContain("If you're approved, we'll contact you with next steps and the program details before you start referring.");
+  });
+
+  it("describes the admin commission setting as internal only", () => {
+    const settings = read("src/app/admin/settings/page.tsx");
+    expect(settings).not.toContain("Shown on the partner page");
+    expect(settings).toContain("does not publish a reward or open the partner program");
+  });
+
   it("keeps the partner application form", () => {
     expect(read(files.partnersPage)).toContain("<PartnerApplicationForm />");
   });
