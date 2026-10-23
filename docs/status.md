@@ -14,7 +14,7 @@ Last updated: 2026-10-22.
   HttpOnly cookie for 90 days (first valid code wins), records the business's details, qualification answers,
   and consent (timestamp, IP, consent text version). Repeat requests for the same business (same email or
   same normalized address) are recorded as duplicates and keep the original request's attribution.
-  Requests are saved as **waiting for match**; the business is told we'll follow up within one business day,
+  Requests are saved as **waiting for match**; the business is told our team will review it and follow up with next steps (no response time is promised),
   and admin is emailed.
 
 **Buyers (Phase 1)**

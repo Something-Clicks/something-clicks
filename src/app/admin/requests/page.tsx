@@ -41,7 +41,7 @@ export default async function RequestsPage() {
       <h1 className="text-2xl font-bold">Booking requests</h1>
       <p className="mt-1 text-sm text-zinc-600">
         Businesses that asked for a walkthrough. Automatic matching to buyers isn&apos;t built yet, so requests wait here
-        with status &quot;waiting_for_match&quot; — follow up within one business day.
+        with status &quot;waiting_for_match&quot; until you review them and follow up with the business.
       </p>
       <div className="mt-6 space-y-4">
         {rows.map((r) => (

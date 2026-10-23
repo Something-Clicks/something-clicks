@@ -10,8 +10,8 @@ import { supabaseAdmin } from "@/lib/supabase/admin";
 import { addressKey, bookingRequestSchema, fieldErrors, formToObject } from "@/lib/validation";
 
 const FOLLOW_UP =
-  "Thanks — we have your request. We're matching it with one commercial cleaning company that serves your area, " +
-  "and we'll follow up within one business day to set up your walkthrough.";
+  "Thanks for submitting your request. Our team will review it, look for one commercial cleaning company that " +
+  "serves your area, and follow up with next steps.";
 
 function clientIp(forwardedFor: string | null): string | null {
   const ip = forwardedFor?.split(",")[0]?.trim();
@@ -98,7 +98,7 @@ export async function requestWalkthrough(_prev: FormState, form: FormData): Prom
   if (existing) {
     return {
       status: "success",
-      message: "We already have a walkthrough request for this business. We'll follow up within one business day.",
+      message: "We already have a walkthrough request for this business. Our team will follow up with next steps.",
     };
   }
 
@@ -107,14 +107,14 @@ export async function requestWalkthrough(_prev: FormState, form: FormData): Prom
     subject: "We received your commercial cleaning walkthrough request",
     text:
       `Hi ${b.contact_name},\n\n` +
-      "Thanks for requesting a commercial cleaning walkthrough through Something Clicks. We're matching your request " +
-      "with one cleaning company that serves your area, and we'll follow up within one business day to schedule it.\n\n" +
+      "Thanks for requesting a commercial cleaning walkthrough through Something Clicks. Our team will review your " +
+      "request, look for one cleaning company that serves your area, and follow up with next steps.\n\n" +
       "Your details will only be shared with that one company.\n\n— Something Clicks",
   });
   await notifyAdmin(
     "Walkthrough request waiting for match",
     `A new walkthrough request (${b.city}, ${code ? "partner link" : "direct"}) is waiting for a match. ` +
-      "Follow up within one business day. See Admin → Booking requests.",
+      "Review it and follow up with the business. See Admin → Booking requests.",
   );
 
   return { status: "success", message: FOLLOW_UP };
