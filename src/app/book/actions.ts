@@ -9,9 +9,7 @@ import type { FormState } from "@/lib/forms";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { addressKey, bookingRequestSchema, fieldErrors, formToObject } from "@/lib/validation";
 
-const FOLLOW_UP =
-  "Thanks for submitting your request. Our team will review it, look for one commercial cleaning company that " +
-  "serves your area, and follow up with next steps.";
+const FOLLOW_UP = "We'll review your request and contact you with next steps.";
 
 function clientIp(forwardedFor: string | null): string | null {
   const ip = forwardedFor?.split(",")[0]?.trim();
@@ -98,7 +96,9 @@ export async function requestWalkthrough(_prev: FormState, form: FormData): Prom
   if (existing) {
     return {
       status: "success",
-      message: "We already have a walkthrough request for this business. Our team will follow up with next steps.",
+      message:
+        "We already have a walkthrough request for this business, so there's no need to send another. " +
+        "We'll review it and contact you with next steps.",
     };
   }
 

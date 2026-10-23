@@ -18,6 +18,6 @@ describe("booking flow copy", () => {
   it("still tells the business what happens next", () => {
     const source = read("src/app/book/actions.ts");
     expect(source).toContain("follow up with next steps");
-    expect(source).toContain("We already have a walkthrough request for this business.");
+    expect(source).toContain("We already have a walkthrough request for this business");
   });
 });

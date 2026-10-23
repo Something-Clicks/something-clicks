@@ -34,7 +34,7 @@ describe.each(Object.entries(files))("%s", (_name, file) => {
 
 describe("partner copy", () => {
   it("says the program is not open yet and details come before referrals begin", () => {
-    expect(read(files.homepage)).toContain("before referrals begin");
+    expect(read(files.homepage)).toContain("The program isn&apos;t open for referrals yet.");
     expect(read(files.partnersPage)).toContain("The program is not open yet");
     expect(read(files.applicationEmail)).toContain("The partner program is not open yet.");
   });

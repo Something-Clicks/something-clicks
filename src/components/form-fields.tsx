@@ -2,8 +2,18 @@ import type { FormState } from "@/lib/forms";
 
 type Option = { value: string; label: string };
 
-function Error({ message }: { message?: string }) {
-  return message ? <p className="mt-1 text-sm text-red-700">{message}</p> : null;
+function Error({ id, message }: { id: string; message?: string }) {
+  return message ? (
+    <p id={id} className="mt-1 text-sm text-red-700">
+      {message}
+    </p>
+  ) : null;
+}
+
+/** ids of the hint and error text, for aria-describedby. */
+function describedBy(name: string, hint: string | undefined, state: FormState | undefined) {
+  const ids = [hint ? `${name}-hint` : null, state?.fieldErrors?.[name] ? `${name}-error` : null].filter(Boolean);
+  return ids.length ? ids.join(" ") : undefined;
 }
 
 const val = (state: FormState | undefined, name: string) => {
@@ -46,9 +56,10 @@ export function TextField(props: {
         defaultValue={val(state, name) ?? defaultValue ?? undefined}
         className="input mt-1"
         aria-invalid={Boolean(state?.fieldErrors?.[name])}
+        aria-describedby={describedBy(name, hint, state)}
       />
-      {hint ? <p className="mt-1 text-xs text-zinc-500">{hint}</p> : null}
-      <Error message={state?.fieldErrors?.[name]} />
+      {hint ? <p id={`${name}-hint`} className="mt-1 text-xs text-zinc-500">{hint}</p> : null}
+      <Error id={`${name}-error`} message={state?.fieldErrors?.[name]} />
     </div>
   );
 }
@@ -76,9 +87,11 @@ export function TextArea(props: {
         required={required}
         defaultValue={val(state, name) ?? defaultValue ?? undefined}
         className="input mt-1"
+        aria-invalid={Boolean(state?.fieldErrors?.[name])}
+        aria-describedby={describedBy(name, hint, state)}
       />
-      {hint ? <p className="mt-1 text-xs text-zinc-500">{hint}</p> : null}
-      <Error message={state?.fieldErrors?.[name]} />
+      {hint ? <p id={`${name}-hint`} className="mt-1 text-xs text-zinc-500">{hint}</p> : null}
+      <Error id={`${name}-error`} message={state?.fieldErrors?.[name]} />
     </div>
   );
 }
@@ -104,6 +117,8 @@ export function SelectField(props: {
         required={required}
         defaultValue={val(state, name) ?? defaultValue ?? ""}
         className="input mt-1"
+        aria-invalid={Boolean(state?.fieldErrors?.[name])}
+        aria-describedby={describedBy(name, undefined, state)}
       >
         <option value="" disabled>
           Choose one
@@ -114,7 +129,7 @@ export function SelectField(props: {
           </option>
         ))}
       </select>
-      <Error message={state?.fieldErrors?.[name]} />
+      <Error id={`${name}-error`} message={state?.fieldErrors?.[name]} />
     </div>
   );
 }
@@ -146,7 +161,7 @@ export function CheckboxGroup(props: {
           </label>
         ))}
       </div>
-      <Error message={state?.fieldErrors?.[name]} />
+      <Error id={`${name}-error`} message={state?.fieldErrors?.[name]} />
     </fieldset>
   );
 }
@@ -162,10 +177,12 @@ export function ConsentCheckbox(props: { name: string; state?: FormState; childr
           required
           defaultChecked={val(state, name) === "on"}
           className="mt-1 h-4 w-4 shrink-0 rounded border-zinc-300"
+          aria-invalid={Boolean(state?.fieldErrors?.[name])}
+          aria-describedby={describedBy(name, undefined, state)}
         />
         <span>{children}</span>
       </label>
-      <Error message={state?.fieldErrors?.[name]} />
+      <Error id={`${name}-error`} message={state?.fieldErrors?.[name]} />
     </div>
   );
 }
