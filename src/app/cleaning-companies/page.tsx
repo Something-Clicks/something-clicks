@@ -44,7 +44,7 @@ export default function CleaningCompaniesPage() {
           </Link>{" "}
           (draft) explain what qualifies and how credits are held, used, and returned.
         </p>
-        <Link href="/signup" className="btn mt-6 !px-5 !py-3 !text-base">
+        <Link href="/signup" className="btn btn-lg mt-6">
           Create an account
         </Link>
       </section>
@@ -84,7 +84,7 @@ export default function CleaningCompaniesPage() {
       </section>
 
       <div className="mt-12 border-t border-zinc-200 pt-8">
-        <Link href="/signup" className="btn !px-5 !py-3 !text-base">
+        <Link href="/signup" className="btn btn-lg">
           Create an account
         </Link>
         <p className="mt-3 text-sm text-zinc-600">

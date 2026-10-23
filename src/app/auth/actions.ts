@@ -41,7 +41,12 @@ export async function signUpBuyer(_prev: FormState, form: FormData): Promise<For
 export async function signIn(_prev: FormState, form: FormData): Promise<FormState> {
   const email = String(form.get("email") ?? "").trim();
   const password = String(form.get("password") ?? "");
-  if (!email || !password) return { status: "error", message: "Enter your email and password.", values: { email } };
+  if (!email || !password) {
+    const fieldErrors: Record<string, string> = {};
+    if (!email) fieldErrors.email = "Enter your email";
+    if (!password) fieldErrors.password = "Enter your password";
+    return { status: "error", message: "Enter your email and password.", fieldErrors, values: { email } };
+  }
   if (!isSupabaseConfigured()) return { status: "error", message: "Sign-in isn't available yet.", values: { email } };
 
   const supabase = await createSupabaseServerClient();

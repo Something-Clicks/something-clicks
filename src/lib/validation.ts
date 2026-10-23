@@ -78,6 +78,8 @@ export const bookingRequestSchema = z.object({
 
 const time = z.string().regex(/^\d{2}:\d{2}$/, "Enter a time");
 
+const MIN_SQ_FT_MESSAGE = "Enter a minimum square footage (0 for none).";
+
 export const buyerOnboardingSchema = z
   .object({
     company_name: trimmed(2, 200, "Company name"),
@@ -87,7 +89,15 @@ export const buyerOnboardingSchema = z
     service_areas: z
       .array(z.enum(SERVICE_AREAS))
       .min(1, "Choose at least one service area"),
-    min_sq_ft: z.coerce.number().int().min(0).max(5_000_000),
+    // An empty field must not silently become 0 ("no minimum").
+    min_sq_ft: z.preprocess(
+      (v) => (typeof v === "string" && v.trim() === "" ? undefined : v),
+      z.coerce
+        .number({ required_error: MIN_SQ_FT_MESSAGE, invalid_type_error: MIN_SQ_FT_MESSAGE })
+        .int()
+        .min(0)
+        .max(5_000_000),
+    ),
     property_types: z.array(z.enum(values(PROPERTY_TYPES))).min(1, "Choose at least one property type"),
     cleaning_frequencies: z
       .array(z.enum(values(CLEANING_FREQUENCIES)))

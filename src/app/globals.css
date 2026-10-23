@@ -15,16 +15,27 @@ body {
   color: #18181b;
 }
 
+/* One clearly visible keyboard focus ring, in the existing brand blue. */
+:focus-visible {
+  outline: 2px solid var(--color-brand-600);
+  outline-offset: 2px;
+}
+
 .input {
   @apply block w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-100;
 }
 
 .btn {
-  @apply inline-flex items-center justify-center rounded-md bg-brand-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-60;
+  @apply inline-flex items-center justify-center rounded-md bg-brand-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-60 aria-disabled:cursor-not-allowed aria-disabled:opacity-60;
 }
 
 .btn-secondary {
-  @apply inline-flex items-center justify-center rounded-md border border-zinc-300 bg-white px-4 py-2 text-sm font-semibold text-zinc-800 hover:bg-zinc-50 disabled:opacity-60;
+  @apply inline-flex items-center justify-center rounded-md border border-zinc-300 bg-white px-4 py-2 text-sm font-semibold text-zinc-800 hover:bg-zinc-50 disabled:opacity-60 aria-disabled:cursor-not-allowed aria-disabled:opacity-60;
+}
+
+/* Large size for main page and form actions; combine with .btn or .btn-secondary. */
+.btn-lg {
+  @apply px-5 py-3 text-base;
 }
 
 .btn-danger {

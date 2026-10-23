@@ -11,7 +11,7 @@ export function SiteHeader() {
           <img src="/logo.svg" alt="" width={28} height={34} className="h-8 w-auto" />
           Something Clicks
         </Link>
-        <nav aria-label="Main" className="hidden items-center gap-1 text-sm font-medium text-zinc-700 md:flex">
+        <nav aria-label="Main" className="hidden items-center gap-1 whitespace-nowrap text-sm font-medium text-zinc-700 lg:flex">
           {NAV_LINKS.map((l) => (
             <Link key={l.href} href={l.href} className="rounded-md px-3 py-2.5 hover:bg-zinc-50 hover:text-brand-700">
               {l.label}

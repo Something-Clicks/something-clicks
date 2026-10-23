@@ -92,6 +92,23 @@ describe("buyer onboarding", () => {
     expect(buyerOnboardingSchema.safeParse({ ...onboarding, service_areas: ["Denver"] }).success).toBe(false);
     expect(buyerOnboardingSchema.safeParse({ ...onboarding, availability_end: "08:00" }).success).toBe(false);
   });
+  it("accepts 0 (no minimum) and positive square footage", () => {
+    expect(buyerOnboardingSchema.parse({ ...onboarding, min_sq_ft: "0" }).min_sq_ft).toBe(0);
+    expect(buyerOnboardingSchema.parse({ ...onboarding, min_sq_ft: "2500" }).min_sq_ft).toBe(2500);
+  });
+  it("rejects an empty or whitespace-only minimum instead of treating it as 0", () => {
+    for (const min_sq_ft of ["", "   ", undefined]) {
+      const r = buyerOnboardingSchema.safeParse({ ...onboarding, min_sq_ft });
+      expect(r.success).toBe(false);
+      expect(r.error?.issues).toEqual([
+        expect.objectContaining({ path: ["min_sq_ft"], message: "Enter a minimum square footage (0 for none)." }),
+      ]);
+    }
+  });
+  it("still rejects negative and fractional square footage", () => {
+    expect(buyerOnboardingSchema.safeParse({ ...onboarding, min_sq_ft: "-5" }).success).toBe(false);
+    expect(buyerOnboardingSchema.safeParse({ ...onboarding, min_sq_ft: "10.5" }).success).toBe(false);
+  });
 });
 
 describe("settings", () => {

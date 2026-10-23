@@ -2,16 +2,17 @@
 
 import Link from "next/link";
 import { useActionState } from "react";
-import { ConsentCheckbox, FormMessage, Honeypot, SelectField, TextArea, TextField } from "@/components/form-fields";
+import { ConsentCheckbox, FormMessage, Honeypot, RequiredNote, SelectField, TextArea, TextField } from "@/components/form-fields";
 import { SubmitButton } from "@/components/submit-button";
+import { useFormFocus } from "@/components/use-form-focus";
 import { BUSINESS_CONSENT_TEXT, CLEANING_FREQUENCIES, PROPERTY_TYPES } from "@/lib/constants";
 import { initialFormState } from "@/lib/forms";
 import { requestWalkthrough } from "./actions";
 
 /** Shown in place of the form once a request (or a repeat request) has been saved. */
-export function BookingResult({ message }: { message?: string }) {
+export function BookingResult({ message, ref }: { message?: string; ref?: React.Ref<HTMLDivElement> }) {
   return (
-    <div role="status" className="py-4">
+    <div ref={ref} role="status" tabIndex={-1} className="py-4 focus:outline-none">
       <h2 className="text-2xl font-bold tracking-tight">Request received</h2>
       <p className="mt-2 text-zinc-700">{message ?? "We'll review your request and contact you with next steps."}</p>
       <Link href="/" className="mt-6 inline-block font-medium text-brand-700 underline underline-offset-4">
@@ -35,17 +36,16 @@ function Section({ step, title, children }: { step: number; title: string; child
 
 export function BookingForm({ urlCode }: { urlCode: string | null }) {
   const [state, action] = useActionState(requestWalkthrough, initialFormState);
+  const { formRef, resultRef } = useFormFocus(state);
 
-  if (state.status === "success") return <BookingResult message={state.message} />;
+  if (state.status === "success") return <BookingResult ref={resultRef} message={state.message} />;
 
   return (
-    <form action={action} className="relative space-y-10" noValidate>
+    <form ref={formRef} action={action} className="relative space-y-10" noValidate>
       <Honeypot />
       <input type="hidden" name="url_code" value={urlCode ?? ""} />
       <FormMessage state={state} />
-      <p className="text-sm text-zinc-500">
-        Fields marked <span className="text-red-600">*</span> are required.
-      </p>
+      <RequiredNote />
 
       <Section step={1} title="Your business">
         <TextField name="business_name" label="Business name" required state={state} autoComplete="organization" />
@@ -112,7 +112,7 @@ export function BookingForm({ urlCode }: { urlCode: string | null }) {
         </ConsentCheckbox>
       </div>
 
-      <SubmitButton pendingText="Sending…" className="btn w-full !py-3 !text-base sm:w-auto">
+      <SubmitButton pendingText="Sending…" className="btn btn-lg w-full sm:w-auto">
         Send request
       </SubmitButton>
     </form>

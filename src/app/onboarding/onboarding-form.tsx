@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { useActionState } from "react";
-import { CheckboxGroup, ConsentCheckbox, FormMessage, TextArea, TextField } from "@/components/form-fields";
+import { CheckboxGroup, ConsentCheckbox, FormMessage, RequiredNote, TextArea, TextField } from "@/components/form-fields";
 import { SubmitButton } from "@/components/submit-button";
+import { useFormFocus } from "@/components/use-form-focus";
 import { CLEANING_FREQUENCIES, PROPERTY_TYPES, SERVICE_AREAS, WEEKDAYS } from "@/lib/constants";
 import { initialFormState } from "@/lib/forms";
 import { saveBuyerProfile } from "./actions";
@@ -25,9 +26,11 @@ export type OnboardingDefaults = {
 
 export function OnboardingForm({ defaults, isNew }: { defaults: OnboardingDefaults; isNew: boolean }) {
   const [state, action] = useActionState(saveBuyerProfile, initialFormState);
+  const { formRef } = useFormFocus(state);
   return (
-    <form action={action} className="space-y-8">
+    <form ref={formRef} action={action} className="space-y-8" noValidate>
       <FormMessage state={state} />
+      <RequiredNote />
       <fieldset className="space-y-5">
         <legend className="text-lg font-semibold">Company</legend>
         <div className="grid gap-5 sm:grid-cols-2">
@@ -57,6 +60,7 @@ export function OnboardingForm({ defaults, isNew }: { defaults: OnboardingDefaul
           label="Minimum square feet"
           type="number"
           required
+          hint="Enter 0 if you have no minimum."
           state={state}
           defaultValue={defaults.min_sq_ft ?? 0}
         />
@@ -117,7 +121,7 @@ export function OnboardingForm({ defaults, isNew }: { defaults: OnboardingDefaul
         </ConsentCheckbox>
       ) : null}
 
-      <SubmitButton pendingText="Saving…">{isNew ? "Submit for review" : "Save changes"}</SubmitButton>
+      <SubmitButton pendingText="Saving…" className="btn btn-lg">{isNew ? "Submit for review" : "Save changes"}</SubmitButton>
     </form>
   );
 }

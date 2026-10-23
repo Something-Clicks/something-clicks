@@ -7,6 +7,7 @@ import { loadBalance, loadBuyerProfile, loadPurchases, PURCHASE_STATUS_LABELS } 
 import { formatCents, formatDateTime } from "@/lib/format";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { startCheckout } from "./actions";
+import { DashboardNotice } from "./dashboard-notice";
 
 export const metadata: Metadata = { title: "Dashboard" };
 
@@ -18,7 +19,7 @@ const NOTICES: Record<string, { tone: "ok" | "warn"; text: string }> = {
   cancelled: { tone: "warn", text: "Checkout was cancelled. You have not been charged." },
   not_approved: { tone: "warn", text: "Your company needs to be approved before you can buy the pilot." },
   pack_unavailable: { tone: "warn", text: "That credit pack is no longer available." },
-  checkout_failed: { tone: "warn", text: "We couldn't start checkout. Please try again, or contact us if it keeps happening." },
+  checkout_failed: { tone: "warn", text: "We couldn't start checkout. Please try again in a few minutes." },
   saved: { tone: "ok", text: "Your company details were saved." },
 };
 
@@ -64,28 +65,20 @@ export default async function DashboardPage({
         </div>
       </div>
 
-      {notice ? (
-        <div
-          className={`mb-6 rounded-md border p-4 text-sm ${notice.tone === "ok" ? "border-brand-100 bg-brand-50 text-brand-900" : "border-amber-300 bg-amber-50 text-amber-900"}`}
-        >
-          {notice.text}
-        </div>
-      ) : null}
+      {notice ? <DashboardNotice tone={notice.tone}>{notice.text}</DashboardNotice> : null}
 
       {buyer.status !== "approved" ? (
         <div className="mb-6 rounded-md border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900">
           {buyer.status === "pending"
             ? "We're reviewing your company. We'll email you when it's approved, and then you can buy the pilot."
             : buyer.status === "suspended"
-              ? "Your account is suspended. Contact us for details."
-              : "Your company was not approved. Contact us if you have questions."}
+              ? "Your account is suspended, so you can't buy credits right now."
+              : "Your company wasn't approved, so you can't buy credits."}
         </div>
       ) : null}
 
       <section className="grid gap-4 sm:grid-cols-3">
         <Stat label="Available credits" value={balance.available} />
-        <Stat label="Held for scheduled walkthroughs" value={balance.reserved} />
-        <Stat label="Walkthroughs completed" value={balance.consumed} />
       </section>
 
       {buyer.status === "approved" ? (

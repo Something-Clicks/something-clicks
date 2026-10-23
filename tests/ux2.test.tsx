@@ -91,7 +91,7 @@ describe("onboarding and dashboard copy", () => {
   });
 
   it("uses consistent credit and walkthrough wording", () => {
-    expect(dashboard).toContain("Held for scheduled walkthroughs");
+    expect(dashboard).toContain('<Stat label="Available credits"');
     expect(dashboard).toContain("per qualifying completed walkthrough");
     expect(dashboard).toContain("Continue to secure checkout");
     expect(dashboard).toContain("walkthroughs are arranged with you directly by the Something Clicks team");

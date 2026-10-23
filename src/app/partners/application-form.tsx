@@ -2,21 +2,24 @@
 
 import Link from "next/link";
 import { useActionState } from "react";
-import { ConsentCheckbox, FormMessage, Honeypot, SelectField, TextArea, TextField } from "@/components/form-fields";
+import { ConsentCheckbox, FormMessage, Honeypot, RequiredNote, SelectField, TextArea, TextField } from "@/components/form-fields";
 import { SubmitButton } from "@/components/submit-button";
+import { useFormFocus } from "@/components/use-form-focus";
 import { PARTNER_TYPES } from "@/lib/constants";
 import { initialFormState } from "@/lib/forms";
 import { applyAsPartner } from "./actions";
 
 export function PartnerApplicationForm() {
   const [state, action] = useActionState(applyAsPartner, initialFormState);
+  const { formRef, resultRef } = useFormFocus(state);
 
-  if (state.status === "success") return <FormMessage state={state} />;
+  if (state.status === "success") return <FormMessage ref={resultRef} state={state} />;
 
   return (
-    <form action={action} className="relative space-y-5" noValidate>
+    <form ref={formRef} action={action} className="relative space-y-5" noValidate>
       <Honeypot />
       <FormMessage state={state} />
+      <RequiredNote />
       <div className="grid gap-5 sm:grid-cols-2">
         <TextField name="full_name" label="Your name" required state={state} autoComplete="name" />
         <TextField name="business_name" label="Business name" required state={state} autoComplete="organization" />
@@ -40,7 +43,7 @@ export function PartnerApplicationForm() {
         self-referrals; Something Clicks may reject or void referrals; and commission is paid only for completed
         walkthroughs.
       </ConsentCheckbox>
-      <SubmitButton pendingText="Submitting…">Submit application</SubmitButton>
+      <SubmitButton pendingText="Submitting…" className="btn btn-lg">Submit application</SubmitButton>
     </form>
   );
 }

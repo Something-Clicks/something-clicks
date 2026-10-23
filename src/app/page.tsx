@@ -25,7 +25,7 @@ export default function HomePage() {
               <p className="mt-2 flex-1 text-zinc-600">
                 Send a request for a free walkthrough of your space. There&apos;s no obligation to hire anyone.
               </p>
-              <Link href="/book" className="btn mt-5 self-start !px-5 !py-3 !text-base">
+              <Link href="/book" className="btn btn-lg mt-5 self-start">
                 Request a walkthrough
               </Link>
             </div>
@@ -34,7 +34,7 @@ export default function HomePage() {
               <p className="mt-2 flex-1 text-zinc-600">
                 We connect cleaning companies with businesses that have asked for a commercial cleaning walkthrough.
               </p>
-              <Link href="/cleaning-companies" className="btn-secondary mt-5 self-start !px-5 !py-3 !text-base">
+              <Link href="/cleaning-companies" className="btn-secondary btn-lg mt-5 self-start">
                 See the pilot
               </Link>
             </div>

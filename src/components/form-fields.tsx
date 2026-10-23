@@ -144,8 +144,9 @@ export function CheckboxGroup(props: {
 }) {
   const { name, label, options, state, defaultValues = [], columns = "sm:grid-cols-2" } = props;
   const selected = new Set(vals(state, name) ?? defaultValues);
+  const error = state?.fieldErrors?.[name];
   return (
-    <fieldset>
+    <fieldset aria-describedby={error ? `${name}-error` : undefined} data-invalid={error ? "true" : undefined}>
       <legend className="block text-sm font-medium text-zinc-800">{label}</legend>
       <div className={`mt-2 grid grid-cols-1 gap-2 ${columns}`}>
         {options.map((o) => (
@@ -155,7 +156,7 @@ export function CheckboxGroup(props: {
               name={name}
               value={o.value}
               defaultChecked={selected.has(o.value)}
-              className="h-4 w-4 rounded border-zinc-300"
+              className="h-5 w-5 rounded border-zinc-300"
             />
             {o.label}
           </label>
@@ -176,7 +177,7 @@ export function ConsentCheckbox(props: { name: string; state?: FormState; childr
           name={name}
           required
           defaultChecked={val(state, name) === "on"}
-          className="mt-1 h-4 w-4 shrink-0 rounded border-zinc-300"
+          className="mt-0.5 h-6 w-6 shrink-0 rounded border-zinc-300"
           aria-invalid={Boolean(state?.fieldErrors?.[name])}
           aria-describedby={describedBy(name, undefined, state)}
         />
@@ -187,16 +188,42 @@ export function ConsentCheckbox(props: { name: string; state?: FormState; childr
   );
 }
 
-export function FormMessage({ state }: { state: FormState }) {
+export function FormMessage({ state, ref }: { state: FormState; ref?: React.Ref<HTMLDivElement> }) {
   if (state.status === "error" && state.message) {
-    return <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-800">{state.message}</div>;
+    return (
+      <div
+        ref={ref}
+        role="alert"
+        tabIndex={-1}
+        data-form-message=""
+        className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-800"
+      >
+        {state.message}
+      </div>
+    );
   }
   if (state.status === "success" && state.message) {
     return (
-      <div className="rounded-md border border-brand-100 bg-brand-50 p-4 text-sm text-brand-900">{state.message}</div>
+      <div
+        ref={ref}
+        role="status"
+        tabIndex={-1}
+        data-form-message=""
+        className="rounded-md border border-brand-100 bg-brand-50 p-4 text-sm text-brand-900"
+      >
+        {state.message}
+      </div>
     );
   }
   return null;
+}
+
+export function RequiredNote() {
+  return (
+    <p className="text-sm text-zinc-500">
+      Fields marked <span className="text-red-600">*</span> are required.
+    </p>
+  );
 }
 
 /** Honeypot field: hidden from people, often filled in by bots. */

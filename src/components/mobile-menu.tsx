@@ -2,26 +2,40 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { NAV_LINKS, PRIMARY_ACTION } from "./nav-links";
 
 export function MobileMenu() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const menuId = useId();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
-  // Close after navigating, and on Escape.
+  // Close after navigating; on Escape (returning focus to the menu button); and on a click outside.
   useEffect(() => setOpen(false), [pathname]);
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      setOpen(false);
+      buttonRef.current?.focus();
+    };
+    const onPointer = (e: PointerEvent) => {
+      if (!containerRef.current?.contains(e.target as Node)) setOpen(false);
+    };
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    document.addEventListener("pointerdown", onPointer);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.removeEventListener("pointerdown", onPointer);
+    };
   }, [open]);
 
   return (
-    <div className="md:hidden">
+    <div ref={containerRef} className="lg:hidden">
       <button
+        ref={buttonRef}
         type="button"
         className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-zinc-300 text-zinc-800 hover:bg-zinc-50"
         aria-expanded={open}
@@ -44,7 +58,7 @@ export function MobileMenu() {
               </li>
             ))}
             <li className="py-3">
-              <Link href={PRIMARY_ACTION.href} onClick={() => setOpen(false)} className="btn w-full !py-3 !text-base">
+              <Link href={PRIMARY_ACTION.href} onClick={() => setOpen(false)} className="btn btn-lg w-full">
                 {PRIMARY_ACTION.label}
               </Link>
             </li>
