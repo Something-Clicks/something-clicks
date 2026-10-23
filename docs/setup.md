@@ -79,8 +79,11 @@ How credits work:
 
 - In `/admin/packs`, create at least one credit pack (e.g. "Pilot pack", 5 credits).
 - In `/admin/settings`, set the price per appointment and the partner commission amount.
-- Replace the placeholder Buyer Terms, Partner Terms, and Privacy pages
-  (`src/app/terms/*`, `src/app/privacy`) and bump the version constants in `src/lib/constants.ts`.
+- Buyer and Partner Terms are drafted but show a "Draft" banner and marked open decisions. Decide each item in
+  `src/app/terms/buyer/decisions.ts` and `src/app/terms/partner/decisions.ts`, write the agreed wording into the
+  page, remove the item, get legal review, and bump the version constants in `src/lib/constants.ts`.
+  The banner disappears automatically when a page has no open decisions.
+- Replace the placeholder Privacy page (`src/app/privacy`).
 
 ## Running checks locally
 

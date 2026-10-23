@@ -6,7 +6,8 @@ Last updated: 2026-10-22.
 
 **Public site**
 - Homepage, "For cleaning companies", "Become a referral partner" (with application form),
-  business booking page (`/book`), placeholder Buyer Terms / Partner Terms / Privacy.
+  business booking page (`/book`), draft Buyer Terms and Partner Terms (open owner decisions marked on the
+  page, not legally reviewed), placeholder Privacy page.
 - Partner application: validation, honeypot spam check, one live application per email
   (enforced in the database), confirmation email to the applicant, alert to admin.
 - Booking page: accepts a partner code as `?via=` or `?ref=` (configurable), remembers it in a first-party
