@@ -51,7 +51,7 @@ export function SignInForm({ next }: { next: string }) {
       <p className="text-sm text-zinc-600">
         Cleaning company without an account?{" "}
         <Link href="/signup" className="font-medium text-brand-700 underline">
-          Create one
+          Apply for the pilot
         </Link>
       </p>
     </form>

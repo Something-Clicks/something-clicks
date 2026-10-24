@@ -56,6 +56,15 @@ describe("partner copy", () => {
     expect(settings).toContain("does not publish a reward or open the partner program");
   });
 
+  it("keeps the partners page short and clear about its status", () => {
+    const page = read(files.partnersPage);
+    expect(page).toContain("It isn't open yet, but you can apply now.");
+    for (const removed of ["<h2>Rewards</h2>", "When a reward would be earned", "<h2>How it works</h2>"]) {
+      expect(page).not.toContain(removed);
+    }
+    for (const kept of ["Who it&apos;s for", "What to refer", "What happens next"]) expect(page).toContain(kept);
+  });
+
   it("keeps the partner application form", () => {
     expect(read(files.partnersPage)).toContain("<PartnerApplicationForm />");
   });

@@ -12,11 +12,11 @@ export default function HomePage() {
       <section className="bg-brand-50">
         <div className="mx-auto max-w-6xl px-4 py-14 sm:py-20">
           <h1 className="max-w-3xl text-4xl font-bold tracking-tight text-zinc-900 sm:text-5xl">
-            Make the right connection click.
+            Commercial cleaning walkthroughs for Salt Lake Valley businesses.
           </h1>
           <p className="mt-4 max-w-2xl text-lg text-zinc-700">
-            Something Clicks connects Salt Lake Valley businesses that need commercial cleaning with local cleaning
-            companies, starting with a walkthrough.
+            Something Clicks connects businesses that need commercial cleaning with local cleaning companies, starting with a
+            walkthrough.
           </p>
 
           <div className="mt-10 grid gap-5 md:grid-cols-2">
@@ -53,12 +53,6 @@ export default function HomePage() {
             </li>
           ))}
         </ol>
-        <p className="mt-8">
-          <Link href="/book" className="font-semibold text-brand-700 underline underline-offset-4">
-            Request a walkthrough
-          </Link>
-          <span className="text-zinc-600"> · Free, with no obligation.</span>
-        </p>
       </section>
 
       <section className="border-t border-zinc-200 bg-zinc-50">

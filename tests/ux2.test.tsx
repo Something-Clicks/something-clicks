@@ -32,19 +32,19 @@ describe("/cleaning-companies", () => {
   it("states the pilot accurately", () => {
     expect(body).toContain("$750");
     expect(body).toContain("for 5 qualifying completed walkthroughs · $150 each");
-    expect(body).toContain("You pay for walkthroughs that qualify and are completed, not for scheduled ones.");
-    expect(body).toContain("A scheduled walkthrough on its own doesn't count.");
+    expect(body).toContain("A scheduled walkthrough alone doesn't qualify.");
     // Never suggest that buying a credit or scheduling a walkthrough is itself a qualifying walkthrough.
     expect(body).not.toMatch(/each credit (covers|is) one (qualifying )?(completed )?walkthrough/i);
   });
 
   it("says cleaning companies are the paying customers and businesses use it free", () => {
-    expect(body).toContain("Something Clicks is built for commercial cleaning companies. You pay for walkthroughs");
-    expect(body).toContain("Businesses use the service for free.");
+    expect(body).toContain("For commercial cleaning companies in the Salt Lake Valley.");
+    expect(body).toContain("Businesses use Something Clicks for free; you pay for qualifying completed walkthroughs.");
   });
 
   it("describes the real, partly manual process", () => {
-    expect(body).toContain("We review your company");
+    expect(body).toContain("We review your application");
+    expect(body).toContain("You can buy the pilot once you're approved.");
     expect(body).toContain("Your credits appear on your dashboard once Stripe confirms the payment.");
     expect(body).toContain("the Something Clicks team handles this personally, not through your dashboard");
     expect(body).toContain("When a request fits your service area and criteria, we'll be in touch about it.");
@@ -58,15 +58,20 @@ describe("/cleaning-companies", () => {
   });
 
   it("gives the pilot box its light-blue background without the white .card override", () => {
-    expect(html).toMatch(/<section aria-labelledby="pilot" class="[^"]*\bbg-brand-50\b[^"]*"/);
-    expect(html).not.toMatch(/<section aria-labelledby="pilot" class="[^"]*\bcard\b/);
+    expect(html).toMatch(/<section aria-label="The pilot" class="[^"]*\bbg-brand-50\b[^"]*"/);
+    expect(html).not.toMatch(/<section aria-label="The pilot" class="[^"]*\bcard\b/);
   });
 
-  it("has one action, creating an account, and links the draft buyer terms", () => {
+  it("has no small label above the price", () => {
+    expect(html).not.toMatch(/uppercase tracking-wide/);
+  });
+
+  it("has one action, applying for the pilot, and links the draft buyer terms", () => {
     expect(links(html).filter((l) => l.href === "/signup").map((l) => l.label)).toEqual([
-      "Create an account",
-      "Create an account",
+      "Apply for the pilot",
+      "Apply for the pilot",
     ]);
+    expect(links(html).some((l) => l.label === "Create an account")).toBe(false);
     expect(links(html)).toContainEqual({ href: "/terms/buyer", label: "buyer terms" });
     expect(body).toContain("(draft)");
   });
@@ -75,8 +80,8 @@ describe("/cleaning-companies", () => {
 describe("/signup", () => {
   it("is clearly for cleaning companies and explains the next step", () => {
     const body = text(renderToStaticMarkup(<SignUpPage />));
-    expect(body).toContain("Create your company account");
-    expect(body).toContain("we'll review it before you can buy the pilot");
+    expect(body).toContain("Apply for the pilot");
+    expect(body).toContain("Create an account, then tell us about your company. We review every application before you can buy the pilot.");
   });
 });
 

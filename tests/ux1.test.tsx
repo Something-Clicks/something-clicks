@@ -18,9 +18,15 @@ describe("homepage", () => {
   const html = renderToStaticMarkup(<HomePage />);
   const body = text(html);
 
-  it("leads with the brand line and says what the business does", () => {
-    expect(html).toContain("Make the right connection click.");
-    expect(body).toContain("connects Salt Lake Valley businesses that need commercial cleaning with local cleaning companies");
+  it("leads with a plain, customer-focused headline and says what the business does", () => {
+    expect(html).toMatch(/<h1[^>]*>Commercial cleaning walkthroughs for Salt Lake Valley businesses\.<\/h1>/);
+    expect(html).not.toContain("Make the right connection click.");
+    expect(body).toContain("connects businesses that need commercial cleaning with local cleaning companies");
+  });
+
+  it("doesn't repeat the walkthrough action below the steps", () => {
+    expect(body).not.toContain("Free, with no obligation.");
+    expect(links(html).filter((l) => l.href === "/book")).toHaveLength(1);
   });
 
   it("offers one path per audience, each with one action", () => {
