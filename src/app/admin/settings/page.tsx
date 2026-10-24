@@ -1,6 +1,7 @@
 import { saveSettings } from "@/app/admin/actions";
 import { SubmitButton } from "@/components/submit-button";
 import { supabaseAdmin } from "@/lib/supabase/admin";
+import { PromoteKitTest } from "./promotekit-test";
 
 const dollars = (cents: number | null) => (cents == null ? "" : (cents / 100).toFixed(2));
 
@@ -34,6 +35,7 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
         </label>
         <SubmitButton>Save settings</SubmitButton>
       </form>
+      <PromoteKitTest />
     </div>
   );
 }

@@ -103,7 +103,7 @@ Something Clicks
 | `/admin/packs` | Create and switch credit packs on and off. **The $750 pilot pack must be created here** | Implemented. No pack exists until you create one |
 | `/admin/applications` | Review and reject partner applications | Incomplete: approval is disabled (waits on PromoteKit) |
 | `/admin/requests` | View walkthrough requests | Implemented but view-only: no matching or scheduling actions |
-| `/admin/settings` | Price per appointment, commission (internal), dispute window, referral expiry | Implemented |
+| `/admin/settings` | Price per appointment, commission (internal), dispute window, referral expiry; "Test PromoteKit connection" (one read-only request) | Implemented. Connection test not yet run against PromoteKit |
 
 ### Non-page routes
 - `/api/webhooks/stripe`: adds credits on confirmed payment; handles refunds, failures and expiry. **Implemented, tested locally only.**

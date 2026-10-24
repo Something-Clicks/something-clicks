@@ -6,6 +6,7 @@ import { auditLog, requireAdmin } from "@/lib/auth";
 import { sendEmail } from "@/lib/email";
 import { siteUrl } from "@/lib/env";
 import { supabaseAdmin } from "@/lib/supabase/admin";
+import { testPromoteKitConnection, type PromoteKitConnectionResult } from "@/lib/promotekit";
 import { adjustmentSchema, creditPackSchema, formToObject, settingsSchema } from "@/lib/validation";
 
 const BUYER_TRANSITIONS: Record<string, string[]> = {
@@ -137,4 +138,10 @@ export async function saveSettings(form: FormData) {
   if (error) throw new Error(`settings update failed: ${error.message}`);
   await auditLog({ actorId: admin.id, action: "settings.update", entityType: "settings", details: values });
   redirect("/admin/settings?saved=1");
+}
+
+/** Admin-only: one read-only PromoteKit request (list affiliates) to check the key and plan. */
+export async function checkPromoteKitConnection(): Promise<PromoteKitConnectionResult> {
+  await requireAdmin();
+  return testPromoteKitConnection();
 }

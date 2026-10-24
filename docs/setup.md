@@ -75,6 +75,23 @@ How credits work:
    (and Preview if you want previews to work). Set `NEXT_PUBLIC_SITE_URL` to the production URL.
 3. Pushing to `main` deploys production.
 
+## PromoteKit connection test
+
+The partner integration isn't built and `PROMOTEKIT_MODE` stays `mock`. To check the key and plan:
+
+1. Set `PROMOTEKIT_API_KEY` in Vercel (server-only; never prefix it with `NEXT_PUBLIC_`).
+2. Sign in as an admin and open **Admin → Settings → Test PromoteKit connection**.
+3. The button makes one read-only request (list affiliates) and shows one of:
+   - **Connected**: the key works.
+   - **401**: the key was rejected.
+   - **403**: the account has no active or trialing plan, so the API isn't available.
+   - **Couldn't reach PromoteKit**: a network error or timeout.
+   - **Not set**: `PROMOTEKIT_API_KEY` is missing in that environment.
+   - **Unexpected status**: anything else, shown with its status code. A 404 would mean the endpoint path differs from
+     PromoteKit's docs.
+
+The key and the response body are never shown or logged.
+
 ## 5. Before taking real orders
 
 - In `/admin/packs`, create at least one credit pack (e.g. "Pilot pack", 5 credits).
