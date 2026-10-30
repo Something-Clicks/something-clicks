@@ -9,9 +9,10 @@ def mb(n: int) -> str:
 
 def format_report(r: dict) -> str:
     lines = [
-        f"Cluster {r['cluster']} · Overture release {r['release']} · run #{r['run_id']}",
+        f"Cluster {r['cluster']} ({r.get('scope', 'metro')}, {'all' if r.get('include_broad', True) else 'wedding-specific'} categories)"
+        f" · Overture release {r['release']} · run #{r['run_id']}",
         "",
-        f"  Rows read            {r['rows_read']:>8,}",
+        f"  Candidate rows read  {r['rows_read']:>8,}   (US, journey category or name match)",
         f"  Kept                 {r['rows_kept']:>8,}   ({r['new_places']:,} new to the database)",
     ]
     for reason, n in r["dropped"].items():

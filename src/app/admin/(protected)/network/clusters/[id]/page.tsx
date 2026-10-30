@@ -44,6 +44,7 @@ export default async function ClusterPage({
               ))}
             </dl>
           </div>
+          {cluster.scope === "metro" ? (
           <form action={recomputeAction} className="rounded-2xl bg-white p-5 text-sm ring-1 ring-line">
             <h2 className="font-semibold">Matches</h2>
             <p className="mt-1 text-navy-soft">
@@ -56,6 +57,14 @@ export default async function ClusterPage({
               Open match explorer
             </Link>
           </form>
+          ) : (
+            <div className="rounded-2xl bg-white p-5 text-sm ring-1 ring-line">
+              <h2 className="font-semibold">Matches</h2>
+              <p className="mt-1 text-navy-soft">
+                National clusters are import scopes. Matches are generated per metro: create a metro cluster and recompute there.
+              </p>
+            </div>
+          )}
           <div className="rounded-2xl bg-white p-5 text-sm ring-1 ring-line">
             <h2 className="font-semibold">Import</h2>
             <p className="mt-1 text-navy-soft">
