@@ -380,7 +380,7 @@ export function ApplicationForm() {
         )}
       </div>
       <noscript>
-        <p className="mt-4 text-sm">This application needs JavaScript. You can also email us to apply.</p>
+        <p className="mt-4 text-sm">This form needs JavaScript. Please enable it to continue.</p>
       </noscript>
     </form>
   );

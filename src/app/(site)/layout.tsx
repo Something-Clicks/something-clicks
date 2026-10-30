@@ -1,5 +1,6 @@
 import { AttributionCapture } from "@/components/AttributionCapture";
 import { Footer } from "@/components/Footer";
+import { GoogleAnalytics } from "@/components/GoogleAnalytics";
 import { Header } from "@/components/Header";
 
 export default function SiteLayout({ children }: { children: React.ReactNode }) {
@@ -17,6 +18,7 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
       </main>
       <Footer />
       <AttributionCapture />
+      <GoogleAnalytics />
     </>
   );
 }

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { P } from "@/components/Placeholder";
 import { ThanksPage } from "@/components/ThanksPage";
+import { TrackSubmit } from "@/components/TrackSubmit";
 import { site } from "@/content/site";
 
 export const metadata: Metadata = { title: "Thanks for your interest", robots: { index: false } };
@@ -16,6 +17,7 @@ export default function ReferralThanksPage() {
         Any thank-you for introductions is possible only where permitted and would be set out in an individual written
         agreement. Nothing is promised by submitting this form.
       </p>
+      <TrackSubmit form="referral" />
     </ThanksPage>
   );
 }

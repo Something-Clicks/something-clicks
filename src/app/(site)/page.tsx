@@ -74,8 +74,7 @@ export default function HomePage() {
       <section className="relative overflow-hidden bg-navy text-white on-dark">
         <HeroLines />
         <div className="container-page relative py-20 sm:py-28">
-          <p className="eyebrow">Something Clicks Network · {site.region}</p>
-          <h1 className="mt-4 max-w-3xl text-4xl leading-tight sm:text-6xl">
+          <h1 className="max-w-3xl text-4xl leading-tight sm:text-6xl">
             Local businesses can be each other&rsquo;s best source of customers.
           </h1>
           <p className="mt-6 max-w-2xl text-lg text-mist sm:text-xl">
@@ -101,8 +100,7 @@ export default function HomePage() {
       <Section tone="ice" aria-labelledby="reveal-heading">
         <div className="grid items-center gap-10 md:grid-cols-2">
           <div>
-            <p className="eyebrow">The connection hiding in plain sight</p>
-            <h2 id="reveal-heading" className="mt-2 text-3xl sm:text-4xl">
+            <h2 id="reveal-heading" className="text-3xl sm:text-4xl">
               The business you just moved on Friday needs desks assembled on Monday.
             </h2>
             <p className="mt-4 text-lg text-navy-soft">
@@ -118,7 +116,6 @@ export default function HomePage() {
       <Section aria-labelledby="problem-heading">
         <SectionHeading
           id="problem-heading"
-          eyebrow="The problem"
           title="Good partnerships already happen. They're just hard to start and impossible to see."
         />
         <ul className="mt-10 grid gap-6 md:grid-cols-3">
@@ -135,7 +132,7 @@ export default function HomePage() {
       </Section>
 
       <Section tone="cloud" aria-labelledby="how-heading">
-        <SectionHeading id="how-heading" eyebrow="How it works" title="Five steps, coordinated for you." />
+        <SectionHeading id="how-heading" title="Five steps, coordinated for you." />
         <ol className="mt-10 grid gap-4 md:grid-cols-5">
           {shortSteps.map((step, i) => (
             <li key={step.title} className="relative rounded-2xl bg-white p-5 ring-1 ring-line">
@@ -155,7 +152,6 @@ export default function HomePage() {
       <Section aria-labelledby="examples-heading">
         <SectionHeading
           id="examples-heading"
-          eyebrow="What a partnership could look like"
           title="Illustrative examples"
           intro="These are made-up examples to show the idea. They are not real members or results."
         />
@@ -187,8 +183,7 @@ export default function HomePage() {
       <Section tone="navy" aria-labelledby="pilot-heading">
         <div className="grid gap-12 lg:grid-cols-[1.1fr_1fr]">
           <div>
-            <p className="eyebrow">The founding pilot</p>
-            <h2 id="pilot-heading" className="mt-2 text-3xl sm:text-4xl">
+            <h2 id="pilot-heading" className="text-3xl sm:text-4xl">
               First journey: {pilot.journey.toLowerCase()}
             </h2>
             <p className="mt-4 text-lg text-mist">{pilot.summary}</p>
@@ -241,7 +236,6 @@ export default function HomePage() {
           <div>
             <SectionHeading
               id="not-heading"
-              eyebrow="What we are, and aren't"
               title="A partnership network, not an agency."
             />
             <p className="mt-4 text-lg text-navy-soft">

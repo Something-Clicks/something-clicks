@@ -70,7 +70,7 @@ export function ReferralForm() {
         {pending ? "Sending…" : "Send"}
       </Button>
       <noscript>
-        <p className="text-sm">This form needs JavaScript. You can also email us using the address in the footer.</p>
+        <p className="text-sm">This form needs JavaScript. Please enable it to continue.</p>
       </noscript>
     </form>
   );

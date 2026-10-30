@@ -91,7 +91,6 @@ export default function ForBusinessesPage() {
   return (
     <>
       <PageHero
-        eyebrow="For businesses"
         title="Grow through the businesses your customers already trust."
         intro={`Founding members get a curated partner, a ready-to-run plan, and honest measurement. The first cycle focuses on ${pilot.shortName}.`}
       >
@@ -101,7 +100,7 @@ export default function ForBusinessesPage() {
       </PageHero>
 
       <Section aria-labelledby="benefits-heading">
-        <SectionHeading id="benefits-heading" eyebrow="Why join" title="What a good partnership is designed to do" />
+        <SectionHeading id="benefits-heading" title="What a good partnership is designed to do" />
         <ul className="mt-10 grid gap-6 sm:grid-cols-2">
           {benefits.map(({ icon: Icon, title, body }) => (
             <li key={title}>
@@ -116,7 +115,7 @@ export default function ForBusinessesPage() {
       </Section>
 
       <Section tone="cloud" aria-labelledby="receive-heading">
-        <SectionHeading id="receive-heading" eyebrow="Founding members receive" title="Everything needed to run one tracked collaboration" />
+        <SectionHeading id="receive-heading" title="Everything needed to run one tracked collaboration" />
         <ul className="mt-10 grid gap-4 md:grid-cols-5">
           {receives.map(({ icon: Icon, title, body }) => (
             <li key={title} className="rounded-2xl bg-white p-5 ring-1 ring-line">
@@ -133,7 +132,6 @@ export default function ForBusinessesPage() {
           <div>
             <SectionHeading
               id="asks-heading"
-              eyebrow="What participation asks"
               title="Kept deliberately light"
               intro="We aim to keep the first cycle to a few hours of your time, spread across several weeks. You tell us your realistic capacity in the application."
             />
@@ -152,7 +150,6 @@ export default function ForBusinessesPage() {
       <Section tone="ice" aria-labelledby="pairings-heading">
         <SectionHeading
           id="pairings-heading"
-          eyebrow={pilot.journey}
           title="Illustrative pairings"
           intro="Made-up examples of complementary businesses in the first journey. They are not real members or results."
         />
@@ -176,7 +173,7 @@ export default function ForBusinessesPage() {
       <Section aria-labelledby="pilot-terms-heading">
         <div className="grid gap-10 md:grid-cols-2">
           <div>
-            <SectionHeading id="pilot-terms-heading" eyebrow="The founding pilot" title="Free for a limited first cycle" />
+            <SectionHeading id="pilot-terms-heading" title="Free for a limited first cycle" />
             <p className="mt-4 text-lg text-navy-soft">
               Founding members pay nothing for the first cycle (<P value={pilot.cycleLength} />). In return, we ask for
               one tracked collaboration within 30 days of being matched and candid feedback about what worked.
@@ -205,7 +202,7 @@ export default function ForBusinessesPage() {
       </Section>
 
       <Section tone="cloud" aria-labelledby="faq-heading">
-        <SectionHeading id="faq-heading" eyebrow="Questions" title="Frequently asked" />
+        <SectionHeading id="faq-heading" title="Frequently asked" />
         <div className="mt-8 divide-y divide-line rounded-2xl bg-white ring-1 ring-line">
           {faqs.map((f) => (
             <details key={f.q} className="group p-5 [&_summary::-webkit-details-marker]:hidden">

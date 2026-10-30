@@ -43,7 +43,7 @@ export function ContactForm() {
         {pending ? "Sending…" : "Send message"}
       </Button>
       <noscript>
-        <p className="text-sm">This form needs JavaScript. You can also email us using the address on this page.</p>
+        <p className="text-sm">This form needs JavaScript. Please enable it to send a message.</p>
       </noscript>
     </form>
   );

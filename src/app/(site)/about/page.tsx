@@ -33,11 +33,11 @@ const principles = [
 export default function AboutPage() {
   return (
     <>
-      <PageHero eyebrow="About Something Clicks" title="Our mission" intro={<p className="text-xl text-white">{site.mission}</p>} />
+      <PageHero title="Our mission" intro={<p className="text-xl text-white">{site.mission}</p>} />
 
       <Section aria-labelledby="why-heading">
         <div className="grid gap-10 md:grid-cols-2">
-          <SectionHeading id="why-heading" eyebrow="Why we exist" title="The best local referrals shouldn't depend on luck." />
+          <SectionHeading id="why-heading" title="The best local referrals shouldn't depend on luck." />
           <div className="space-y-4 text-lg text-navy-soft">
             <p>
               Independent businesses already share customers. The mover hands off to the furniture installer, the
@@ -58,7 +58,7 @@ export default function AboutPage() {
       </Section>
 
       <Section tone="cloud" aria-labelledby="principles-heading">
-        <SectionHeading id="principles-heading" eyebrow="How we work" title="Principles" />
+        <SectionHeading id="principles-heading" title="Principles" />
         <ul className="mt-10 grid gap-6 md:grid-cols-3">
           {principles.map(({ icon: Icon, title, body }) => (
             <li key={title}>
@@ -85,8 +85,7 @@ export default function AboutPage() {
             </div>
           </div>
           <div>
-            <p className="eyebrow">A note from the founder</p>
-            <h2 id="founder-heading" className="mt-2 text-3xl">
+            <h2 id="founder-heading" className="text-3xl">
               {site.founder.name}
             </h2>
             <p className="text-navy-soft">

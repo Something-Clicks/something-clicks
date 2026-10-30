@@ -50,13 +50,11 @@ export function Section({
 }
 
 export function SectionHeading({
-  eyebrow,
   title,
   intro,
   id,
   align = "left",
 }: {
-  eyebrow?: string;
   title: ReactNode;
   intro?: ReactNode;
   id?: string;
@@ -64,8 +62,7 @@ export function SectionHeading({
 }) {
   return (
     <div className={`max-w-3xl ${align === "center" ? "mx-auto text-center" : ""}`}>
-      {eyebrow && <p className="eyebrow">{eyebrow}</p>}
-      <h2 id={id} className="mt-2 text-3xl sm:text-4xl">
+      <h2 id={id} className="text-3xl sm:text-4xl">
         {title}
       </h2>
       {intro && <div className="mt-4 text-lg text-navy-soft [.on-dark_&]:text-mist">{intro}</div>}
@@ -87,12 +84,10 @@ export function Card({ className = "", ...props }: ComponentProps<"div">) {
 }
 
 export function PageHero({
-  eyebrow,
   title,
   intro,
   children,
 }: {
-  eyebrow: string;
   title: ReactNode;
   intro: ReactNode;
   children?: ReactNode;
@@ -101,8 +96,7 @@ export function PageHero({
     <section className="bg-navy text-white on-dark relative overflow-hidden">
       <HeroLines />
       <div className="container-page relative py-16 sm:py-24">
-        <p className="eyebrow">{eyebrow}</p>
-        <h1 className="mt-3 max-w-3xl text-4xl sm:text-5xl">{title}</h1>
+        <h1 className="max-w-3xl text-4xl sm:text-5xl">{title}</h1>
         <div className="mt-5 max-w-2xl text-lg text-mist">{intro}</div>
         {children && <div className="mt-8 flex flex-wrap gap-3">{children}</div>}
       </div>

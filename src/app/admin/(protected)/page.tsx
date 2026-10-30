@@ -46,7 +46,7 @@ export default async function AdminOverview() {
         <h2 id="funnel-heading" className="text-lg">
           Form activity, last 30 days
         </h2>
-        <p className="mt-1 text-sm text-navy-soft">First-party, cookieless counts. Page views are in Vercel Web Analytics.</p>
+        <p className="mt-1 text-sm text-navy-soft">First-party, cookieless counts. Page views are in Vercel Web Analytics (and Google Analytics, if configured).</p>
         <table className="mt-4 w-full max-w-lg text-sm">
           <thead>
             <tr className="text-left text-navy-soft">

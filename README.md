@@ -15,7 +15,7 @@ The website for the **Something Clicks Network**, a managed partnership network 
 
 Content you are likely to edit:
 
-- `src/content/site.ts`: contact email, response window, founder note, service-area cities, consent wording
+- `src/content/site.ts`: response window, founder note, service-area cities, consent wording (no email address is published on the site, to avoid scrapers; visitors use the contact form)
 - `src/content/pilot.ts`: the founding-pilot journey (currently small-business setup), its member and referral-partner types, cycle length, and application window
 - `src/content/options.ts`: form dropdown and checkbox options
 - `src/app/globals.css`: brand color tokens
@@ -61,6 +61,7 @@ Set these in **Vercel → Project → Settings → Environment Variables**. Prod
 | `RESEND_API_KEY` | required | optional | Without it, notifications are skipped and logged |
 | `NOTIFY_EMAIL_TO` | required | optional | Comma-separated list is allowed |
 | `NOTIFY_EMAIL_FROM` | required | optional | Must be on a domain verified in Resend, e.g. `Something Clicks <alerts@somethingclicks.com>` |
+| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | optional | leave unset | Google Analytics 4 → Admin → Data streams → your web stream → **Measurement ID** (`G-…`). GA loads only when set; it is never loaded on admin pages |
 
 Recommended: point Preview at a **second free Supabase project**, so test submissions from preview deployments don't land in your real data.
 
@@ -90,7 +91,7 @@ Free projects pause after about a week with no activity. Visiting the site's for
 
 1. **Add New → Project**, import `Something-Clicks/something-clicks`. The framework is detected as Next.js; no build settings need changing.
 2. Add the environment variables above, then deploy. Vercel deploys `main` to Production, and every other branch gets a Preview.
-3. **Analytics tab → Enable** Web Analytics (cookieless page views).
+3. **Analytics tab → Enable** Web Analytics (cookieless page views). For Google Analytics, also set `NEXT_PUBLIC_GA_MEASUREMENT_ID`; it receives page views plus `form_start`, `form_step`, and `form_submit` events (no form contents).
 4. **Settings → Domains:** add `somethingclicks.com` and `www.somethingclicks.com`, and choose which one redirects to the other (recommended: `www` → apex).
 
 Plan note: Vercel's free Hobby plan is for personal, non-commercial use. A business site should be on Vercel Pro.
@@ -126,7 +127,7 @@ These are Vercel's standard values. Vercel's **Settings → Domains** page shows
    - records a `form_submit` event
 3. Only a failed save is shown to the visitor. Email or analytics failures are logged and never lose a submission.
 
-No customer lists or customer personal data are collected anywhere, and visitors get no cookies.
+No customer lists or customer personal data are collected anywhere. The only visitor cookies come from Google Analytics, when it is configured; everything it does is disclosed on `/privacy` and `/terms`.
 
 ## Project structure
 
