@@ -1,3 +1,4 @@
+import { site } from "@/content/site";
 import type { Kind } from "./store/types";
 
 export type Notification = { kind: Kind; id: string; record: Record<string, unknown> };
@@ -97,7 +98,7 @@ export async function notifyOwner(n: Notification, fetchImpl: typeof fetch = fet
     return;
   }
 
-  const email = buildEmail(n, process.env.SITE_URL ?? "https://somethingclicks.com");
+  const email = buildEmail(n, site.url);
   const res = await fetchImpl("https://api.resend.com/emails", {
     method: "POST",
     headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },

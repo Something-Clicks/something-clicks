@@ -4,6 +4,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { adminConfig, devLoginEnabled, endSession, requireAdmin, startSession } from "@/lib/admin-auth";
+import { site } from "@/content/site";
 import { isKind, kindMeta } from "@/lib/admin-fields";
 import { clientIp, hashIp } from "@/lib/request";
 import { getStore } from "@/lib/store";
@@ -32,10 +33,9 @@ export async function requestLoginLink(_prev: LoginState, formData: FormData): P
   const supabase = await createAuthClient();
   if (!supabase) return { error: "Sign-in isn't configured yet (SUPABASE_URL / SUPABASE_ANON_KEY)." };
 
-  const siteUrl = (process.env.SITE_URL ?? "https://somethingclicks.com").replace(/\/$/, "");
   const { error } = await supabase.auth.signInWithOtp({
     email,
-    options: { emailRedirectTo: `${siteUrl}/admin/auth/callback`, shouldCreateUser: false },
+    options: { emailRedirectTo: `${site.url}/admin/auth/callback`, shouldCreateUser: false },
   });
   if (error) console.error("[admin] signInWithOtp failed", error.message);
   return { message: GENERIC };

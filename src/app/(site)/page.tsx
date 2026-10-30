@@ -52,9 +52,25 @@ const examples = [
   },
 ];
 
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: site.legalName,
+  alternateName: site.name,
+  url: site.url,
+  description: site.description,
+  areaServed: { "@type": "Place", name: site.region },
+  founder: { "@type": "Person", name: site.founder.name },
+};
+
 export default function HomePage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        // Static, developer-authored JSON; no user input.
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd).replace(/</g, "\\u003c") }}
+      />
       <section className="relative overflow-hidden bg-navy text-white on-dark">
         <HeroLines />
         <div className="container-page relative py-20 sm:py-28">

@@ -15,7 +15,11 @@ export const site = {
   name: "Something Clicks",
   legalName: "Something Clicks LLC",
   region: "Salt Lake Valley, Utah",
-  url: process.env.SITE_URL ?? "https://somethingclicks.com",
+  /** SITE_URL in Production; Vercel previews fall back to their own deployment URL. */
+  url: (
+    process.env.SITE_URL ??
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "https://somethingclicks.com")
+  ).replace(/\/$/, ""),
   tagline: "Local businesses, each other's best source of customers.",
   description:
     "Something Clicks is a managed partnership network that helps independent Salt Lake Valley businesses gain customers through complementary businesses that already serve the same people.",
