@@ -36,7 +36,9 @@ def run_import(conn: psycopg.Connection, slug: str, *, dry_run: bool, work_dir: 
 
         before = L.database_bytes(conn)
         new = L.new_place_count(conn, [r["gers_id"] for r in result.kept])
-        projected = new * L.BYTES_PER_PLACE + len(result.kept) * L.BYTES_MATCHES_PER_PLACE
+        # Matches are generated per metro, so only metro imports reserve room for them.
+        matches_room = len(result.kept) * L.BYTES_MATCHES_PER_PLACE if cluster["scope"] == "metro" else 0
+        projected = new * L.BYTES_PER_PLACE + matches_room
         budget = L.budget_bytes()
         report = {
             "run_id": run_id,
