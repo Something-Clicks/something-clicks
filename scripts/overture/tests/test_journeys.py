@@ -76,3 +76,11 @@ def test_every_pair_is_present_in_both_directions():
 def test_reason_keys_have_copy():
     keys = {r.reason_key for r in J.complements(WEDDINGS)}
     assert keys <= WEDDINGS["reasons"].keys()
+
+
+def test_include_broad_filters_categories_and_rules():
+    specific = J.taxonomy_map(DATA, "weddings", include_broad=False)
+    assert "florist" in specific and "hair_salon" not in specific and "bakery" not in specific
+    assert len(specific) == len(J.taxonomy_map(DATA, "weddings")) - 7  # salons 2, bakeries 2, jewelers 2, gift shops 1
+    assert all(cid not in {"salons", "bakeries", "jewelers", "flower_gift_shops"}
+               for cid, _ in J.name_rules(DATA, "weddings", include_broad=False))

@@ -8,7 +8,7 @@ import psycopg
 
 from . import journeys as J
 from . import load as L
-from .extract import extract
+from .extract import US_BOXES, Prefilter, extract
 from .release import latest_release
 from .transform import transform
 
@@ -21,15 +21,17 @@ def run_import(conn: psycopg.Connection, slug: str, *, dry_run: bool, work_dir: 
     result = None
     try:
         bbox = (cluster["min_lng"], cluster["min_lat"], cluster["max_lng"], cluster["max_lat"])
+        boxes = US_BOXES if cluster["scope"] == "national" else [bbox]
+        data = J.load()
+        tax = J.taxonomy_map(data, cluster["journey_id"], include_broad=cluster["include_broad"])
+        rules = [(c, p.pattern) for c, p in J.name_rules(data, cluster["journey_id"], include_broad=cluster["include_broad"])]
+        prefilter = Prefilter(frozenset(tax), "|".join(f"(?:{p})" for _, p in rules) or None)
+
         path = work_dir / f"{slug}-{release}.parquet"
         if path.exists():
             log(f"Reusing extract {path}")
         else:
-            extract(release, bbox, path, log)
-
-        data = J.load()
-        tax = J.taxonomy_map(data, cluster["journey_id"])
-        rules = [(c, p.pattern) for c, p in J.name_rules(data, cluster["journey_id"])]
+            extract(release, boxes, path, prefilter, log)
         result = transform(path, bbox, cluster["min_confidence"], tax, rules, L.suppression(conn))
 
         before = L.database_bytes(conn)
@@ -39,6 +41,8 @@ def run_import(conn: psycopg.Connection, slug: str, *, dry_run: bool, work_dir: 
         report = {
             "run_id": run_id,
             "cluster": slug,
+            "scope": cluster["scope"],
+            "include_broad": cluster["include_broad"],
             "release": release,
             "rows_read": result.rows_read,
             "rows_kept": len(result.kept),

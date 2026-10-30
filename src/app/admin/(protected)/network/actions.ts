@@ -13,6 +13,8 @@ const clusterSchema = z
     slug: z.string().trim().regex(/^[a-z0-9-]{3,60}$/, "Use 3–60 lowercase letters, numbers, and dashes."),
     name: z.string().trim().min(2).max(120),
     journey_id: z.string().min(1),
+    scope: z.enum(["metro", "national"]),
+    include_broad: z.preprocess((v) => v === "on", z.boolean()),
     min_lng: num(-180, 180),
     min_lat: num(-90, 90),
     max_lng: num(-180, 180),

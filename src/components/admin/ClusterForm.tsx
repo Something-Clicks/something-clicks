@@ -30,6 +30,17 @@ export function ClusterForm({ cluster, journeys }: { cluster?: ClusterRow | null
           </select>
         </div>
         <div>
+          <label htmlFor="scope" className="text-sm font-medium">Scope</label>
+          <select id="scope" name="scope" defaultValue={cluster?.scope ?? "metro"} className={input}>
+            <option value="metro">Metro: matches generated here</option>
+            <option value="national">National: import scope only</option>
+          </select>
+        </div>
+        <div className="flex items-end gap-2 pb-2">
+          <input id="include_broad" name="include_broad" type="checkbox" defaultChecked={cluster?.include_broad ?? true} className="h-4 w-4 accent-royal" />
+          <label htmlFor="include_broad" className="text-sm">Import broad categories (salons, bakeries, jewelers, gift shops)</label>
+        </div>
+        <div>
           <label htmlFor="status" className="text-sm font-medium">Status</label>
           <select id="status" name="status" defaultValue={cluster?.status ?? "draft"} className={input}>
             {["draft", "importing", "active", "paused"].map((s) => <option key={s} value={s}>{s}</option>)}

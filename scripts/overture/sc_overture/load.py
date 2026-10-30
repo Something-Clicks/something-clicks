@@ -24,7 +24,8 @@ def budget_bytes() -> int:
 def get_cluster(conn: psycopg.Connection, slug: str) -> dict:
     with conn.cursor(row_factory=psycopg.rows.dict_row) as cur:
         cur.execute(
-            """select id, slug, name, journey_id, min_lng, min_lat, max_lng, max_lat, min_confidence, status
+            """select id, slug, name, journey_id, scope, include_broad, min_lng, min_lat, max_lng, max_lat,
+                      min_confidence, status
                from clusters where slug = %s""",
             (slug,),
         )

@@ -28,11 +28,13 @@ def _selected(data: dict, journey_id: str | None):
     return [j for j in data["journeys"] if (j["id"] == journey_id if journey_id else j.get("active"))]
 
 
-def taxonomy_map(data: dict, journey_id: str | None = None) -> dict[str, str]:
+def taxonomy_map(data: dict, journey_id: str | None = None, include_broad: bool = True) -> dict[str, str]:
     """Overture taxonomy.primary value -> category id, for one journey or all active ones."""
     out: dict[str, str] = {}
     for j in _selected(data, journey_id):
         for c in j["categories"]:
+            if c.get("broad") and not include_broad:
+                continue
             for t in c["taxonomy"]:
                 if t in out:
                     raise ValueError(f"taxonomy value {t!r} mapped twice ({out[t]}, {c['id']})")
@@ -40,13 +42,13 @@ def taxonomy_map(data: dict, journey_id: str | None = None) -> dict[str, str]:
     return out
 
 
-def name_rules(data: dict, journey_id: str | None = None) -> list[tuple[str, re.Pattern[str]]]:
+def name_rules(data: dict, journey_id: str | None = None, include_broad: bool = True) -> list[tuple[str, re.Pattern[str]]]:
     """Ordered (category id, compiled pattern) pairs, applied when taxonomy doesn't map."""
     return [
         (c["id"], re.compile(c["nameRule"], re.IGNORECASE))
         for j in _selected(data, journey_id)
         for c in j["categories"]
-        if c.get("nameRule")
+        if c.get("nameRule") and (include_broad or not c.get("broad"))
     ]
 
 
