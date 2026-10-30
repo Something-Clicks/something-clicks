@@ -25,13 +25,14 @@ If you already created the project, skip to step 4.
 
 **Easiest (works from a phone):** once the GitHub secret from Part 5 is set, go to **Actions** → **Overture import** → **Run workflow**, set **job** to `migrate` and **mode** to `dry-run`, and run it. The summary lists the files it would apply. Run it again with **mode** `load` to apply them. It applies only the files that are missing, in order, each in its own transaction, and stops at the first error. Files you already ran in the SQL Editor are recognised by name and skipped. Running it again when nothing is missing changes nothing.
 
-**Or by hand:** run all five files, **in this order**, from the `supabase/migrations` folder in the GitHub repo. If you already ran the first four, just run the fifth:
+**Or by hand:** run all the files, **in this order**, from the `supabase/migrations` folder in the GitHub repo, skipping any you've already run:
 
 1. `20261030000000_init.sql`
 2. `20261031000000_network_foundation.sql`
 3. `20261031010000_matching.sql`
 4. `20261031020000_metro_and_national.sql`
 5. `20261031030000_skip_unchanged_matches.sql`
+6. `20261101000000_members_claims_introductions.sql` (accounts, claims, introductions; arrives with phase 2)
 
 For each file:
 
@@ -75,7 +76,9 @@ The Vercel value should look like:
 | `ADMIN_SESSION_SECRET` | 48 random characters ([1Password generator](https://1password.com/password-generator) or `openssl rand -base64 48`) | ✓ | ✓ |
 | `RATE_LIMIT_SALT` | another long random string | ✓ | ✓ |
 
-The Resend variables (`RESEND_API_KEY`, `NOTIFY_EMAIL_TO`, `NOTIFY_EMAIL_FROM`) are covered in the main README.
+The Resend variables (`RESEND_API_KEY`, `NOTIFY_EMAIL_TO`, `NOTIFY_EMAIL_FROM`) are covered in the main README. Member sign-in links are emailed through Resend too, so **members can't sign in until `RESEND_API_KEY` and `NOTIFY_EMAIL_FROM` are set** (or `AUTH_EMAIL_FROM`, to send them from a different address). Member sessions are signed with `ADMIN_SESSION_SECRET`, under a separate key.
+
+`MAILING_ADDRESS` and `INVITE_EMAIL_FROM` are for invitations, which nothing sends yet. Leave them unset until phase 3.
 
 3. Variables only apply to new deployments. Go to **Deployments**, click **⋯** on the latest Production deployment → **Redeploy** → **Redeploy**.
 

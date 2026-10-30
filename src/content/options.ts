@@ -60,7 +60,8 @@ export const contactMethods = [
 
 export const contactTopics = [
   { value: "general", label: "General question" },
-  { value: "pilot", label: "The founding pilot" },
+  { value: "claim", label: "Claiming my business" },
+  { value: "removal", label: "Removing my business" },
   { value: "referral", label: "Referral partnerships" },
   { value: "press", label: "Press" },
   { value: "other", label: "Other" },

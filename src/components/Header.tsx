@@ -48,7 +48,7 @@ export function Header() {
     return () => document.removeEventListener("keydown", onKey);
   }, [open]);
 
-  const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
+  const isActive = (href: string) => !href.includes("#") && pathname.startsWith(href);
 
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-white/95 backdrop-blur">
@@ -70,9 +70,15 @@ export function Header() {
           </ul>
         </nav>
         <div className="flex items-center gap-2">
-          <ButtonLink href="/join" className="hidden !px-4 !py-2 text-sm sm:inline-flex">
-            Apply
-          </ButtonLink>
+          <Link href="/sign-in" className="hidden rounded-md px-3 py-2 text-sm font-semibold text-navy hover:text-royal sm:block">
+            Sign in
+          </Link>
+          {/* Wrapper controls visibility: ButtonLink's own inline-flex would override `hidden`. */}
+          <span className="hidden sm:block">
+            <ButtonLink href="/#find" className="!px-4 !py-2 text-sm">
+              Find my matches
+            </ButtonLink>
+          </span>
           <button
             ref={toggleRef}
             type="button"
@@ -100,9 +106,14 @@ export function Header() {
                 </Link>
               </li>
             ))}
+            <li>
+              <Link href="/sign-in" className="block rounded-md px-3 py-3 text-base font-medium text-navy hover:bg-ice">
+                Sign in
+              </Link>
+            </li>
             <li className="mt-2">
-              <Link href="/join" className="block rounded-lg bg-royal px-3 py-3 text-center font-semibold text-white">
-                Apply to the founding pilot
+              <Link href="/#find" className="block rounded-lg bg-royal px-3 py-3 text-center font-semibold text-white">
+                Find my matches
               </Link>
             </li>
           </ul>

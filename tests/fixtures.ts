@@ -47,7 +47,7 @@ export const validReferral = (): FormInput => ({
 export const validContact = (): FormInput => ({
   name: "Sam",
   email: "sam@example.com",
-  topic: "pilot",
+  topic: "claim",
   message: "When does the pilot start?",
   consent_contact: "on",
 });
