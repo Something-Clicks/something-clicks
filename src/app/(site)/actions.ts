@@ -19,11 +19,18 @@ const thanksPath: Record<Kind, string> = {
 async function submit(kind: Kind, formData: FormData): Promise<FormState> {
   const input = formDataToInput(formData);
   const ipHash = await hashIp(clientIp(await headers()));
+  let store;
+  try {
+    store = getStore();
+  } catch (error) {
+    console.error("[forms] store not configured", error);
+    return { formError: "Our forms aren't connected yet. Please try again a little later.", submittedAt: Date.now() };
+  }
   const result = await handleSubmission(
     kind,
     input,
     { ipHash, attribution: readAttribution(input) },
-    { store: getStore(), notify: notifyOwner },
+    { store, notify: notifyOwner },
   );
 
   switch (result.status) {

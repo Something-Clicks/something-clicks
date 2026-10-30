@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
-import { headers } from "next/headers";
 import Link from "next/link";
 import { CategoryMatchCard } from "@/components/network/CategoryMatchCard";
 import { FindForm } from "@/components/network/FindForm";
 import { activeJourneys, resolveCategories } from "@/content/journeys";
-import { dbConfigured } from "@/lib/db";
+import { ComingSoon } from "@/components/ComingSoon";
+import { allow } from "@/lib/members/limits";
+import { readiness } from "@/lib/readiness";
 import { resolveLocation, searchMatches, SEARCH_RADIUS_MILES } from "@/lib/network/search";
-import { clientIp, hashIp } from "@/lib/request";
-import { getStore } from "@/lib/store";
 
 export const metadata: Metadata = {
   title: "Your business matches",
@@ -44,10 +43,10 @@ function Hint() {
 }
 
 async function Results({ what, where }: Search & { what: string; where: string }) {
-  if (!dbConfigured()) return <p className="text-lg text-navy-soft">Search is being set up. Please check back soon.</p>;
-
-  const ipHash = await hashIp(clientIp(await headers()));
-  if (!(await getStore().checkRateLimit(`search:${ipHash}`, 60, 30).catch(() => true))) {
+  if (!(await readiness()).search) {
+    return <ComingSoon compact title="Search opens soon." body="We're loading wedding businesses across the U.S. Check back shortly to see who fits yours." />;
+  }
+  if (!(await allow("search", 60, 30))) {
     return <p role="alert" className="text-lg">You&rsquo;ve searched a lot in the last minute. Please wait a moment and try again.</p>;
   }
 

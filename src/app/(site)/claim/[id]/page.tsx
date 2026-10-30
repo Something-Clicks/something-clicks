@@ -6,7 +6,7 @@ import { formatPhone } from "@/content/network";
 import { CategoryIcon } from "@/components/network/CategoryIcon";
 import { Field, Notice } from "@/components/members/fields";
 import { SubmitButton } from "@/components/members/SubmitButton";
-import { dbConfigured } from "@/lib/db";
+import { readiness } from "@/lib/readiness";
 import { getClaimable } from "@/lib/members/claims";
 import { websiteDomain } from "@/lib/members/domains";
 import { claimPlace } from "../actions";
@@ -23,7 +23,9 @@ const errors: Record<string, string> = {
 export default async function ClaimPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ error?: string }> }) {
   const id = Number((await params).id);
   const { error } = await searchParams;
-  if (!Number.isInteger(id) || !dbConfigured()) notFound();
+  const ready = await readiness();
+  if (!ready.members || !ready.listings) return null; // the layout shows "coming soon"
+  if (!Number.isInteger(id)) notFound();
   const place = await getClaimable(id);
   if (!place) notFound();
   const domain = websiteDomain(place.website);
