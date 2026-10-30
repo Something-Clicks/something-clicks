@@ -62,7 +62,7 @@ Set these in **Vercel → Project → Settings → Environment Variables**. Prod
 | `NOTIFY_EMAIL_TO` | required | optional | Comma-separated list is allowed |
 | `NOTIFY_EMAIL_FROM` | required | optional | Must be on a domain verified in Resend, e.g. `Something Clicks <alerts@somethingclicks.com>` |
 | `SUPABASE_DB_URL` | required | required | Supabase → **Connect** → *Transaction pooler* connection string (port 6543), with your database password. Used by the network features and the import job. Also add it as a **GitHub Actions secret** with the same name |
-| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | optional | leave unset | Google Analytics 4 → Admin → Data streams → your web stream → **Measurement ID** (`G-…`). GA loads only when set; it is never loaded on admin pages |
+| `GA_MEASUREMENT_ID` | optional | leave unset | Google Analytics 4 → Admin → Data streams → your web stream → **Measurement ID** (`G-…`). Read on the server (no `NEXT_PUBLIC_` variable). GA loads only when set, never on admin pages, and the Privacy and Terms GA wording appears only when set. Redeploy after changing it |
 
 Recommended: point Preview at a **second free Supabase project**, so test submissions from preview deployments don't land in your real data.
 
@@ -92,7 +92,7 @@ Free projects pause after about a week with no activity. Visiting the site's for
 
 1. **Add New → Project**, import `Something-Clicks/something-clicks`. The framework is detected as Next.js; no build settings need changing.
 2. Add the environment variables above, then deploy. Vercel deploys `main` to Production, and every other branch gets a Preview.
-3. **Analytics tab → Enable** Web Analytics (cookieless page views). For Google Analytics, also set `NEXT_PUBLIC_GA_MEASUREMENT_ID`; it receives page views plus `form_start`, `form_step`, and `form_submit` events (no form contents).
+3. **Analytics tab → Enable** Web Analytics (cookieless page views). For Google Analytics, also set `GA_MEASUREMENT_ID`; it receives page views plus `form_start`, `form_step`, and `form_submit` events (no form contents).
 4. **Settings → Domains:** add `somethingclicks.com` and `www.somethingclicks.com`, and choose which one redirects to the other (recommended: `www` → apex).
 
 Plan note: Vercel's free Hobby plan is for personal, non-commercial use. A business site should be on Vercel Pro.

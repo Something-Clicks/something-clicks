@@ -1,6 +1,6 @@
 import { AttributionCapture } from "@/components/AttributionCapture";
 import { Footer } from "@/components/Footer";
-import { GoogleAnalytics } from "@/components/GoogleAnalytics";
+import { GoogleAnalytics, gaMeasurementId } from "@/components/GoogleAnalytics";
 import { Header } from "@/components/Header";
 
 export default function SiteLayout({ children }: { children: React.ReactNode }) {
@@ -18,7 +18,8 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
       </main>
       <Footer />
       <AttributionCapture />
-      <GoogleAnalytics />
+      {/* Read server-side here, not in the root layout, so GA never loads on admin pages. */}
+      <GoogleAnalytics measurementId={gaMeasurementId()} />
     </>
   );
 }
