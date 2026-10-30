@@ -16,7 +16,6 @@ export default function HowItWorksPage() {
   return (
     <>
       <PageHero
-        eyebrow="How it works"
         title="From overlapping customers to a tracked joint offer."
         intro="Seven stages, coordinated by Something Clicks. You stay in control of your name, your offer, and your customers at every step."
       >
@@ -26,7 +25,7 @@ export default function HowItWorksPage() {
       </PageHero>
 
       <Section aria-labelledby="stages-heading">
-        <SectionHeading id="stages-heading" eyebrow="The process" title="Seven stages" />
+        <SectionHeading id="stages-heading" title="Seven stages" />
         <ol className="mt-10 space-y-4">
           {stages.map((s, i) => (
             <li key={s.key} id={s.key} className="scroll-mt-24">
@@ -56,7 +55,6 @@ export default function HowItWorksPage() {
             <FileText aria-hidden="true" className="h-8 w-8 text-royal" />
             <SectionHeading
               id="brief-heading"
-              eyebrow="The collaboration brief"
               title="One page that keeps both partners on the same plan."
               intro="Every match gets a written brief. Both partners approve it before anything is shared."
             />
@@ -78,7 +76,6 @@ export default function HowItWorksPage() {
             <Link2 aria-hidden="true" className="h-8 w-8 text-royal" />
             <SectionHeading
               id="tracking-heading"
-              eyebrow="How results are tracked"
               title="Simple counts both partners can trust."
               intro="At the end of the cycle you receive a short results summary: what was shared, what was redeemed, and what we'd change."
             />

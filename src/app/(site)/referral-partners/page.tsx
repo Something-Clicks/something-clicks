@@ -21,7 +21,6 @@ export default function ReferralPartnersPage() {
   return (
     <>
       <PageHero
-        eyebrow="For referral partners"
         title="You already know which businesses should know each other."
         intro="Property managers, commercial real estate professionals, consultants, and other well-connected people see local businesses at the moments that matter. Help them find partners, and help your clients and tenants get better service."
       >
@@ -37,7 +36,6 @@ export default function ReferralPartnersPage() {
         <div className="grid gap-10 md:grid-cols-2">
           <SectionHeading
             id="who-heading"
-            eyebrow={`Founding pilot: ${pilot.shortName}`}
             title="Who we're looking for first"
             intro="For the first cycle, we're especially interested in professionals who see businesses moving into, setting up, or maintaining commercial space."
           />
@@ -53,7 +51,7 @@ export default function ReferralPartnersPage() {
       </Section>
 
       <Section tone="cloud" aria-labelledby="steps-heading">
-        <SectionHeading id="steps-heading" eyebrow="How it works" title="Light-touch, on your terms" />
+        <SectionHeading id="steps-heading" title="Light-touch, on your terms" />
         <ol className="mt-10 grid gap-6 md:grid-cols-3">
           {steps.map(({ icon: Icon, title, body }, i) => (
             <li key={title}>
@@ -87,7 +85,6 @@ export default function ReferralPartnersPage() {
         <div className="mx-auto max-w-2xl">
           <SectionHeading
             id="form-heading"
-            eyebrow="Interest form"
             title="Tell us about your network"
             intro="Takes about three minutes. We'll follow up to talk it through."
           />

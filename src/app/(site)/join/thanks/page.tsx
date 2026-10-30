@@ -1,6 +1,8 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import { P } from "@/components/Placeholder";
 import { ThanksPage } from "@/components/ThanksPage";
+import { TrackSubmit } from "@/components/TrackSubmit";
 import { site } from "@/content/site";
 
 export const metadata: Metadata = { title: "Application received", robots: { index: false } };
@@ -18,8 +20,9 @@ export default function JoinThanksPage() {
         file and let you know.
       </p>
       <p>
-        Questions in the meantime? Email <P value={site.contactEmail} />.
+        Questions in the meantime? Use our <Link href="/contact" className="text-royal underline">contact form</Link>.
       </p>
+      <TrackSubmit form="application" />
     </ThanksPage>
   );
 }

@@ -11,7 +11,6 @@ export default async function AdminLoginPage({ searchParams }: { searchParams: P
   return (
     <main className="grid min-h-dvh place-items-center px-4">
       <div className="w-full max-w-sm rounded-2xl bg-white p-8 ring-1 ring-line">
-        <p className="eyebrow">Something Clicks</p>
         <h1 className="mt-2 text-2xl">Admin sign-in</h1>
         <p className="mt-2 text-sm text-navy-soft">We&rsquo;ll email a one-time sign-in link to the administrator address.</p>
         {error === "link" && (

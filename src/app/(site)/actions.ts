@@ -33,7 +33,7 @@ async function submit(kind: Kind, formData: FormData): Promise<FormState> {
       return { errors: result.errors, formError: "Please fix the highlighted fields.", submittedAt: Date.now() };
     case "rate_limited":
       return {
-        formError: "We've received several submissions from your connection recently. Please try again in an hour, or email us.",
+        formError: "We've received several submissions from your connection recently. Please try again in an hour.",
         submittedAt: Date.now(),
       };
     default:

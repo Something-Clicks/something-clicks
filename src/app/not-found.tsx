@@ -7,7 +7,6 @@ export default function NotFound() {
     <>
       <Header />
       <main id="main" className="container-page max-w-2xl py-24">
-        <p className="eyebrow">404</p>
         <h1 className="mt-2 text-4xl">We couldn&rsquo;t find that page.</h1>
         <p className="mt-4 text-lg text-navy-soft">It may have moved, or the link may be mistyped.</p>
         <ButtonLink href="/" className="mt-8">

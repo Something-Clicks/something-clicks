@@ -16,8 +16,7 @@ export default function JoinPage() {
     <>
       <section className="bg-navy text-white on-dark">
         <div className="container-page py-14 sm:py-16">
-          <p className="eyebrow">Join the Network</p>
-          <h1 className="mt-3 max-w-3xl text-4xl sm:text-5xl">Apply to the founding pilot</h1>
+          <h1 className="max-w-3xl text-4xl sm:text-5xl">Apply to the founding pilot</h1>
           <p className="mt-4 max-w-2xl text-lg text-mist">
             The first cycle focuses on {pilot.shortName}: {pilot.summary.toLowerCase()} Businesses outside this journey
             are welcome to apply for future cycles.

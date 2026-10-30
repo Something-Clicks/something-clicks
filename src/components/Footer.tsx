@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { nav, site } from "@/content/site";
 import { LogoPlaceholder } from "./LogoPlaceholder";
-import { P } from "./Placeholder";
 
 export function Footer() {
   return (
@@ -27,7 +26,9 @@ export function Footer() {
           <h2 className="text-sm font-semibold text-white">Contact</h2>
           <ul className="mt-3 space-y-2 text-sm text-mist">
             <li>
-              <P value={site.contactEmail} />
+              <Link href="/contact" className="hover:text-white">
+                Contact form
+              </Link>
             </li>
             <li>{site.region}</li>
             <li>

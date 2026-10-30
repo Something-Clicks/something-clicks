@@ -27,8 +27,7 @@ export const site = {
     "Make it easier for independent businesses to grow through the customers, trust, and complementary services already present in their local business community.",
   founder: { name: "Matt Hill", role: "Founder and business manager" },
 
-  // [PLACEHOLDER] Replace with the real public contact address.
-  contactEmail: placeholder("hello@somethingclicks.com"),
+  // No email address is published on the site (scrapers); visitors use the contact form.
   // [PLACEHOLDER] Replace with the committed response window.
   responseWindow: placeholder("within [X] business days"),
   // [PLACEHOLDER] Matt to write the founder note (2–4 short paragraphs).

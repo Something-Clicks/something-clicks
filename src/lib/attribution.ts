@@ -49,8 +49,20 @@ export function getAttribution(): Record<string, string> {
 
 export type TrackedForm = "application" | "referral" | "contact";
 
+type Gtag = (command: "event", name: string, params: Record<string, unknown>) => void;
+
+/** Mirrors a form event to Google Analytics when it is loaded. No typed content is sent. */
+export function trackGa(event: "form_start" | "form_step" | "form_submit", form: TrackedForm, step?: number) {
+  try {
+    (window as unknown as { gtag?: Gtag }).gtag?.("event", event, { form_name: form, ...(step ? { form_step: step } : {}) });
+  } catch {
+    // Analytics must never break the form.
+  }
+}
+
 /** Sends a first-party form event. Never includes anything the visitor typed. */
 export function trackFormEvent(form: TrackedForm, event: "form_start" | "form_step", step?: number) {
+  trackGa(event, form, step);
   try {
     const a = getAttribution();
     const body = JSON.stringify({
