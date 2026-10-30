@@ -11,7 +11,7 @@ import { formDataToInput, type FieldErrors } from "@/lib/validation";
 export type FormState = { errors?: FieldErrors; formError?: string; submittedAt?: number };
 
 const thanksPath: Record<Kind, string> = {
-  applications: "/join/thanks",
+  applications: "/claim",
   referrals: "/referral-partners/thanks",
   contacts: "/contact/thanks",
 };
@@ -42,10 +42,6 @@ async function submit(kind: Kind, formData: FormData): Promise<FormState> {
         submittedAt: Date.now(),
       };
   }
-}
-
-export async function submitApplication(_prev: FormState, formData: FormData) {
-  return submit("applications", formData);
 }
 
 export async function submitReferral(_prev: FormState, formData: FormData) {

@@ -1,105 +1,75 @@
-import { Eye, MapPin, Scale } from "lucide-react";
+import { Eye, Handshake, Store } from "lucide-react";
 import { CtaBand } from "@/components/CtaBand";
 import { P } from "@/components/Placeholder";
-import { ButtonLink, Card, PageHero, Section, SectionHeading } from "@/components/ui";
+import { ButtonLink } from "@/components/ui";
 import { site } from "@/content/site";
 import { pageMeta } from "@/lib/metadata";
 
 export const metadata = pageMeta({
   title: "About",
   path: "/about",
-  description:
-    "Why Something Clicks exists: to make it easier for independent Salt Lake Valley businesses to grow through the customers and trust already in their local business community.",
+  description: "Something Clicks helps independent businesses grow through the businesses their customers already trust.",
 });
 
 const principles = [
-  {
-    icon: Eye,
-    title: "Disclosed, always",
-    body: "Partners tell their customers when they're sharing a partner's offer. No hidden endorsements.",
-  },
-  {
-    icon: Scale,
-    title: "Honest measurement",
-    body: "We report what the tracking shows, including when a partnership didn't produce much. That's how the model improves.",
-  },
-  {
-    icon: MapPin,
-    title: "Local and independent",
-    body: "We work with independently owned businesses in the Salt Lake Valley, and the customer relationships stay with them.",
-  },
+  { icon: Handshake, title: "Both sides agree.", body: "No introduction, no shared details, no partnership without a yes from both businesses." },
+  { icon: Eye, title: "Always disclosed.", body: "When you share a partner's offer, your customers know it's a partner." },
+  { icon: Store, title: "Yours to keep.", body: "Your customers and your relationships stay with you. We never ask for customer lists." },
 ];
 
 export default function AboutPage() {
   return (
     <>
-      <PageHero title="Our mission" intro={<p className="text-xl text-white">{site.mission}</p>} />
+      <section className="bg-navy text-white on-dark">
+        <div className="container-page py-20 sm:py-28">
+          <h1 className="max-w-3xl text-5xl leading-[1.05] sm:text-6xl">The best referrals come from people you trust.</h1>
+          <p className="mt-6 max-w-xl text-xl text-mist">{site.mission}</p>
+        </div>
+      </section>
 
-      <Section aria-labelledby="why-heading">
-        <div className="grid gap-10 md:grid-cols-2">
-          <SectionHeading id="why-heading" title="The best local referrals shouldn't depend on luck." />
-          <div className="space-y-4 text-lg text-navy-soft">
-            <p>
-              Independent businesses already share customers. The mover hands off to the furniture installer, the
-              property manager knows which cleaner tenants like, the photographer knows the florist. These connections
-              are some of the most trusted recommendations a customer ever gets.
-            </p>
-            <p>
-              But they mostly happen informally, nobody measures them, and they&rsquo;re hard to start on purpose.
-              Something Clicks is a managed partnership network: we find businesses whose customers overlap, match them,
-              help them build a joint offer, coordinate how each partner shares it, and track what it leads to.
-            </p>
-            <p>
-              We&rsquo;re not a marketing agency, an ad seller, or an influencer marketplace. We&rsquo;re in a founding
-              pilot, testing whether this model works for local businesses, and we&rsquo;ll be open about what we learn.
-            </p>
+      <section className="bg-white py-20 sm:py-28" aria-labelledby="why-heading">
+        <div className="container-page grid gap-10 md:grid-cols-2">
+          <h2 id="why-heading" className="text-4xl sm:text-5xl">Good partnerships shouldn&rsquo;t depend on luck.</h2>
+          <div className="space-y-5 text-xl text-navy-soft">
+            <p>The photographer knows the florist. The planner knows the venue. That&rsquo;s how most good work gets found.</p>
+            <p>Something Clicks shows you which local businesses fit yours, and makes the introduction easy.</p>
           </div>
         </div>
-      </Section>
+      </section>
 
-      <Section tone="cloud" aria-labelledby="principles-heading">
-        <SectionHeading id="principles-heading" title="Principles" />
-        <ul className="mt-10 grid gap-6 md:grid-cols-3">
-          {principles.map(({ icon: Icon, title, body }) => (
-            <li key={title}>
-              <Card className="h-full">
-                <Icon aria-hidden="true" className="h-7 w-7 text-royal" />
-                <h3 className="mt-4 text-xl">{title}</h3>
-                <p className="mt-2 text-navy-soft">{body}</p>
-              </Card>
-            </li>
-          ))}
-        </ul>
-      </Section>
+      <section className="bg-cloud py-20 sm:py-28" aria-labelledby="principles-heading">
+        <div className="container-page">
+          <h2 id="principles-heading" className="text-4xl sm:text-5xl">What we stand for.</h2>
+          <ul className="mt-12 grid gap-6 md:grid-cols-3">
+            {principles.map(({ icon: Icon, title, body }) => (
+              <li key={title} className="rounded-2xl bg-white p-7 ring-1 ring-line">
+                <Icon aria-hidden="true" className="h-8 w-8 text-royal" />
+                <h3 className="mt-5 text-2xl">{title}</h3>
+                <p className="mt-2 text-lg text-navy-soft">{body}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
 
-      <Section aria-labelledby="founder-heading">
-        <div className="grid gap-10 md:grid-cols-[280px_1fr]">
-          <div>
-            <div
-              data-placeholder="founder-photo"
-              className="grid aspect-square w-full max-w-[280px] place-items-center rounded-2xl border-2 border-dashed border-navy-soft bg-cloud text-center text-sm font-semibold text-navy-soft"
-            >
-              Founder photo
-              <br />
-              (placeholder)
-            </div>
+      <section className="bg-white py-20 sm:py-28" aria-labelledby="founder-heading">
+        <div className="container-page grid gap-10 md:grid-cols-[280px_1fr]">
+          <div
+            data-placeholder="founder-photo"
+            className="grid aspect-square w-full max-w-[280px] place-items-center rounded-2xl border-2 border-dashed border-navy-soft bg-cloud text-center text-sm font-semibold text-navy-soft"
+          >
+            Founder photo
+            <br />
+            (placeholder)
           </div>
           <div>
-            <h2 id="founder-heading" className="text-3xl">
-              {site.founder.name}
-            </h2>
-            <p className="text-navy-soft">
-              {site.founder.role}, {site.legalName}
-            </p>
-            <div className="mt-6 text-lg">
-              <P value={site.founderNote} />
-            </div>
-            <ButtonLink href="/contact" variant="secondary" className="mt-8">
-              Get in touch
-            </ButtonLink>
+            <h2 id="founder-heading" className="text-4xl">{site.founder.name}</h2>
+            <p className="mt-1 text-navy-soft">Founder, {site.name}</p>
+            <div className="mt-6 text-lg"><P value={site.founderNote} /></div>
+            <ButtonLink href="/contact" variant="secondary" className="mt-8">Get in touch</ButtonLink>
           </div>
         </div>
-      </Section>
+      </section>
 
       <CtaBand />
     </>

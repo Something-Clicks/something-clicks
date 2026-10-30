@@ -4,7 +4,7 @@ import { buildEmail, notifyOwner } from "@/lib/email";
 const n = {
   kind: "contacts" as const,
   id: "123",
-  record: { name: "<script>alert(1)</script>", email: "sam@example.com", topic: "pilot", message: "Hi", source_page: "/contact" },
+  record: { name: "<script>alert(1)</script>", email: "sam@example.com", topic: "claim", message: "Hi", source_page: "/contact" },
 };
 
 afterEach(() => vi.unstubAllEnvs());

@@ -1,8 +1,6 @@
 import Link from "next/link";
 import { gaMeasurementId } from "@/components/GoogleAnalytics";
 import { LegalPage } from "@/components/LegalPage";
-import { P } from "@/components/Placeholder";
-import { pilot } from "@/content/pilot";
 import { site } from "@/content/site";
 import { pageMeta } from "@/lib/metadata";
 
@@ -17,21 +15,22 @@ export default function TermsPage() {
   return (
     <LegalPage title="Terms of Use" updated="[PLACEHOLDER: date]">
       <p>
-        These terms govern your use of somethingclicks.com (the &ldquo;site&rdquo;), operated by {site.legalName},{" "}
-        {site.region}. By using the site or submitting a form, you agree to these terms and to our{" "}
+        These terms govern your use of somethingclicks.com (the &ldquo;site&rdquo;), operated by {site.legalName}. By using the site or submitting a form, you agree to these terms and to our{" "}
         <Link href="/privacy">Privacy Policy</Link>. Questions: use our <Link href="/contact">contact form</Link>.
       </p>
 
       <h2>1. What Something Clicks does</h2>
       <p>
-        Something Clicks coordinates partnerships between independent businesses whose customers overlap. We are not a
-        marketing agency, advertising seller, or influencer marketplace. The model is still being tested.{" "}
+        Something Clicks shows independent businesses which local businesses fit theirs and helps them connect. We are
+        not a marketing agency, advertising seller, or influencer marketplace.{" "}
         <strong>We do not guarantee any results</strong>, including customers, inquiries, bookings, or revenue.
       </p>
 
-      <h2>2. Submissions</h2>
+      <h2>2. Accounts, claims and submissions</h2>
       <ul>
-        <li>Submitting an application does not guarantee acceptance. We may accept, waitlist, or decline any application.</li>
+        <li>Claim only a business you own or are authorized to represent. A business has one owner on Something Clicks.</li>
+        <li>We may ask for more evidence, and we may decline or remove a claim, for example if another person shows a better right to the business.</li>
+        <li>Keep your sign-in links to yourself. You are responsible for activity on your account.</li>
         <li>You confirm that what you submit is accurate and that you are authorized to submit it for your business.</li>
         <li>Do not submit customer lists or any personal information about your customers.</li>
         <li>
@@ -44,7 +43,7 @@ export default function TermsPage() {
       <ul>
         <li>By submitting a form, you agree that we may contact you about it using the contact method you chose.</li>
         <li>We send occasional updates only if you opted in, and every update includes a way to unsubscribe.</li>
-        <li>We share your contact details with another business only when you agree to that introduction.</li>
+        <li>We share your contact details with another business only when you have both accepted the introduction.</li>
       </ul>
 
       <h2>4. Analytics and cookies</h2>
@@ -57,13 +56,12 @@ export default function TermsPage() {
         <Link href="/privacy">Privacy Policy</Link>.
       </p>
 
-      <h2>5. Participation</h2>
+      <h2>5. Introductions and partnerships</h2>
       <ul>
-        <li>
-          The first cycle is free (<P value={pilot.cycleLength} />). Any future pricing will be explained in writing
-          before you are asked to commit to it.
-        </li>
-        <li>Any partnership requires the agreement of both businesses. Either may decline or end it.</li>
+        <li>Free to claim your business and see your matches. Any paid feature would be explained in writing before you are asked to pay.</li>
+        <li>Matches are suggestions based on business categories and distance. They are not endorsements of any business.</li>
+        <li>Introductions and partnerships need the agreement of both businesses. Either may decline or end one at any time.</li>
+        <li>Partner tracking links count visits so both businesses can see what a partnership sends; we don&rsquo;t record who followed them.</li>
         <li>
           Each business is responsible for its own offers, pricing, services, and compliance with the laws that apply to
           it, including advertising and consumer-protection laws.
@@ -72,8 +70,7 @@ export default function TermsPage() {
           Partner promotions are disclosed relationships. Each business agrees to tell its customers clearly when it is
           sharing a partner&rsquo;s offer.
         </li>
-        <li>Collaboration briefs and results we share with you are for your business&rsquo;s use, not for publication without the partner&rsquo;s consent.</li>
-        <li>[PLACEHOLDER: participation agreement details, such as term and termination.]</li>
+        <li>Don&rsquo;t use contact details you receive through an introduction for anything other than working with that business.</li>
       </ul>
 
       <h2>6. Referral partners</h2>
@@ -83,33 +80,40 @@ export default function TermsPage() {
         commission or payment.
       </p>
 
-      <h2>7. Third-party services</h2>
+      <h2>7. Business listings</h2>
+      <p>
+        Listings come from public sources (see <Link href="/data-sources">Data sources</Link>) and may be incomplete or
+        out of date. A listed business is not a member unless its owner has joined. Anyone can ask us to remove a
+        listing at <Link href="/remove-my-business">Remove my business</Link>.
+      </p>
+
+      <h2>8. Third-party services</h2>
       <p>
         The site relies on service providers (Vercel, {ga ? "Google, " : ""}Supabase, Resend, and Cloudflare) as described in the
         Privacy Policy. Their services are governed by their own terms, and we are not responsible for their
         availability.
       </p>
 
-      <h2>8. Site content</h2>
+      <h2>9. Site content</h2>
       <p>
         Examples on this site are illustrative and do not describe real members or results. Content is provided for
         general information and may change without notice. The site&rsquo;s design and text belong to{" "}
         {site.legalName}.
       </p>
 
-      <h2>9. Acceptable use</h2>
+      <h2>10. Acceptable use</h2>
       <p>
         Do not misuse the site. That includes submitting spam, false information, or automated submissions; scraping
         the site; interfering with its security; or attempting to access the admin area.
       </p>
 
-      <h2>10. Disclaimers and limitation of liability</h2>
+      <h2>11. Disclaimers and limitation of liability</h2>
       <p>
         [PLACEHOLDER: disclaimer of warranties, limitation of liability, indemnity, and governing law (Utah) to be
         drafted by counsel.]
       </p>
 
-      <h2>11. Changes</h2>
+      <h2>12. Changes</h2>
       <p>We may update these terms. We will post changes on this page and update the date above.</p>
     </LegalPage>
   );

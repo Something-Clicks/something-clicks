@@ -14,17 +14,16 @@ export const isPlaceholder = (value: unknown): value is Placeholder =>
 export const site = {
   name: "Something Clicks",
   legalName: "Something Clicks LLC",
-  region: "Salt Lake Valley, Utah",
   /** SITE_URL in Production; Vercel previews fall back to their own deployment URL. */
   url: (
     process.env.SITE_URL ??
     (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "https://somethingclicks.com")
   ).replace(/\/$/, ""),
-  tagline: "Local businesses, each other's best source of customers.",
+  tagline: "Good businesses know other good businesses.",
   description:
-    "Something Clicks is a managed partnership network that helps independent Salt Lake Valley businesses gain customers through complementary businesses that already serve the same people.",
-  mission:
-    "Make it easier for independent businesses to grow through the customers, trust, and complementary services already present in their local business community.",
+    "See which local businesses fit yours, and why. Request an introduction and grow together. Free to claim your business and see your matches.",
+  mission: "We help independent businesses grow through the businesses their customers already trust.",
+  brandLine: "Make the complicated click.",
   founder: { name: "Matt Hill", role: "Founder and business manager" },
 
   // No email address is published on the site (scrapers); visitors use the contact form.
@@ -32,14 +31,11 @@ export const site = {
   responseWindow: placeholder("within [X] business days"),
   // [PLACEHOLDER] Matt to write the founder note (2–4 short paragraphs).
   founderNote: placeholder(
-    "Founder note from Matt Hill goes here: why Something Clicks exists, what he has seen in local business partnerships, and what the founding pilot is setting out to learn.",
+    "Founder note from Matt Hill goes here: why Something Clicks exists, and what he has seen in local business partnerships.",
   ),
 } as const;
 
-/**
- * [PLACEHOLDER] Approved draft list of Salt Lake Valley service areas.
- * Edit freely; values are stored as-is in the database.
- */
+/** Service areas offered by the retired application form; kept so older applications still validate and filter in admin. */
 export const serviceAreas = [
   "Salt Lake City",
   "South Salt Lake",
@@ -66,13 +62,13 @@ export const consentCopy = {
   // Draft wording — pending legal review.
   contact: "I agree to be contacted by Something Clicks about this submission, and I agree to the Privacy Policy and Terms.",
   updates: "Send me occasional updates about the Something Clicks Network. I can unsubscribe at any time.",
-  noGuarantee: "Submitting an application does not guarantee acceptance into the founding pilot.",
   disclosed:
     "Partner promotions are disclosed relationships: each business tells its own customers that it is sharing a partner's offer.",
 } as const;
 
 export const nav = [
   { href: "/#how-it-works", label: "How it works" },
+  { href: "/claim", label: "Claim your business" },
   { href: "/referral-partners", label: "Referral partners" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },

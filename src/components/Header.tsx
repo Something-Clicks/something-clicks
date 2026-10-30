@@ -70,6 +70,9 @@ export function Header() {
           </ul>
         </nav>
         <div className="flex items-center gap-2">
+          <Link href="/sign-in" className="hidden rounded-md px-3 py-2 text-sm font-semibold text-navy hover:text-royal sm:block">
+            Sign in
+          </Link>
           {/* Wrapper controls visibility: ButtonLink's own inline-flex would override `hidden`. */}
           <span className="hidden sm:block">
             <ButtonLink href="/#find" className="!px-4 !py-2 text-sm">
@@ -103,6 +106,11 @@ export function Header() {
                 </Link>
               </li>
             ))}
+            <li>
+              <Link href="/sign-in" className="block rounded-md px-3 py-3 text-base font-medium text-navy hover:bg-ice">
+                Sign in
+              </Link>
+            </li>
             <li className="mt-2">
               <Link href="/#find" className="block rounded-lg bg-royal px-3 py-3 text-center font-semibold text-white">
                 Find my matches

@@ -1,98 +1,70 @@
-import { Building2, MessageCircle, Scale, Sparkles } from "lucide-react";
 import { ReferralForm } from "@/components/forms/ReferralForm";
-import { Card, PageHero, Section, SectionHeading } from "@/components/ui";
-import { pilot } from "@/content/pilot";
 import { pageMeta } from "@/lib/metadata";
 
 export const metadata = pageMeta({
-  title: "For Referral Partners",
+  title: "Referral partners",
   path: "/referral-partners",
   description:
-    "Property managers, commercial real estate professionals, and other well-connected Salt Lake Valley professionals can introduce businesses to the Something Clicks Network.",
+    "Venue coordinators, planners and other well-connected wedding pros: help the vendors you trust find each other.",
 });
 
+const who = ["Venue coordinators", "Wedding planners", "Day-of coordinators", "Bridal shop owners", "Officiants", "Wedding association leaders"];
+
 const steps = [
-  { icon: MessageCircle, title: "Tell us who you know", body: "Share the kinds of businesses you work with and how you know them." },
-  { icon: Building2, title: "Make an introduction", body: "When a business looks like a fit, introduce us, with their permission." },
-  { icon: Sparkles, title: "We take it from there", body: "We handle the application, matching, and coordination. You stay in the loop." },
+  { title: "Tell us who you know.", body: "The kinds of vendors you work with, and how." },
+  { title: "Make an introduction.", body: "With their permission, point them our way." },
+  { title: "We take it from there.", body: "They claim their business and see who fits." },
 ];
 
 export default function ReferralPartnersPage() {
   return (
     <>
-      <PageHero
-        title="You already know which businesses should know each other."
-        intro="Property managers, commercial real estate professionals, consultants, and other well-connected people see local businesses at the moments that matter. Help them find partners, and help your clients and tenants get better service."
-      >
-        <a
-          href="#interest-form"
-          className="inline-flex items-center justify-center rounded-lg bg-white px-5 py-3 font-semibold text-navy hover:bg-ice"
-        >
-          Share your interest
-        </a>
-      </PageHero>
+      <section className="bg-navy text-white on-dark">
+        <div className="container-page py-20 sm:py-28">
+          <h1 className="max-w-3xl text-5xl leading-[1.05] sm:text-6xl">You already know who should know each other.</h1>
+          <p className="mt-6 max-w-xl text-xl text-mist">Help the wedding vendors you trust find each other.</p>
+          <a href="#interest-form" className="mt-10 inline-flex rounded-xl bg-white px-6 py-4 text-lg font-semibold text-navy hover:bg-ice">
+            Share your interest
+          </a>
+        </div>
+      </section>
 
-      <Section aria-labelledby="who-heading">
-        <div className="grid gap-10 md:grid-cols-2">
-          <SectionHeading
-            id="who-heading"
-            title="Who we're looking for first"
-            intro="For the first cycle, we're especially interested in professionals who see businesses moving into, setting up, or maintaining commercial space."
-          />
-          <ul className="grid gap-3 self-center sm:grid-cols-2">
-            {pilot.referralPartnerTypes.map((t) => (
-              <li key={t} className="rounded-xl bg-cloud px-4 py-3 font-medium">
-                {t}
-              </li>
-            ))}
-            <li className="rounded-xl bg-cloud px-4 py-3 font-medium">Business consultants and advisors</li>
+      <section className="bg-white py-20 sm:py-28" aria-labelledby="who-heading">
+        <div className="container-page grid gap-10 md:grid-cols-2">
+          <h2 id="who-heading" className="text-4xl sm:text-5xl">Made for connectors.</h2>
+          <ul className="grid grid-cols-2 gap-3 self-center">
+            {who.map((t) => <li key={t} className="rounded-xl bg-cloud px-4 py-3 font-medium">{t}</li>)}
           </ul>
         </div>
-      </Section>
+      </section>
 
-      <Section tone="cloud" aria-labelledby="steps-heading">
-        <SectionHeading id="steps-heading" title="Light-touch, on your terms" />
-        <ol className="mt-10 grid gap-6 md:grid-cols-3">
-          {steps.map(({ icon: Icon, title, body }, i) => (
-            <li key={title}>
-              <Card className="h-full">
-                <div className="flex items-center gap-3">
-                  <span className="grid h-9 w-9 place-items-center rounded-full bg-royal text-sm font-semibold text-white">
-                    {i + 1}
-                  </span>
-                  <Icon aria-hidden="true" className="h-6 w-6 text-royal" />
-                </div>
-                <h3 className="mt-4 text-xl">{title}</h3>
-                <p className="mt-2 text-navy-soft">{body}</p>
-              </Card>
-            </li>
-          ))}
-        </ol>
-        <div className="mt-8 flex gap-3 rounded-2xl bg-white p-6 ring-1 ring-line">
-          <Scale aria-hidden="true" className="mt-0.5 h-6 w-6 shrink-0 text-royal" />
-          <div>
-            <h3 className="text-lg">About rewards</h3>
-            <p className="mt-1 text-navy-soft">
-              In some cases we may offer a thank-you for introductions, but only where permitted by law and any
-              professional rules that apply to you, and only under an individual written agreement. We don&rsquo;t
-              promise any specific reward, commission, or payout, and submitting this form doesn&rsquo;t create one.
-            </p>
-          </div>
+      <section className="bg-cloud py-20 sm:py-28" aria-labelledby="steps-heading">
+        <div className="container-page">
+          <h2 id="steps-heading" className="text-4xl sm:text-5xl">Light touch.</h2>
+          <ol className="mt-12 grid gap-10 md:grid-cols-3">
+            {steps.map((s, i) => (
+              <li key={s.title}>
+                <span className="grid h-10 w-10 place-items-center rounded-full bg-royal font-semibold text-white">{i + 1}</span>
+                <h3 className="mt-5 text-xl">{s.title}</h3>
+                <p className="mt-2 text-lg text-navy-soft">{s.body}</p>
+              </li>
+            ))}
+          </ol>
+          <p className="mt-12 max-w-3xl text-sm text-navy-soft">
+            <strong className="text-navy">About rewards:</strong> a thank-you for introductions is possible only where the law and any
+            professional rules that apply to you allow it, and only under an individual written agreement. Nothing here
+            promises a commission or payment.
+          </p>
         </div>
-      </Section>
+      </section>
 
-      <Section aria-labelledby="form-heading" id="interest-form" className="scroll-mt-16">
-        <div className="mx-auto max-w-2xl">
-          <SectionHeading
-            id="form-heading"
-            title="Tell us about your network"
-            intro="Takes about three minutes. We'll follow up to talk it through."
-          />
-          <div className="mt-8">
-            <ReferralForm />
-          </div>
+      <section id="interest-form" className="scroll-mt-16 bg-white py-20 sm:py-28" aria-labelledby="form-heading">
+        <div className="container-page max-w-2xl">
+          <h2 id="form-heading" className="text-4xl">Tell us about your network.</h2>
+          <p className="mt-3 text-lg text-navy-soft">About three minutes. We&rsquo;ll follow up.</p>
+          <div className="mt-8"><ReferralForm /></div>
         </div>
-      </Section>
+      </section>
     </>
   );
 }

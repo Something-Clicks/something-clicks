@@ -36,7 +36,7 @@ export function ReferralForm() {
       <TextArea
         name="business_types"
         label="What types of businesses could you introduce?"
-        hint="For example: new commercial tenants, office furniture installers, maintenance vendors."
+        hint="For example: florists, photographers and caterers who work my venue."
         required
         rows={3}
         errors={errors}
@@ -44,7 +44,7 @@ export function ReferralForm() {
       <TextArea
         name="connection"
         label="How are you connected to those businesses?"
-        hint="For example: I manage the buildings they lease, or they're my clients."
+        hint="For example: they're on my preferred vendor list."
         required
         rows={3}
         errors={errors}

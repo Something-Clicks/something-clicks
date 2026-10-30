@@ -53,7 +53,8 @@ export default async function ClaimPage({ params, searchParams }: { params: Prom
             {place.website && <li className="flex gap-2 break-all"><Globe aria-hidden="true" className="mt-0.5 h-5 w-5 shrink-0" />{place.website}</li>}
           </ul>
           <p className="mt-5 text-xs text-navy-soft">
-            From public business listings. <Link href="/data-sources" className="underline">Data sources</Link>
+            From public business listings. <Link href="/data-sources" className="underline">Data sources</Link> ·{" "}
+            <Link href={`/remove-my-business?place=${place.id}`} className="underline">Remove this business</Link>
           </p>
         </div>
 
