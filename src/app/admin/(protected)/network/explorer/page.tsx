@@ -14,7 +14,7 @@ const input = "mt-1 block w-full rounded-lg border border-field bg-white px-3 py
 export default async function ExplorerPage({ searchParams }: { searchParams: Promise<Search> }) {
   if (!dbConfigured()) return <NetworkNotConfigured />;
   const sp = await searchParams;
-  const clusters = await listClusters();
+  const clusters = (await listClusters()).filter((c) => c.scope === "metro");
   const clusterId = Number(sp.cluster) || clusters[0]?.id;
   if (!clusterId) return <p>No clusters yet.</p>;
   const placeId = Number(sp.place) || null;

@@ -159,11 +159,26 @@
   },
   "clusters": [
     {
-      "slug": "slv-weddings",
-      "name": "Salt Lake Valley weddings",
+      "slug": "us-weddings",
+      "name": "United States: wedding-specific businesses",
       "journey": "weddings",
-      "bbox": [-112.2, 40.4, -111.7, 40.85],
-      "center": [-111.891, 40.6461]
+      "scope": "national",
+      "includeBroad": false,
+      "bbox": [-179.9, 18.5, -66.5, 71.6],
+      "center": [-98.5, 39.8],
+      "status": "active"
+    },
+    {
+      "slug": "dfw-weddings",
+      "name": "Dallas–Fort Worth weddings",
+      "journey": "weddings",
+      "scope": "metro",
+      "includeBroad": true,
+      "matchUnconfirmedBroad": false,
+      "bbox": [-97.85, 32.4, -96.45, 33.3],
+      "center": [-97.04, 32.86],
+      "distanceScaleKm": 15,
+      "maxMatchKm": 50
     }
   ]
 }

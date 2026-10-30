@@ -9,9 +9,10 @@ def mb(n: int) -> str:
 
 def format_report(r: dict) -> str:
     lines = [
-        f"Cluster {r['cluster']} · Overture release {r['release']} · run #{r['run_id']}",
+        f"Cluster {r['cluster']} ({r.get('scope', 'metro')}, {'all' if r.get('include_broad', True) else 'wedding-specific'} categories)"
+        f" · Overture release {r['release']} · run #{r['run_id']}",
         "",
-        f"  Rows read            {r['rows_read']:>8,}",
+        f"  Candidate rows read  {r['rows_read']:>8,}   (US, journey category or name match)",
         f"  Kept                 {r['rows_kept']:>8,}   ({r['new_places']:,} new to the database)",
     ]
     for reason, n in r["dropped"].items():
@@ -23,7 +24,7 @@ def format_report(r: dict) -> str:
     lines += [
         "",
         f"  Database now         {mb(r['database_bytes_before']):>10}",
-        f"  This import adds     {mb(r['projected_bytes']):>10}   (places + room for matches)",
+        f"  This import adds     {mb(r['projected_bytes']):>10}   ({'places + room for matches' if r.get('scope', 'metro') == 'metro' else 'places; matches are generated per metro'})",
         f"  Projected total      {mb(total):>10}   budget {mb(r['budget_bytes'])}, free tier {mb(r['free_tier_bytes'])}",
         "  " + ("✓ Within budget." if r["within_budget"] else "✗ Over budget: Supabase Pro would be required."),
         "",

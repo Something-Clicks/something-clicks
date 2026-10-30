@@ -26,6 +26,8 @@ def main() -> None:
     nat.add_argument("--release")
     nat.add_argument("--journey", default="weddings")
     nat.add_argument("--max-files", type=int, help="scan only the first N files (for testing)")
+    mat = sub.add_parser("matches", help="Generate matches for one metro cluster")
+    mat.add_argument("cluster", help="metro cluster slug, e.g. dfw-weddings")
     args = p.parse_args()
 
     if args.cmd == "seed":
@@ -55,6 +57,23 @@ def main() -> None:
             report = run_national(conn, dry_run=args.dry_run, release=args.release, journey_id=args.journey,
                                   max_files=args.max_files)
         print(json.dumps(report, indent=2))
+
+    elif args.cmd == "matches":
+        import time
+
+        from .db import connect
+        from .load import get_cluster
+
+        with connect() as conn:
+            cluster = get_cluster(conn, args.cluster)
+            started = time.time()
+            with conn.cursor() as cur:
+                cur.execute("select compute_matches(%s)", (cluster["id"],))
+                n = cur.fetchone()[0]
+                cur.execute("select pg_size_pretty(pg_total_relation_size('matches'))")
+                size = cur.fetchone()[0]
+            conn.commit()
+        print(f"{args.cluster}: {n:,} match suggestions in {time.time() - started:.0f}s (matches table now {size})")
 
 
 if __name__ == "__main__":

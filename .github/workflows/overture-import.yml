@@ -4,12 +4,18 @@ name: Overture import
 on:
   workflow_dispatch:
     inputs:
-      cluster:
-        description: "Cluster slug (e.g. slv-weddings)"
+      job:
+        description: "import = one cluster; national = ZIP counts + location lookup; matches = generate a metro's matches"
         required: true
-        default: slv-weddings
+        type: choice
+        options: [import, national, matches]
+        default: import
+      cluster:
+        description: "Cluster slug (us-weddings, dfw-weddings…); not used by national"
+        required: false
+        default: us-weddings
       mode:
-        description: "dry-run reports counts and projected size; load writes to the database"
+        description: "dry-run reports counts and projected size; load writes (import and national only)"
         required: true
         type: choice
         options: [dry-run, load]
@@ -22,9 +28,9 @@ permissions:
   contents: read
 
 jobs:
-  import:
+  run:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     defaults:
       run:
         working-directory: scripts/overture
@@ -37,13 +43,18 @@ jobs:
           cache-dependency-path: scripts/overture/requirements.txt
       - run: pip install -r requirements.txt
       - run: python -m pytest -q
-      - name: Import
+      - name: Run
         env:
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          JOB: ${{ inputs.job }}
           CLUSTER: ${{ inputs.cluster }}
           MODE: ${{ inputs.mode }}
           RELEASE: ${{ inputs.release }}
         run: |
           python -m sc_overture seed
-          python -m sc_overture import "$CLUSTER" "--$MODE" ${RELEASE:+--release "$RELEASE"} | tee report.txt
-          cat report.txt >> "$GITHUB_STEP_SUMMARY"
+          case "$JOB" in
+            import)   python -m sc_overture import "$CLUSTER" "--$MODE" ${RELEASE:+--release "$RELEASE"} | tee report.txt ;;
+            national) python -m sc_overture national "--$MODE" ${RELEASE:+--release "$RELEASE"} | tee report.txt ;;
+            matches)  python -m sc_overture matches "$CLUSTER" | tee report.txt ;;
+          esac
+          { echo '```'; cat report.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"

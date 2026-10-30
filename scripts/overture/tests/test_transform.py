@@ -106,3 +106,22 @@ def test_deduplication_keeps_higher_confidence_and_records_merges(result):
     assert "g-cater-a" in k and "g-cater-b" in k
     assert "g-venue-b" in k and "g-venue-a" not in k
     assert k["g-venue-b"]["merged_gers_ids"] == ["g-venue-a"]
+
+
+def test_prefilter_keeps_us_journey_rows_only():
+    import pyarrow.compute as pc
+
+    from sc_overture.extract import Prefilter, prefilter_mask
+
+    rows = [
+        place("keep-tax", "Bloom", "florist"),
+        place("keep-name", "Jen Smith Photography", "professional_service"),
+        place("drop-tax", "Joe's Tires", "tire_dealer_and_repair"),
+        place("drop-ca", "Maple Florist", "florist", country="CA"),
+        place("drop-box", "Far Florist", "florist", lng=-80.0),
+    ]
+    t = pa.Table.from_pylist(rows)
+    pf = Prefilter(frozenset(TAX), "|".join(f"(?:{p})" for _, p in RULES))
+    kept = t.filter(prefilter_mask(t, [BBOX], pf))
+    assert kept["id"].to_pylist() == ["keep-tax", "keep-name"]
+    assert pc.sum(prefilter_mask(t, [BBOX, (-81, 40, -79, 41)], pf)).as_py() == 3

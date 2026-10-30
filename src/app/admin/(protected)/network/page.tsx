@@ -34,7 +34,10 @@ export default async function NetworkOverview() {
               <tr key={c.id} className="border-t border-line">
                 <td className="px-4 py-3">
                   <Link href={`/admin/network/clusters/${c.id}`} className="font-semibold text-royal hover:underline">{c.name}</Link>
-                  <div className="text-xs text-navy-soft">{c.slug} · {c.journey_id}</div>
+                  <div className="text-xs text-navy-soft">
+                    {c.slug} · {c.scope === "national" ? "national import" : "metro"} · {c.include_broad ? "imports all categories" : "wedding-specific"}
+                    {c.scope === "metro" && (c.match_unconfirmed_broad ? " · matches unconfirmed broad" : " · matches confirmed only")}
+                  </div>
                 </td>
                 <td className="px-4 py-3 capitalize">{c.status}</td>
                 {[c.listed, c.claimed, c.verified, c.member, c.matches].map((n, i) => (

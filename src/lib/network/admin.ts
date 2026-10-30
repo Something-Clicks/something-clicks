@@ -5,6 +5,9 @@ export type ClusterRow = {
   slug: string;
   name: string;
   journey_id: string;
+  scope: "metro" | "national";
+  include_broad: boolean;
+  match_unconfirmed_broad: boolean;
   status: string;
   min_lng: number;
   min_lat: number;
@@ -25,23 +28,30 @@ export type ClusterRow = {
 
 export async function listClusters(): Promise<ClusterRow[]> {
   return sql()<ClusterRow[]>`
-    select c.id::int, c.slug, c.name, c.journey_id, c.status, c.min_lng, c.min_lat, c.max_lng, c.max_lat,
-           c.distance_scale_km, c.max_match_km, c.min_confidence,
-           count(p.id) filter (where p.state = 'listed' and not p.stale)::int as listed,
-           count(p.id) filter (where p.state = 'claimed')::int as claimed,
-           count(p.id) filter (where p.state = 'verified')::int as verified,
-           count(p.id) filter (where p.state = 'member')::int as member,
-           count(p.id) filter (where p.stale)::int as stale,
+    select c.id::int, c.slug, c.name, c.journey_id, c.scope, c.include_broad, c.match_unconfirmed_broad, c.status,
+           c.min_lng, c.min_lat, c.max_lng, c.max_lat, c.distance_scale_km, c.max_match_km, c.min_confidence,
+           s.listed, s.claimed, s.verified, s.member, s.stale,
            (select count(*) from matches m where m.cluster_id = c.id)::int as matches,
            (select count(*) from matches m where m.cluster_id = c.id and m.status = 'approved')::int as approved,
            (select count(*) from matches m where m.cluster_id = c.id and m.status = 'hidden')::int as hidden
-    from clusters c left join places p on c.id = any (p.cluster_ids)
-    group by c.id order by c.name`;
+    from clusters c
+    -- Metros contain every business inside their box; a national cluster is its import scope.
+    cross join lateral (
+      select count(*) filter (where p.state = 'listed' and not p.stale)::int as listed,
+             count(*) filter (where p.state = 'claimed')::int as claimed,
+             count(*) filter (where p.state = 'verified')::int as verified,
+             count(*) filter (where p.state = 'member')::int as member,
+             count(*) filter (where p.stale)::int as stale
+      from places p
+      where (c.scope = 'metro' and st_intersects(p.geog, cluster_box(c)))
+         or (c.scope = 'national' and c.id = any (p.cluster_ids))
+    ) s
+    order by c.scope desc, c.name`;
 }
 
 export async function getCluster(id: number) {
   const [row] = await sql()<ClusterRow[]>`
-    select id::int, slug, name, journey_id, status, min_lng, min_lat, max_lng, max_lat,
+    select id::int, slug, name, journey_id, scope, include_broad, match_unconfirmed_broad, status, min_lng, min_lat, max_lng, max_lat,
            distance_scale_km, max_match_km, min_confidence
     from clusters where id = ${id}`;
   return row ?? null;
@@ -55,6 +65,9 @@ export type ClusterInput = {
   slug: string;
   name: string;
   journey_id: string;
+  scope: "metro" | "national";
+  include_broad: boolean;
+  match_unconfirmed_broad: boolean;
   min_lng: number;
   min_lat: number;
   max_lng: number;
@@ -71,9 +84,9 @@ export async function saveCluster(id: number | null, c: ClusterInput): Promise<n
   const db = sql();
   if (id === null) {
     const [row] = await db<{ id: number }[]>`
-      insert into clusters (slug, name, journey_id, min_lng, min_lat, max_lng, max_lat, center,
-                            distance_scale_km, max_match_km, min_confidence, status)
-      values (${c.slug}, ${c.name}, ${c.journey_id}, ${c.min_lng}, ${c.min_lat}, ${c.max_lng}, ${c.max_lat},
+      insert into clusters (slug, name, journey_id, scope, include_broad, match_unconfirmed_broad, min_lng, min_lat,
+                            max_lng, max_lat, center, distance_scale_km, max_match_km, min_confidence, status)
+      values (${c.slug}, ${c.name}, ${c.journey_id}, ${c.scope}, ${c.include_broad}, ${c.match_unconfirmed_broad}, ${c.min_lng}, ${c.min_lat}, ${c.max_lng}, ${c.max_lat},
               st_setsrid(st_makepoint(${centerLng}, ${centerLat}), 4326)::geography,
               ${c.distance_scale_km}, ${c.max_match_km}, ${c.min_confidence}, ${c.status})
       returning id::int`;
@@ -81,6 +94,7 @@ export async function saveCluster(id: number | null, c: ClusterInput): Promise<n
   }
   await db`
     update clusters set slug = ${c.slug}, name = ${c.name}, journey_id = ${c.journey_id},
+      scope = ${c.scope}, include_broad = ${c.include_broad}, match_unconfirmed_broad = ${c.match_unconfirmed_broad},
       min_lng = ${c.min_lng}, min_lat = ${c.min_lat}, max_lng = ${c.max_lng}, max_lat = ${c.max_lat},
       center = st_setsrid(st_makepoint(${centerLng}, ${centerLat}), 4326)::geography,
       distance_scale_km = ${c.distance_scale_km}, max_match_km = ${c.max_match_km},
@@ -139,7 +153,7 @@ export async function searchPlaces(clusterId: number, q: string, category: strin
     select p.id::int, p.name, p.category_id, c.label as category_label, c.broad, p.state::text, p.locality, p.classified_by,
            (select count(*) from matches m where m.place_a = p.id)::int as matches
     from places p join categories c on c.id = p.category_id
-    where ${clusterId} = any (p.cluster_ids) and not p.stale
+    where st_intersects(p.geog, (select cluster_box(k) from clusters k where k.id = ${clusterId})) and not p.stale
       ${term ? sql()`and (p.name ilike ${"%" + term + "%"} or p.name % ${term})` : sql()``}
       ${category ? sql()`and p.category_id = ${category}` : sql()``}
     order by ${term ? sql()`similarity(p.name, ${term}) desc,` : sql()``} p.name
@@ -149,7 +163,8 @@ export async function searchPlaces(clusterId: number, q: string, category: strin
 export async function clusterCategories(clusterId: number) {
   return sql()<{ id: string; label: string; n: number }[]>`
     select c.id, c.label, count(*)::int as n from places p join categories c on c.id = p.category_id
-    where ${clusterId} = any (p.cluster_ids) and not p.stale group by c.id, c.label order by c.label`;
+    where st_intersects(p.geog, (select cluster_box(k) from clusters k where k.id = ${clusterId})) and not p.stale
+    group by c.id, c.label order by c.label`;
 }
 
 export type PlaceDetail = {
