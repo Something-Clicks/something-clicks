@@ -147,3 +147,13 @@ vite.config.ts.timestamp-*
 
 # Turbo Repo
 .turbo
+
+# Next.js / OpenNext / Cloudflare
+.next/
+out/
+.open-next/
+.wrangler/
+.dev.vars
+.env*.local
+next-env.d.ts
+*.tsbuildinfo

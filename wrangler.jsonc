@@ -1,0 +1,24 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "something-clicks",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "services": [
+    {
+      // Self-reference binding required by OpenNext; must match "name".
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "something-clicks"
+    }
+  ],
+  "observability": { "enabled": true },
+  // Non-secret configuration. Secrets (API keys) are set with
+  // `npx wrangler secret put NAME`. See README.
+  "vars": {
+    "SITE_URL": "https://somethingclicks.com"
+  }
+}
