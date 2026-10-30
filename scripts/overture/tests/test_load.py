@@ -19,6 +19,10 @@ pytestmark = pytest.mark.skipif(not URL, reason="TEST_DATABASE_URL not set")
 def conn():
     with psycopg.connect(URL) as c:
         seed(c)  # idempotent; commits journey data and the starter cluster
+        # A throwaway cluster, so tests never touch a locally loaded real cluster.
+        with c.cursor() as cur:
+            cur.execute("""insert into clusters (slug, name, journey_id, min_lng, min_lat, max_lng, max_lat, center)
+                           values ('test-load', 'Test', 'weddings', -112, 40, -111, 41, st_makepoint(-111.5, 40.5)::geography)""")
         yield c
         c.rollback()
 
@@ -39,7 +43,7 @@ def place(conn, gers):
 
 
 def test_insert_then_update_and_stale(conn):
-    cluster = L.get_cluster(conn, "slv-weddings")["id"]
+    cluster = L.get_cluster(conn, "test-load")["id"]
     assert L.load(conn, cluster, "2026-09-23.0", [row("t-a"), row("t-b", name="Old Venue", category="wedding_venues")]) == {
         "inserted": 2, "updated": 0, "marked_stale": 0}
     assert place(conn, "t-a")["cluster_ids"] == [cluster]
@@ -54,7 +58,7 @@ def test_insert_then_update_and_stale(conn):
 
 
 def test_claimed_businesses_keep_owner_fields(conn):
-    cluster = L.get_cluster(conn, "slv-weddings")["id"]
+    cluster = L.get_cluster(conn, "test-load")["id"]
     L.load(conn, cluster, "2026-09-23.0", [row("t-c")])
     with conn.cursor() as cur:
         cur.execute("""update places set state = 'verified', name = 'Bloom Studio', website = 'https://bloomstudio.example',

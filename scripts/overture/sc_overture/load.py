@@ -11,8 +11,8 @@ from .transform import Result, Suppression
 
 # Measured on Postgres 16 with indexes (660 B) plus a PostGIS point and index.
 BYTES_PER_PLACE = 750
-# About 15 matches per clustered place at ~130 B each, including indexes.
-BYTES_MATCHES_PER_PLACE = 2000
+# About 15 matches per clustered place at ~210 B each, including indexes (measured).
+BYTES_MATCHES_PER_PLACE = 3200
 FREE_TIER_BYTES = 500 * 1024**2
 
 
