@@ -6,7 +6,7 @@ import { dbConfigured } from "@/lib/db";
 import { pageMeta } from "@/lib/metadata";
 import { metroTotals } from "@/lib/network/metros";
 
-export const revalidate = 86400;
+export const revalidate = 3600;
 
 export const metadata = pageMeta({
   title: "Wedding businesses by city",

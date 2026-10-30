@@ -13,8 +13,8 @@ import { pageMeta } from "@/lib/metadata";
 import { metroCounts } from "@/lib/network/metros";
 import { resolveLocation, searchMatches, SEARCH_RADIUS_MILES } from "@/lib/network/search";
 
-// Counts change when data is imported; refresh daily.
-export const revalidate = 86400;
+// Counts change when data is imported; refresh hourly (and redeploy after a load).
+export const revalidate = 3600;
 export const dynamicParams = false;
 
 export function generateStaticParams() {
@@ -68,6 +68,17 @@ export default async function MetroPage({ params }: Params) {
           <p className="mt-4 text-sm text-mist">Free to claim your business and see your matches.</p>
         </div>
       </section>
+
+      {tiles.length === 0 && (
+        <section className="bg-white py-16 sm:py-20" aria-labelledby="here-heading">
+          <div className="container-page max-w-2xl text-center">
+            <h2 id="here-heading" className="text-4xl">{m.name} is coming soon.</h2>
+            <p className="mt-3 text-lg text-navy-soft">
+              We&rsquo;re loading {m.name}&rsquo;s wedding businesses now. Check back shortly to see who&rsquo;s here and who fits yours.
+            </p>
+          </div>
+        </section>
+      )}
 
       {tiles.length > 0 && (
         <section className="bg-white py-20 sm:py-28" aria-labelledby="here-heading">
