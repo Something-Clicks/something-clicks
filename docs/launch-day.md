@@ -1,6 +1,6 @@
 # Launch day: one pass, start to finish
 
-Everything to take Something Clicks live, in the order to do it. Follow it top to bottom once. Each step says where to click and what "done" looks like. If anything doesn't match, stop and send me a screenshot.
+Until these steps are done, the live site shows friendly "coming soon" states for search, claiming, sign-in and city pages, never an error page. Everything to take Something Clicks live, in the order to do it. Follow it top to bottom once. Each step says where to click and what "done" looks like. If anything doesn't match, stop and send me a screenshot.
 
 **Time:** about 2½ hours, most of it waiting on data loads. You can do the waiting steps in a second browser tab.
 
@@ -129,6 +129,8 @@ Each load is a run of **Actions → Overture import → Run workflow**, on branc
 Locally, the whole set came to about 335 MB. If a dry run projects more than 400 MB, stop there and tell me. The load refuses on its own anyway.
 
 **Done when:** **/admin/setup → Data loads** is all green.
+
+Then **Vercel → Deployments → ⋯ on the latest Production deployment → Redeploy**. Until the data was loaded, the city pages and the search said "coming soon"; the redeploy rebuilds them with the real counts right away (otherwise they refresh within the hour).
 
 ## 9. Final check (15 min)
 
