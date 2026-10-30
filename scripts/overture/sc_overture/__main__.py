@@ -19,6 +19,13 @@ def main() -> None:
     imp.add_argument("--work-dir", default="work", help="where extracts are cached (default: ./work)")
     imp.add_argument("--allow-over-budget", action="store_true", help="only with explicit approval")
     imp.add_argument("--json", action="store_true", help="print the full report as JSON")
+    nat = sub.add_parser("national", help="National ZIP x category counts and location lookup (no names)")
+    nmode = nat.add_mutually_exclusive_group(required=True)
+    nmode.add_argument("--dry-run", action="store_true")
+    nmode.add_argument("--load", action="store_true")
+    nat.add_argument("--release")
+    nat.add_argument("--journey", default="weddings")
+    nat.add_argument("--max-files", type=int, help="scan only the first N files (for testing)")
     args = p.parse_args()
 
     if args.cmd == "seed":
@@ -39,6 +46,15 @@ def main() -> None:
             report = run_import(conn, args.cluster, dry_run=args.dry_run, work_dir=Path(args.work_dir),
                                 release=args.release, allow_over_budget=args.allow_over_budget)
         print(json.dumps(report, indent=2, default=str) if args.json else format_report(report))
+
+    elif args.cmd == "national":
+        from .db import connect
+        from .national import run_national
+
+        with connect() as conn:
+            report = run_national(conn, dry_run=args.dry_run, release=args.release, journey_id=args.journey,
+                                  max_files=args.max_files)
+        print(json.dumps(report, indent=2))
 
 
 if __name__ == "__main__":
