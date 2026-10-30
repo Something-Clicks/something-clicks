@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { metros } from "@/content/metros";
 import { site } from "@/content/site";
 import { LogoPlaceholder } from "./LogoPlaceholder";
 
@@ -15,6 +16,10 @@ const columns = [
     ],
   },
   {
+    title: "Cities",
+    links: metros.map((m) => ({ href: `/weddings/${m.slug}`, label: m.name })),
+  },
+  {
     title: "Your data",
     links: [
       { href: "/data-sources", label: "Data sources" },
@@ -28,13 +33,13 @@ const columns = [
 export function Footer() {
   return (
     <footer className="bg-navy text-white on-dark">
-      <div className="container-page grid gap-10 py-14 md:grid-cols-[1.4fr_1fr_1fr]">
+      <div className="container-page grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
         <div>
           <LogoPlaceholder tone="dark" />
           <p className="mt-4 max-w-sm text-lg text-white">{site.brandLine}</p>
         </div>
         {columns.map((c) => (
-          <nav key={c.title} aria-label={c.title === "Your data" ? "Your data" : "Footer"}>
+          <nav key={c.title} aria-label={c.title === "Something Clicks" ? "Footer" : c.title}>
             <h2 className="text-sm font-semibold text-white">{c.title}</h2>
             <ul className="mt-3 space-y-2 text-sm">
               {c.links.map((l) => (

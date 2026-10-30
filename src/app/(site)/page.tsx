@@ -4,6 +4,7 @@ import { CategoryMatchCard } from "@/components/network/CategoryMatchCard";
 import { CategoryIcon } from "@/components/network/CategoryIcon";
 import { FindForm } from "@/components/network/FindForm";
 import { activeJourneys, categoryById } from "@/content/journeys";
+import { metros } from "@/content/metros";
 import { formatAtLeast } from "@/content/network";
 import { site } from "@/content/site";
 import { dbConfigured } from "@/lib/db";
@@ -109,6 +110,15 @@ export default async function HomePage() {
                 {journey?.noun ?? "businesses"} mapped across the U.S.
               </p>
             )}
+            <p className="mt-8 text-navy-soft">
+              Matches are live in{" "}
+              {metros.map((m, i) => (
+                <span key={m.slug}>
+                  <Link href={`/weddings/${m.slug}`} className="font-semibold text-royal hover:underline">{m.name}</Link>
+                  {i < metros.length - 2 ? ", " : i === metros.length - 2 ? " and " : "."}
+                </span>
+              ))}
+            </p>
           </div>
           <ul className="grid grid-cols-3 gap-3 sm:grid-cols-4" aria-label={`${journey?.name ?? ""} categories`}>
             {journey?.categories.filter((c) => !c.broad).slice(0, 12).map((c) => (
