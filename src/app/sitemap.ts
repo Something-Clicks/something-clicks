@@ -1,9 +1,12 @@
 import type { MetadataRoute } from "next";
+import { metros } from "@/content/metros";
 import { site } from "@/content/site";
 
 const pages: { path: string; priority: number }[] = [
   { path: "/", priority: 1 },
   { path: "/claim", priority: 0.9 },
+  { path: "/weddings", priority: 0.7 },
+  ...metros.map((m) => ({ path: `/weddings/${m.slug}`, priority: 0.8 })),
   { path: "/referral-partners", priority: 0.6 },
   { path: "/about", priority: 0.6 },
   { path: "/contact", priority: 0.5 },
