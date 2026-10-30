@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatAtLeast, formatMiles } from "@/content/network";
+import { formatAtLeast, formatMiles, formatPhone } from "@/content/network";
 
 describe("formatAtLeast", () => {
   it("rounds down to two significant digits and never overstates", () => {
@@ -17,5 +17,13 @@ describe("formatMiles", () => {
   it("shows one decimal under 10 miles", () => {
     expect(formatMiles(1609.344)).toBe("1.0 mi");
     expect(formatMiles(20000)).toBe("12 mi");
+  });
+});
+
+describe("formatPhone", () => {
+  it("formats US numbers and leaves others alone", () => {
+    expect(formatPhone("+12815072162")).toBe("(281) 507-2162");
+    expect(formatPhone("817-480-0894")).toBe("(817) 480-0894");
+    expect(formatPhone("+44 20 7946 0958")).toBe("+44 20 7946 0958");
   });
 });

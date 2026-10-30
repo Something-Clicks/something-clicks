@@ -26,3 +26,10 @@ export const formatMiles = (meters: number) => {
   const mi = meters / 1609.344;
   return mi < 10 ? `${mi.toFixed(1)} mi` : `${Math.round(mi)} mi`;
 };
+
+/** "+12815072162" -> "(281) 507-2162"; anything that isn't a US number is shown as stored. */
+export function formatPhone(phone: string): string {
+  const d = phone.replace(/\D/g, "");
+  const us = d.length === 11 && d.startsWith("1") ? d.slice(1) : d;
+  return us.length === 10 ? `(${us.slice(0, 3)}) ${us.slice(3, 6)}-${us.slice(6)}` : phone;
+}

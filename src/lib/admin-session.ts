@@ -10,20 +10,20 @@ type Payload = { email: string; exp: number };
 
 const enc = new TextEncoder();
 
-const b64url = (bytes: Uint8Array) =>
+export const b64url = (bytes: Uint8Array) =>
   btoa(String.fromCharCode(...bytes)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 
-const fromB64url = (s: string) => {
+export const fromB64url = (s: string) => {
   const padded = s.replace(/-/g, "+").replace(/_/g, "/") + "===".slice((s.length + 3) % 4);
   return Uint8Array.from(atob(padded), (c) => c.charCodeAt(0));
 };
 
-async function hmac(secret: string, data: string): Promise<Uint8Array> {
+export async function hmac(secret: string, data: string): Promise<Uint8Array> {
   const key = await crypto.subtle.importKey("raw", enc.encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
   return new Uint8Array(await crypto.subtle.sign("HMAC", key, enc.encode(data)));
 }
 
-function timingSafeEqual(a: Uint8Array, b: Uint8Array) {
+export function timingSafeEqual(a: Uint8Array, b: Uint8Array) {
   if (a.length !== b.length) return false;
   let diff = 0;
   for (let i = 0; i < a.length; i++) diff |= a[i] ^ b[i];
