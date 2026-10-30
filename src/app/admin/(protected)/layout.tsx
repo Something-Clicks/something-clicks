@@ -15,6 +15,9 @@ export default async function ProtectedAdminLayout({ children }: { children: Rea
             <Link href="/admin" className="mr-3 font-semibold text-white">
               Something Clicks · Admin
             </Link>
+            <Link href="/admin/network" className="rounded-md px-3 py-1.5 text-mist hover:bg-white/10 hover:text-white">
+              Network
+            </Link>
             {kinds.map((k) => (
               <Link key={k} href={`/admin/${k}`} className="rounded-md px-3 py-1.5 text-mist hover:bg-white/10 hover:text-white">
                 {kindMeta[k].title}

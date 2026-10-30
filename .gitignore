@@ -155,3 +155,10 @@ out/
 .env*.local
 next-env.d.ts
 *.tsbuildinfo
+
+# Python (Overture import job)
+__pycache__/
+.pytest_cache/
+*.pyc
+.venv/
+scripts/overture/work/
