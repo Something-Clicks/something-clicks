@@ -21,6 +21,7 @@ import psycopg
 from . import journeys as J
 from . import load as L
 from .extract import _row_group_bbox
+from .httpfs import http_fs
 from .release import latest_release, place_files
 
 US_BOXES = [(-125.0, 24.0, -66.5, 49.6), (-170.0, 51.0, -129.0, 71.6), (-161.0, 18.5, -154.5, 22.5)]
@@ -94,6 +95,17 @@ class Aggregator:
             c[1] += slat; c[2] += slng; c[3] += n  # noqa: E702
         con.unregister("batch")
 
+    def merge(self, other: "Aggregator") -> None:
+        self.us_rows += other.us_rows
+        for k, n in other.counts.items():
+            self.counts[k] += n
+        for k, (slat, slng, n) in other.zips.items():
+            z = self.zips[k]
+            z[0] += slat; z[1] += slng; z[2] += n  # noqa: E702
+        for k, (display, slat, slng, n) in other.cities.items():
+            c = self.cities.setdefault(k, [display, 0.0, 0.0, 0])
+            c[1] += slat; c[2] += slng; c[3] += n  # noqa: E702
+
     def place_counts(self) -> list[tuple[str, str, int]]:
         return sorted((z, c, n) for (z, c), n in self.counts.items())
 
@@ -106,26 +118,40 @@ class Aggregator:
         return rows
 
 
-def scan(release: str, agg: Aggregator, log=print, max_files: int | None = None) -> None:
-    import fsspec
+def _read_with_retry(f, groups, attempts: int = 4):
+    for attempt in range(attempts):
+        try:
+            return f.read_row_groups(groups, columns=COLUMNS)
+        except Exception:  # noqa: BLE001 - network errors surface as several exception types
+            if attempt == attempts - 1:
+                raise
+            time.sleep(2 ** (attempt + 1))
+
+
+def scan(release: str, make_aggregator, log=print, max_files: int | None = None) -> "Aggregator":
+    """Each worker aggregates whole files on its own; only totals come back."""
     import pyarrow.parquet as pq
 
-    # Exact-range reads coalesced by PyArrow (pre_buffer) are ~3x faster than read-ahead caching.
-    fs = fsspec.filesystem("http", client_kwargs={"trust_env": True})
+    fs = http_fs()
     urls = place_files(release)[:max_files]
     started = time.time()
 
-    def read(url: str) -> list[pa.Table]:
+    def work(url: str) -> Aggregator:
+        agg = make_aggregator()
+        # Exact-range reads coalesced by PyArrow (pre_buffer) are ~3x faster than read-ahead caching.
         f = pq.ParquetFile(fs.open(url, "rb", cache_type="none"), pre_buffer=True)
         md = f.metadata
         groups = [i for i in range(md.num_row_groups) if _intersects_us(_row_group_bbox(md, i))]
-        return [f.read_row_groups(groups[i:i + 16], columns=COLUMNS) for i in range(0, len(groups), 16)]
+        for i in range(0, len(groups), 8):
+            agg.add(_read_with_retry(f, groups[i:i + 8]))
+        return agg
 
+    total = make_aggregator()
     with ThreadPoolExecutor(4) as ex:
-        for n, tables in enumerate(ex.map(read, urls), 1):
-            for t in tables:
-                agg.add(t)
-            log(f"  file {n}/{len(urls)} · {agg.us_rows:,} US rows · {time.time() - started:.0f}s")
+        for n, part in enumerate(ex.map(work, urls), 1):
+            total.merge(part)
+            log(f"  file {n}/{len(urls)} · {total.us_rows:,} US rows · {time.time() - started:.0f}s")
+    return total
 
 
 def run_national(conn: psycopg.Connection, *, dry_run: bool, release: str | None = None,
@@ -134,12 +160,9 @@ def run_national(conn: psycopg.Connection, *, dry_run: bool, release: str | None
     run_id = L.start_run(conn, None, "counts", "dry_run" if dry_run else "load", release)
     try:
         data = J.load()
-        agg = Aggregator(
-            J.taxonomy_map(data, journey_id),
-            [(c, p.pattern) for c, p in J.name_rules(data, journey_id)],
-            min_confidence,
-        )
-        scan(release, agg, log, max_files)
+        tax = J.taxonomy_map(data, journey_id)
+        rules = [(c, p.pattern) for c, p in J.name_rules(data, journey_id)]
+        agg = scan(release, lambda: Aggregator(tax, rules, min_confidence), log, max_files)
         counts, geo = agg.place_counts(), agg.geo_rows()
         # ~70 B per counts row and ~140 B per lookup row, including indexes.
         projected = len(counts) * 70 + len(geo) * 140

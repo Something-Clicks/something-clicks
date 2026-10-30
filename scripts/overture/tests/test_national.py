@@ -34,3 +34,15 @@ def test_counts_and_lookup():
     assert z[3] == "84070" and round(z[4], 3) == round((40.60 + 40.62 + 40.65 * 4) / 6, 3)
     assert ("zcta", "84101") not in geo  # fewer than 3 places
     assert not any(k[0] == "place" for k in geo)  # cities need at least 10 places
+
+
+def test_merge_combines_partial_aggregates():
+    args = (J.taxonomy_map(DATA, "weddings"), [], 0.6)
+    a, b, total = Aggregator(*args), Aggregator(*args), Aggregator(*args)
+    a.add(table([(place("a", "Bloom", "florist"), "84070")] * 1))
+    b.add(table([(place("b", "Petal", "florist"), "84070"), (place("c", "Hall", "event_venue"), "84101")]))
+    total.merge(a)
+    total.merge(b)
+    assert total.us_rows == 3
+    assert total.place_counts() == [("84070", "florists", 2), ("84101", "wedding_venues", 1)]
+    assert total.zips["84070"][2] == 2

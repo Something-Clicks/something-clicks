@@ -58,16 +58,17 @@ def _row_group_bbox(md, i):
 
 
 def _extract_pyarrow(release: str, bbox: BBox, out: Path, log) -> Path:
-    import fsspec
     import pyarrow as pa
     import pyarrow.compute as pc
     import pyarrow.parquet as pq
 
-    # Exact-range reads coalesced by PyArrow (pre_buffer) are ~3x faster than read-ahead caching.
-    fs = fsspec.filesystem("http", client_kwargs={"trust_env": True})
+    from .httpfs import http_fs
+
+    fs = http_fs()
     x0, y0, x1, y1 = bbox
 
     def read(url: str):
+        # Exact-range reads coalesced by PyArrow (pre_buffer) are ~3x faster than read-ahead caching.
         f = pq.ParquetFile(fs.open(url, "rb", cache_type="none"), pre_buffer=True)
         md = f.metadata
         tables = []
