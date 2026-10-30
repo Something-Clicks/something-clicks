@@ -2,9 +2,6 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
-  // Only SVG graphics are used; skipping Next image optimization avoids
-  // needing Cloudflare Images on the free plan.
-  images: { unoptimized: true },
   async headers() {
     return [
       {
@@ -28,6 +25,3 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
-
-import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
-initOpenNextCloudflareForDev();

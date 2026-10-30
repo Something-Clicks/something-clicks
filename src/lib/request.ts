@@ -21,13 +21,12 @@ export function readAttribution(input: FormInput): Attribution {
   };
 }
 
+/**
+ * Visitor IP as reported by Vercel, which sets x-real-ip and overwrites
+ * x-forwarded-for at its edge, so clients can't spoof them.
+ */
 export function clientIp(headers: Headers): string {
-  return (
-    headers.get("cf-connecting-ip") ??
-    headers.get("x-real-ip") ??
-    headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
-    "unknown"
-  );
+  return headers.get("x-real-ip") ?? headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
 }
 
 /** One-way, salted hash so raw IP addresses are never stored. */

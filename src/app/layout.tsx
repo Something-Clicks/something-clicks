@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
-import Script from "next/script";
+import { Analytics } from "@vercel/analytics/next";
 import { site } from "@/content/site";
 import "./globals.css";
 
@@ -22,22 +22,13 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = { themeColor: "#15263D" };
 
-// Cloudflare Web Analytics (cookieless). Loads only when a token is configured.
-const cfAnalyticsToken = process.env.NEXT_PUBLIC_CF_ANALYTICS_TOKEN;
-
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={inter.variable}>
       <body className="min-h-dvh font-sans">
         {children}
-        {cfAnalyticsToken && (
-          <Script
-            defer
-            src="https://static.cloudflareinsights.com/beacon.min.js"
-            data-cf-beacon={JSON.stringify({ token: cfAnalyticsToken })}
-            strategy="afterInteractive"
-          />
-        )}
+        {/* Vercel Web Analytics: cookieless page views. Enable it in the Vercel project. */}
+        <Analytics />
       </body>
     </html>
   );

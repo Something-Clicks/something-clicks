@@ -44,7 +44,7 @@ export default function PrivacyPage() {
       <h2>Information collected automatically</h2>
       <ul>
         <li>
-          <strong>Analytics:</strong> we use Cloudflare Web Analytics, which counts page views without cookies and
+          <strong>Analytics:</strong> we use Vercel Web Analytics, which counts page views without cookies and
           without tracking you across sites. We also record anonymous form events (for example, &ldquo;application
           started&rdquo; and &ldquo;application submitted&rdquo;) that contain no personal information.
         </li>
@@ -69,7 +69,7 @@ export default function PrivacyPage() {
 
       <h2>Service providers</h2>
       <p>
-        We use a small number of providers to run the site: Cloudflare (hosting and analytics), Supabase (database), and
+        We use a small number of providers to run the site: Vercel (hosting and analytics), Cloudflare (domain DNS), Supabase (database), and
         Resend (email notifications to our team). They process information on our behalf under their own security and
         privacy terms. [PLACEHOLDER: confirm data-processing terms and storage regions.]
       </p>
