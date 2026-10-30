@@ -5,6 +5,7 @@ import { Field, Notice } from "@/components/members/fields";
 import { SubmitButton } from "@/components/members/SubmitButton";
 import { getMember, safeNext } from "@/lib/members/auth";
 import { requestSignIn } from "./actions";
+import { readiness } from "@/lib/readiness";
 
 export const metadata: Metadata = { title: "Sign in", robots: { index: false } };
 
@@ -15,6 +16,8 @@ const errors: Record<string, string> = {
 };
 
 export default async function SignInPage({ searchParams }: { searchParams: Promise<{ next?: string; error?: string }> }) {
+  // The layout shows "coming soon" until accounts are live; don't query tables that may not exist yet.
+  if (!(await readiness()).members) return null;
   const sp = await searchParams;
   const next = safeNext(sp.next);
   if (await getMember()) redirect(next);
