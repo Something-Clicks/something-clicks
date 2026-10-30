@@ -7,6 +7,7 @@ export type ClusterRow = {
   journey_id: string;
   scope: "metro" | "national";
   include_broad: boolean;
+  match_unconfirmed_broad: boolean;
   status: string;
   min_lng: number;
   min_lat: number;
@@ -27,7 +28,7 @@ export type ClusterRow = {
 
 export async function listClusters(): Promise<ClusterRow[]> {
   return sql()<ClusterRow[]>`
-    select c.id::int, c.slug, c.name, c.journey_id, c.scope, c.include_broad, c.status,
+    select c.id::int, c.slug, c.name, c.journey_id, c.scope, c.include_broad, c.match_unconfirmed_broad, c.status,
            c.min_lng, c.min_lat, c.max_lng, c.max_lat, c.distance_scale_km, c.max_match_km, c.min_confidence,
            s.listed, s.claimed, s.verified, s.member, s.stale,
            (select count(*) from matches m where m.cluster_id = c.id)::int as matches,
@@ -50,7 +51,7 @@ export async function listClusters(): Promise<ClusterRow[]> {
 
 export async function getCluster(id: number) {
   const [row] = await sql()<ClusterRow[]>`
-    select id::int, slug, name, journey_id, scope, include_broad, status, min_lng, min_lat, max_lng, max_lat,
+    select id::int, slug, name, journey_id, scope, include_broad, match_unconfirmed_broad, status, min_lng, min_lat, max_lng, max_lat,
            distance_scale_km, max_match_km, min_confidence
     from clusters where id = ${id}`;
   return row ?? null;
@@ -66,6 +67,7 @@ export type ClusterInput = {
   journey_id: string;
   scope: "metro" | "national";
   include_broad: boolean;
+  match_unconfirmed_broad: boolean;
   min_lng: number;
   min_lat: number;
   max_lng: number;
@@ -82,9 +84,9 @@ export async function saveCluster(id: number | null, c: ClusterInput): Promise<n
   const db = sql();
   if (id === null) {
     const [row] = await db<{ id: number }[]>`
-      insert into clusters (slug, name, journey_id, scope, include_broad, min_lng, min_lat, max_lng, max_lat, center,
-                            distance_scale_km, max_match_km, min_confidence, status)
-      values (${c.slug}, ${c.name}, ${c.journey_id}, ${c.scope}, ${c.include_broad}, ${c.min_lng}, ${c.min_lat}, ${c.max_lng}, ${c.max_lat},
+      insert into clusters (slug, name, journey_id, scope, include_broad, match_unconfirmed_broad, min_lng, min_lat,
+                            max_lng, max_lat, center, distance_scale_km, max_match_km, min_confidence, status)
+      values (${c.slug}, ${c.name}, ${c.journey_id}, ${c.scope}, ${c.include_broad}, ${c.match_unconfirmed_broad}, ${c.min_lng}, ${c.min_lat}, ${c.max_lng}, ${c.max_lat},
               st_setsrid(st_makepoint(${centerLng}, ${centerLat}), 4326)::geography,
               ${c.distance_scale_km}, ${c.max_match_km}, ${c.min_confidence}, ${c.status})
       returning id::int`;
@@ -92,7 +94,7 @@ export async function saveCluster(id: number | null, c: ClusterInput): Promise<n
   }
   await db`
     update clusters set slug = ${c.slug}, name = ${c.name}, journey_id = ${c.journey_id},
-      scope = ${c.scope}, include_broad = ${c.include_broad},
+      scope = ${c.scope}, include_broad = ${c.include_broad}, match_unconfirmed_broad = ${c.match_unconfirmed_broad},
       min_lng = ${c.min_lng}, min_lat = ${c.min_lat}, max_lng = ${c.max_lng}, max_lat = ${c.max_lat},
       center = st_setsrid(st_makepoint(${centerLng}, ${centerLat}), 4326)::geography,
       distance_scale_km = ${c.distance_scale_km}, max_match_km = ${c.max_match_km},

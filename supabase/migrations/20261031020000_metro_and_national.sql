@@ -4,12 +4,16 @@
 --   national: an import scope (e.g. all US wedding-specific businesses), never matched as a whole
 --   metro:    a geography where matches are generated on demand; broad categories
 --             (salons, bakeries…) are imported only for metros with include_broad
+-- Broad businesses are matched only once confirmed to serve the journey
+-- (serves_journey = true, set by an admin, the owner, or AI review), unless the
+-- metro sets match_unconfirmed_broad.
 -- Metro membership is by location (inside the metro's bounding box), so a
 -- national import makes businesses available to every metro without re-importing.
 
 alter table clusters
   add column scope text not null default 'metro' check (scope in ('metro', 'national')),
-  add column include_broad boolean not null default true;
+  add column include_broad boolean not null default true,
+  add column match_unconfirmed_broad boolean not null default false;
 
 -- Bounding box as geography, for index-backed "inside this metro" queries.
 create or replace function cluster_box(c clusters) returns geography
@@ -46,7 +50,8 @@ begin
     where st_intersects(pl.geog, cluster_box(cl))
       and not pl.stale and not pl.suppressed
       and c.journey_id = cl.journey_id
-      and pl.serves_journey is not false;  -- marked as not a wedding business (admin, owner, or AI)
+      and pl.serves_journey is not false  -- marked as not a wedding business (admin, owner, or AI)
+      and (not c.broad or pl.serves_journey or cl.match_unconfirmed_broad);
   create index on cluster_places using gist (category_id, geog);
   analyze cluster_places;
 

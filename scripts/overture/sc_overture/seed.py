@@ -51,12 +51,12 @@ def seed(conn: psycopg.Connection, data: dict | None = None) -> dict[str, int]:
             lng, lat = cl["center"]
             # Insert only: admins may have edited an existing cluster.
             cur.execute(
-                """insert into clusters (slug, name, journey_id, scope, include_broad, status, min_lng, min_lat, max_lng,
-                                         max_lat, center, distance_scale_km, max_match_km)
-                   values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, st_setsrid(st_makepoint(%s, %s), 4326)::geography, %s, %s)
+                """insert into clusters (slug, name, journey_id, scope, include_broad, match_unconfirmed_broad, status, min_lng,
+                                         min_lat, max_lng, max_lat, center, distance_scale_km, max_match_km)
+                   values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, st_setsrid(st_makepoint(%s, %s), 4326)::geography, %s, %s)
                    on conflict (slug) do nothing""",
                 (cl["slug"], cl["name"], cl["journey"], cl.get("scope", "metro"), cl.get("includeBroad", True),
-                 cl.get("status", "draft"), min_lng, min_lat, max_lng, max_lat, lng, lat,
+                 cl.get("matchUnconfirmedBroad", False), cl.get("status", "draft"), min_lng, min_lat, max_lng, max_lat, lng, lat,
                  cl.get("distanceScaleKm", 10), cl.get("maxMatchKm", 40)),
             )
             counts["clusters"] += cur.rowcount
