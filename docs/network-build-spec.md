@@ -1,6 +1,6 @@
 # Something Clicks Network — Website Build Specification
 
-**Status:** v3. Consolidates the original build prompt, the Step 0 repository findings, the brand, structure, functionality, and boundary requirements added on 2026-10-30, and the build decisions approved the same day (root-level site, small-business setup journey, Cloudflare hosting, official brand colors, placeholder logo).
+**Status:** v4. Consolidates the original build prompt, the Step 0 repository findings, the brand, structure, functionality, and boundary requirements added on 2026-10-30, and the build decisions approved the same day (root-level site, small-business setup journey, official brand colors, placeholder logo), and the switch to Vercel hosting with the domain's DNS kept on Cloudflare.
 **Owner:** Matt Hill, Something Clicks LLC (Salt Lake Valley, Utah)
 **Purpose:** the single source of truth for the business model, brand standards, page structure, and technical boundaries. If code and this document disagree, this document wins until it is updated.
 
@@ -208,8 +208,7 @@ Every submission table has: `id`, `created_at`, `updated_at`, `status`, `interna
 ### 6.2 Admin dashboard (`/admin`)
 
 - **The only login on the site.** One admin, restricted to the email in `ADMIN_EMAIL`. Not a member portal.
-- Sign-in: Supabase Auth sends a magic link. The callback verifies the link and checks the email against `ADMIN_EMAIL`, then issues an HMAC-signed, httpOnly session cookie (8 hours, `ADMIN_SESSION_SECRET`). Every admin page, action, and export checks that cookie. No passwords are stored anywhere, and no Next.js middleware is needed (keeps the Cloudflare build simple).
-- Optional extra layer: put `/admin*` behind Cloudflare Access (free for small teams).
+- Sign-in: Supabase Auth sends a magic link. The callback verifies the link and checks the email against `ADMIN_EMAIL`, then issues an HMAC-signed, httpOnly session cookie (8 hours, `ADMIN_SESSION_SECRET`). Every admin page, action, and export checks that cookie. No passwords are stored anywhere, and no Next.js middleware is needed.
 - Tabs for Applications, Referral partners, and Contact messages.
 - List views filtered by status, category, and service area, plus a date range and text search.
 - Detail view showing every field.
@@ -232,8 +231,8 @@ Every submission table has: `id`, `created_at`, `updated_at`, `status`, `interna
 - `sitemap.xml` for public pages; `robots.txt` that disallows `/admin`.
 - Structured data: `Organization` with Salt Lake Valley area served. No review or rating markup.
 - **Analytics:** basic and privacy-respecting. Track page views plus `form_start` and `form_submit` events for each form, with the form name and step. No personal data goes into analytics.
-- **Decided:** page views come from **Cloudflare Web Analytics** (free, cookieless, no consent banner). It does not support custom events, so `form_start` and `form_submit` are recorded **first-party** in a small `form_events` table: no cookies, no personal data, just form name, event, step, source page, and UTM fields. Counts appear in the admin dashboard.
-- No other trackers. The Cloudflare beacon loads only when `NEXT_PUBLIC_CF_ANALYTICS_TOKEN` is set, or Web Analytics can be switched on in the Cloudflare dashboard with no code.
+- **Decided:** page views come from **Vercel Web Analytics** (cookieless, no consent banner), enabled in the Vercel project. Custom events need a paid Vercel plan, so `form_start` and `form_submit` are recorded **first-party** in a small `form_events` table: no cookies, no personal data, just form name, event, step, source page, and UTM fields. Counts appear in the admin dashboard.
+- No other trackers. The `<Analytics />` component sends nothing until Web Analytics is enabled in the Vercel dashboard.
 
 ---
 
@@ -264,14 +263,15 @@ Every submission table has: `id`, `created_at`, `updated_at`, `status`, `interna
 | Database and admin auth | Supabase (Postgres + Auth) |
 | Validation | Zod (shared client/server) |
 | Tests | Vitest for schemas, submission handling, rate limiting, sessions, and CSV export (DB and email replaced with in-memory fakes) |
-| Hosting | **Cloudflare Workers** using the OpenNext Cloudflare adapter (`@opennextjs/cloudflare`); DNS is already on Cloudflare |
+| Hosting | **Vercel**, standard zero-config Next.js deploy from `main`; previews for every branch |
+| DNS | Domain stays on **Cloudflare DNS**, with records pointed at Vercel (DNS only, not proxied) |
 | Email | Resend REST API called with `fetch` (no SDK) |
 
 Known free-tier tradeoffs:
 
 - Supabase free projects pause after about 1 week of inactivity. A scheduled keep-alive ping, or the steady flow of submissions, prevents it.
-- The Cloudflare Workers free plan caps the compressed worker at 3 MiB and CPU time at 10 ms per request. Content pages are prerendered to keep CPU low. If either limit is hit, Workers Paid is $5/month and needs Matt's approval.
-- Next.js image optimization is not used (SVG and icons only), so no Cloudflare Images setup is needed.
+- Vercel's free Hobby plan is limited to personal, non-commercial use. A business site should run on Vercel Pro ($20 per user per month). **Needs Matt's decision.**
+- Supabase Auth's built-in email sender is rate-limited to a few emails per hour. That is enough for one admin's sign-in links; pointing Supabase at Resend SMTP removes the limit.
 
 ### 9.2 In scope
 
@@ -304,10 +304,10 @@ Design the data model so these can be added later, but build none of them.
 |---|---|
 | Site location | Root of somethingclicks.com; no `/network` base path |
 | First partnership journey | Small-business setup (`src/content/pilot.ts`) |
-| Hosting | Cloudflare Workers via OpenNext |
+| Hosting | Vercel (DNS stays on Cloudflare) |
 | Brand colors | Official values in section 3.2 |
 | Logo | Marked temporary placeholder until Matt supplies the file |
-| Analytics | Cloudflare Web Analytics plus first-party form events |
+| Analytics | Vercel Web Analytics plus first-party form events |
 | Privacy/terms | Flagged draft pages at `/privacy` and `/terms` |
 
 ### Still open (marked placeholders in the site)
@@ -322,6 +322,8 @@ Design the data model so these can be added later, but build none of them.
 | 6 | Logo file, favicon, OG image | `src/components/LogoPlaceholder.tsx`, `public/` |
 | 7 | Legal review of privacy, terms, and consent wording | `/privacy`, `/terms`, `src/content/site.ts` |
 | 8 | Applicant auto-reply email | Off in v1 |
+| 9 | Vercel plan (Hobby is non-commercial; Pro is $20/user/month) | Vercel dashboard |
+| 10 | Separate Supabase project for Preview deployments (recommended) | Vercel env vars |
 
 ---
 
