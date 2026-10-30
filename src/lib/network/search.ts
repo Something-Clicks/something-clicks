@@ -90,8 +90,10 @@ export async function searchMatches(categoryId: string, place: Place, limit = 6)
     from complements cm
     join categories c on c.id = cm.category_b
     join near on near.category_id = cm.category_b
-    where cm.category_a = ${categoryId}
-    order by cm.strength * (case when c.broad then 0.6 else 1 end) desc, near.n desc
+    -- Broad categories (salons, bakeries…) aren't presented as partners until
+    -- individual businesses are confirmed to serve the journey.
+    where cm.category_a = ${categoryId} and not c.broad
+    order by cm.strength desc, near.n desc
     limit ${limit}`;
   const order: PartnershipType[] = ["referral", "joint_offer", "distribution"];
   return rows.flatMap((r) => {

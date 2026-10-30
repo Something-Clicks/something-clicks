@@ -63,10 +63,10 @@ def test_rules(db):
     compute(conn, cl)
 
     m = matches(conn, "florist")
-    assert set(m) == {"photo", "planner", "salon-unknown"}
+    assert set(m) == {"photo", "planner"}  # unconfirmed broad businesses aren't matched by default
+    assert matches(conn, "salon-unknown") == {}
     assert m["photo"]["reason_key"] == "day_of" and m["photo"]["partnership_type"] == "joint_offer"
     assert m["planner"]["reason_key"] == "hub_planner" and m["planner"]["c"] == pytest.approx(1.0)
-    assert m["salon-unknown"]["c"] == pytest.approx(0.6 * 0.6)          # same_couple 0.6, broad x0.6
     assert m["photo"]["s"] == pytest.approx(0.75) and m["planner"]["s"] == pytest.approx(0.5)  # same locality
     assert m["photo"]["distance_m"] == pytest.approx(1000, rel=0.02)
     assert m["photo"]["score"] == pytest.approx(0.5 * 0.9 + 0.3 * m["photo"]["d"] + 0.2 * 0.75, rel=1e-4)
@@ -104,3 +104,20 @@ def test_national_clusters_are_never_matched_as_a_whole(db):
         nat = cur.fetchone()[0]
     with pytest.raises(psycopg.errors.RaiseException, match="per metro"):
         compute(conn, nat)
+
+
+def test_broad_businesses_match_once_confirmed_or_when_metro_allows(db):
+    conn, cl = db
+    add(conn, cl, "florist", "florists")
+    add(conn, cl, "salon-yes", "salons", lat_km=1, serves=True)
+    add(conn, cl, "salon-unknown", "salons", lat_km=1)
+    compute(conn, cl)
+    m = matches(conn, "florist")
+    assert set(m) == {"salon-yes"} and m["salon-yes"]["c"] == pytest.approx(0.6)  # confirmed: full strength
+
+    with conn.cursor() as cur:
+        cur.execute("update clusters set match_unconfirmed_broad = true where id = %s", (cl,))
+    compute(conn, cl)
+    m = matches(conn, "florist")
+    assert set(m) == {"salon-yes", "salon-unknown"}
+    assert m["salon-unknown"]["c"] == pytest.approx(0.6 * 0.6)  # unconfirmed: x0.6

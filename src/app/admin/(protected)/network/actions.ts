@@ -15,6 +15,7 @@ const clusterSchema = z
     journey_id: z.string().min(1),
     scope: z.enum(["metro", "national"]),
     include_broad: z.preprocess((v) => v === "on", z.boolean()),
+    match_unconfirmed_broad: z.preprocess((v) => v === "on", z.boolean()),
     min_lng: num(-180, 180),
     min_lat: num(-90, 90),
     max_lng: num(-180, 180),
