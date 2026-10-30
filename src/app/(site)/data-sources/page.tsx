@@ -12,8 +12,8 @@ export const metadata = pageMeta({
 // Reflects the latest import; refresh daily.
 export const revalidate = 86400;
 
-/** Overture's attribution page, which carries its NOTICE. Swap in a direct NOTICE.txt link if Overture publishes one. */
-const OVERTURE_NOTICE_URL = "https://docs.overturemaps.org/attribution/";
+/** The Foursquare NOTICE.txt that Overture's attribution page links for the Foursquare places data. */
+const OVERTURE_NOTICE_URL = "https://opensource.foursquare.com/places-notice-txt/";
 
 const CDLA = { name: "CDLA Permissive 2.0", url: "https://cdla.dev/permissive-2-0/" };
 
@@ -71,7 +71,7 @@ export default async function DataSourcesPage() {
                   {s.note === "notice" && (
                     <p className="mt-2 text-base text-navy-soft">
                       This data was transformed to the Overture schema. See{" "}
-                      <a href={OVERTURE_NOTICE_URL} rel="noopener noreferrer" className="underline">Overture&rsquo;s NOTICE</a>.
+                      <a href={OVERTURE_NOTICE_URL} rel="noopener noreferrer" className="underline">NOTICE.txt</a>.
                     </p>
                   )}
                 </li>
