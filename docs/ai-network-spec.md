@@ -403,6 +403,6 @@ Row-level security is on everywhere. Public access goes only through server rout
 | 6 | Retire How It Works, For Businesses, Join | **Yes**, with redirects to `/` and `/claim` |
 | 7 | Price wording | **"Free to claim your business and see your matches."** Nothing else about price. |
 | 8 | Invitations to Overture business emails | **Yes**, active clusters only, each batch approved by Matt, sent from **hello.somethingclicks.com** |
-| 9 | Google Analytics | Loads only when `NEXT_PUBLIC_GA_MEASUREMENT_ID` is set, and the legal pages mention GA only then (merged in Something-Clicks/something-clicks#2) |
+| 9 | Google Analytics | Loads only when `GA_MEASUREMENT_ID` is set, and the legal pages mention GA only then (merged in Something-Clicks/something-clicks#2) |
 
 Still open: the production Supabase project and the `SUPABASE_DB_URL` secret, needed before the test cluster loads anywhere but local Postgres.
