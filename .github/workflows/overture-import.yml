@@ -1,0 +1,49 @@
+name: Overture import
+
+# Manual only. Always run a dry run first and review the report before a load.
+on:
+  workflow_dispatch:
+    inputs:
+      cluster:
+        description: "Cluster slug (e.g. slv-weddings)"
+        required: true
+        default: slv-weddings
+      mode:
+        description: "dry-run reports counts and projected size; load writes to the database"
+        required: true
+        type: choice
+        options: [dry-run, load]
+        default: dry-run
+      release:
+        description: "Overture release (blank = latest)"
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: scripts/overture
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: scripts/overture/requirements.txt
+      - run: pip install -r requirements.txt
+      - run: python -m pytest -q
+      - name: Import
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          CLUSTER: ${{ inputs.cluster }}
+          MODE: ${{ inputs.mode }}
+          RELEASE: ${{ inputs.release }}
+        run: |
+          python -m sc_overture seed
+          python -m sc_overture import "$CLUSTER" "--$MODE" ${RELEASE:+--release "$RELEASE"} | tee report.txt
+          cat report.txt >> "$GITHUB_STEP_SUMMARY"

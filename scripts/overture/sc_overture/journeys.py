@@ -24,12 +24,14 @@ def load(path: Path = JOURNEYS_PATH) -> dict:
     return json.loads(path.read_text())
 
 
-def taxonomy_map(data: dict) -> dict[str, str]:
-    """Overture taxonomy.primary value -> category id, across active journeys."""
+def _selected(data: dict, journey_id: str | None):
+    return [j for j in data["journeys"] if (j["id"] == journey_id if journey_id else j.get("active"))]
+
+
+def taxonomy_map(data: dict, journey_id: str | None = None) -> dict[str, str]:
+    """Overture taxonomy.primary value -> category id, for one journey or all active ones."""
     out: dict[str, str] = {}
-    for j in data["journeys"]:
-        if not j.get("active"):
-            continue
+    for j in _selected(data, journey_id):
         for c in j["categories"]:
             for t in c["taxonomy"]:
                 if t in out:
@@ -38,12 +40,11 @@ def taxonomy_map(data: dict) -> dict[str, str]:
     return out
 
 
-def name_rules(data: dict) -> list[tuple[str, re.Pattern[str]]]:
+def name_rules(data: dict, journey_id: str | None = None) -> list[tuple[str, re.Pattern[str]]]:
     """Ordered (category id, compiled pattern) pairs, applied when taxonomy doesn't map."""
     return [
         (c["id"], re.compile(c["nameRule"], re.IGNORECASE))
-        for j in data["journeys"]
-        if j.get("active")
+        for j in _selected(data, journey_id)
         for c in j["categories"]
         if c.get("nameRule")
     ]
