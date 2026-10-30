@@ -1,10 +1,10 @@
 # Something Clicks Network — Website Build Specification
 
-**Status:** v2. Consolidates the original build prompt, the Step 0 repository findings, and the brand, structure, functionality, and boundary requirements added on 2026-10-30.
+**Status:** v3. Consolidates the original build prompt, the Step 0 repository findings, the brand, structure, functionality, and boundary requirements added on 2026-10-30, and the build decisions approved the same day (root-level site, small-business setup journey, Cloudflare hosting, official brand colors, placeholder logo).
 **Owner:** Matt Hill, Something Clicks LLC (Salt Lake Valley, Utah)
 **Purpose:** the single source of truth for the business model, brand standards, page structure, and technical boundaries. If code and this document disagree, this document wins until it is updated.
 
-Items marked **[DECISION]** are still open; see section 10.
+Remaining open items are marked **[PLACEHOLDER]** in the site and listed in section 10.
 
 ---
 
@@ -33,13 +33,13 @@ The site explains the larger Network **and** makes the first opportunity to join
 - **The Network (big picture):** many kinds of complementary local businesses helping each other find customers.
 - **The founding pilot (concrete first step):** one named customer journey, the business types we are recruiting for it, and the single tracked collaboration a founding member is asked to run in the first cycle.
 
-**[DECISION] Which journey leads.** Candidates: moving / new home, weddings / events, health / fitness, small-business setup.
-**Recommendation:** moving / new home. Its before-and-after needs are obvious to visitors, there are many independent providers in the Salt Lake Valley, and the joint offer is easy to picture.
+**Decided: small-business setup.** Businesses moving into, setting up, or maintaining commercial space. Most of the services they need come one after another (lease → move → furniture → cleaning → IT → signage → maintenance), and the providers of those services are natural partners.
 
-**Implementation rule:** the journey is defined in one content file (`src/content/pilot.ts` or equivalent), not hard-coded across pages. It holds:
+**Implementation rule:** the journey is defined in one content file, `src/content/pilot.ts`, and is not hard-coded across pages. It holds:
 
 - journey name and one-sentence description
-- target business types (for example, for moving / new home: movers, home organizers, cleaners, handypeople, painters, real estate agents, property managers, local furniture/decor shops)
+- member business types we are recruiting (commercial movers, office furniture installers, commercial cleaners, IT/network setup, signage and print, security/access control, property maintenance, space planning, and similar)
+- referral partner types: commercial real estate professionals, property managers, commercial movers, office furniture installers, property maintenance companies
 - an example joint offer, labeled illustrative
 - what the first cycle asks of a member (one tracked collaboration within 30 days)
 - cycle length and application window **[placeholder]**
@@ -61,27 +61,28 @@ The Magician makes transformation feel possible by revealing connections other p
 
 ### 3.2 Color
 
-Proposed hex values. **[DECISION]** Confirm them, or supply official values. All values live as design tokens in one place (Tailwind theme and CSS variables) so a swap is a single edit.
+Official values. All values live as design tokens in one place (`src/app/globals.css` `@theme`), so a swap is a single edit.
 
-| Token | Name | Proposed hex | Primary use |
+| Token | Name | Hex | Primary use |
 |---|---|---|---|
-| `navy` | Deep navy | `#0B1F4D` | Body text, headers/footers, dark sections |
-| `royal` | Royal blue | `#1E4FD8` | Primary buttons, links, key headings |
-| `cyan` | Cyan | `#00B8E6` | Accent: logo spark, highlights, focus rings, icons on dark |
-| `ice` | Ice blue | `#E6F3FC` | Section backgrounds, cards, form panels |
+| `navy` | Navy | `#15263D` | Body text, header/footer, dark sections |
+| `royal` | Royal | `#2853FB` | Primary buttons, links, key headings on light backgrounds |
+| `cyan` | Cyan | `#209AFD` | Accent only on light backgrounds; text, icons, and focus rings allowed on navy |
+| `ice` | Ice | `#EAF0FF` | Cards, form panels, highlighted sections |
+| `cloud` | Cloud white | `#F4F7FB` | Alternating section backgrounds |
 | `white` | White | `#FFFFFF` | Page background, text on navy/royal |
 
-Measured contrast (WCAG 2.x):
+Measured contrast (WCAG 2.x; 4.5:1 is needed for normal text, 3:1 for large text and UI components):
 
 | Pair | Ratio | Allowed for |
 |---|---|---|
-| White on navy | 15.9 : 1 | All text |
-| Navy on ice | 14.1 : 1 | All text |
-| White on royal | 6.6 : 1 | All text, buttons |
-| Royal on white | 6.6 : 1 | Links, headings, body text |
-| Royal on ice | 5.9 : 1 | All text |
-| Cyan on navy | 6.8 : 1 | All text, focus rings on dark |
-| **Cyan on white** | **2.3 : 1** | **Decoration only. Never text, icons that carry meaning, or the only focus indicator on light backgrounds.** |
+| Navy on white / cloud / ice | 15.3 / 14.2 / 13.4 : 1 | All text |
+| Royal on white / cloud / ice | 5.6 / 5.3 / 5.0 : 1 | All text, links, focus rings |
+| White on royal | 5.6 : 1 | Button labels, all text |
+| White on navy | 15.3 : 1 | All text |
+| Cyan on navy | 5.2 : 1 | Text, icons, focus rings on dark sections |
+| **Cyan on white / cloud / ice** | **3.0 / 2.8 / 2.6 : 1** | **Decoration only.** Never text, meaningful icons, borders that carry meaning, or focus indicators. |
+| **Royal on navy / navy on royal** | **2.7 : 1** | **Never** pair for text or UI. |
 
 ### 3.3 Typography
 
@@ -99,16 +100,11 @@ Measured contrast (WCAG 2.x):
 
 ### 3.5 Logo symbol
 
-A distinctive custom mark. **Not allowed:** puzzle pieces, handshakes, lightbulbs, chain links, or generic "network graph" clip art.
+**Decided:** the developer does not design a logo. Matt will supply the logo file.
 
-Design brief:
-
-- **Concept:** two separate arcs or paths that, at one precise point, lock into alignment and release a small spark. This is the moment something "clicks" between two businesses that already shared customers.
-- **Construction:** geometric, with no more than 2–3 shapes. Recognizable at 16px (favicon) and 512px.
-- **Colors:** royal and navy, with a cyan spark. It must also work in single-color white on navy and single-color navy on white.
-- **Lockups:** symbol only; symbol + "Something Clicks"; symbol + "Something Clicks Network".
-- **Deliverables:** SVG source, favicon set, Open Graph image template.
-- The developer drafts an SVG concept for review. Matt approves it before it is treated as final. **[DECISION]** Approve the concept, or supply a professionally designed mark.
+- Until then the site uses a clearly marked **temporary placeholder** (`src/components/LogoPlaceholder.tsx`): a dashed outline box labeled "Logo" next to the "Something Clicks" wordmark in Inter.
+- Swapping in the real logo means replacing that one component and the favicon/OG image files.
+- Requirements for the supplied mark (for reference): distinctive and custom; not a puzzle, handshake, lightbulb, or chain link; recognizable at 16px; works in single color on white and on navy. SVG preferred.
 
 ### 3.6 Consistency across pages
 
@@ -122,13 +118,13 @@ All pages share one layout, one navigation, one footer, one button and form comp
 
 | # | Page | Route | Purpose |
 |---|---|---|---|
-| 1 | Home | `/network` | Vision, the problem, how it works in 5 steps, illustrative examples, the founding pilot (section 2), primary CTA "Apply to the founding pilot", secondary CTA for referral partners |
-| 2 | How It Works | `/network/how-it-works` | Map → Qualify → Match → Package (joint offer) → Distribute (each partner shares with its own customers) → Measure → Learn. What a collaboration brief contains. How results are tracked (referral links, codes, redeemed offers, inquiries). |
-| 3 | For Businesses | `/network/for-businesses` | Benefits; what participation asks of an owner (kept light); what founding members receive (curated match with rationale, collaboration brief, ready-to-adapt copy, coordination and reminders, results summary); illustrative pairings; founding pilot free for a limited first cycle; CTA |
-| 4 | For Referral Partners | `/network/referral-partners` | For property managers, consultants, and other well-connected professionals who can introduce businesses. Interest form. Rewards only where permitted and by individual written agreement. **No** specific payout promises. |
-| 5 | Join the Network | `/network/join` | Founding-member application (section 5.1), multi-step with progress indication |
-| 6 | About | `/network/about` | Mission, why Something Clicks exists, founder note **[placeholder for Matt]** |
-| 7 | Contact | `/network/contact` | Contact form, contact email **[placeholder]**, service area (Salt Lake Valley), expected response time **[placeholder]** |
+| 1 | Home | `/` | Vision, the problem, how it works in 5 steps, illustrative examples, the founding pilot (section 2), primary CTA "Apply to the founding pilot", secondary CTA for referral partners |
+| 2 | How It Works | `/how-it-works` | Map → Qualify → Match → Package (joint offer) → Distribute (each partner shares with its own customers) → Measure → Learn. What a collaboration brief contains. How results are tracked (referral links, codes, redeemed offers, inquiries). |
+| 3 | For Businesses | `/for-businesses` | Benefits; what participation asks of an owner (kept light); what founding members receive (curated match with rationale, collaboration brief, ready-to-adapt copy, coordination and reminders, results summary); illustrative pairings; founding pilot free for a limited first cycle; CTA |
+| 4 | For Referral Partners | `/referral-partners` | For property managers, consultants, and other well-connected professionals who can introduce businesses. Interest form. Rewards only where permitted and by individual written agreement. **No** specific payout promises. |
+| 5 | Join the Network | `/join` | Founding-member application (section 5.1), multi-step with progress indication |
+| 6 | About | `/about` | Mission, why Something Clicks exists, founder note **[placeholder for Matt]** |
+| 7 | Contact | `/contact` | Contact form, contact email **[placeholder]**, service area (Salt Lake Valley), expected response time **[placeholder]** |
 
 Contact is its own page; About links to it.
 
@@ -136,23 +132,21 @@ Contact is its own page; About links to it.
 
 | Route | Purpose |
 |---|---|
-| `/network/join/thanks` | This is an application, not a guarantee of acceptance; the team reviews and follows up; response window **[placeholder]** |
-| `/network/referral-partners/thanks`, `/network/contact/thanks` | Short confirmations, or inline success states (developer's choice; must stay consistent) |
-| `/network/privacy` | Privacy policy. Placeholder text, visibly flagged **"Draft — pending legal review."** |
-| `/network/terms` | Terms of use, including the founding-pilot participation terms and the disclosed-relationship language. Placeholder, flagged **"Draft — pending legal review."** |
-| `/admin/network` | Protected admin dashboard (section 6) |
+| `/join/thanks` | This is an application, not a guarantee of acceptance; the team reviews and follows up; response window **[placeholder]** |
+| `/referral-partners/thanks`, `/contact/thanks` | Short confirmations, or inline success states (developer's choice; must stay consistent) |
+| `/privacy` | Privacy policy. Placeholder text, visibly flagged **"Draft — pending legal review."** |
+| `/terms` | Terms of use, including the founding-pilot participation terms and the disclosed-relationship language. Placeholder, flagged **"Draft — pending legal review."** |
+| `/admin` | Protected admin dashboard (section 6) |
 
-If somethingclicks.com already has a privacy policy, link to it instead of creating `/network/privacy`. **[DECISION]**
 
 ### 4.3 Navigation and footer
 
-- **Header:** logo → Home, How It Works, For Businesses, Referral Partners, About, Contact, plus a primary button "Apply" → `/network/join`. On mobile, a hamburger menu with a focus trap, closable with Esc.
+- **Header:** logo → Home, How It Works, For Businesses, Referral Partners, About, Contact, plus a primary button "Apply" → `/join`. On mobile, a hamburger menu with a focus trap, closable with Esc.
 - **Footer:** short mission line, page links, Privacy, Terms, contact email, "Something Clicks LLC · Salt Lake Valley, Utah", copyright.
 
-### 4.4 Hosting and base path
+### 4.4 Site location
 
-- Routes live under `/network` so they can be served at `somethingclicks.com/network`, forwarded from the existing host, or moved to a subdomain such as `network.somethingclicks.com` without code changes (the base path is configurable). **[DECISION]** Choose the host and domain approach.
-- Existing somethingclicks.com pages, forms, and tracking are not in this repo and must not be touched.
+**Decided:** there is no existing site to protect. The Network is the whole Something Clicks business, and the site is served at the root of `somethingclicks.com`. There is no `/network` base path and no forwarding or subdomain setup.
 
 ---
 
@@ -166,7 +160,7 @@ All forms:
 - **Attribution:** capture source page, referrer, and `utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content`. UTMs persist from the landing page for the visit.
 - **Privacy:** do **not** ask for customer lists or any customer personal data, anywhere.
 
-### 5.1 Founding-member application (`/network/join`)
+### 5.1 Founding-member application (`/join`)
 
 Five steps with a progress indicator ("Step 2 of 5"). Progress is saved in the browser for the session only, and data is sent only on final submit.
 
@@ -176,17 +170,17 @@ Five steps with a progress indicator ("Step 2 of 5"). Progress is saved in the b
 4. **Partnerships and capacity:** businesses they already refer to or receive referrals from; business types they would like to partner with; collaboration interests (joint offer, sharing a partner's offer, co-created content, local event, other); past cross-promotion experience and what worked or failed; realistic time per month; willing to commit to one tracked collaboration in the next 30 days (yes / no / maybe); fit with the current pilot journey (yes / not sure / no, for future cycles).
 5. **Contact and consent:** name; role; email; phone (optional); preferred contact method; **required** checkbox to be contacted and agree to the Privacy Policy and Terms; **optional** checkbox for occasional Network updates (unchecked by default).
 
-### 5.2 Referral partner interest (`/network/referral-partners`)
+### 5.2 Referral partner interest (`/referral-partners`)
 
 Name, organization, role, email, phone (optional), types of businesses they could introduce, how they are connected to those businesses, notes, **required** consent checkbox.
 
-### 5.3 Contact (`/network/contact`)
+### 5.3 Contact (`/contact`)
 
 Name, email, topic (general, founding pilot, referral partners, press, other), message, **required** consent checkbox.
 
 ### 5.4 Service-area list
 
-Proposed default; **[DECISION]** confirm or edit: Salt Lake City, South Salt Lake, Millcreek, Holladay, Murray, Cottonwood Heights, Midvale, Taylorsville, West Valley City, Kearns, Magna, West Jordan, South Jordan, Sandy, Draper, Riverton, Herriman, Bluffdale, plus "Other / outside the valley".
+Approved default (kept in `src/content/site.ts` and marked as a placeholder, so it is easy to edit): Salt Lake City, South Salt Lake, Millcreek, Holladay, Murray, Cottonwood Heights, Midvale, Taylorsville, West Valley City, Kearns, Magna, West Jordan, South Jordan, Sandy, Draper, Riverton, Herriman, Bluffdale, plus "Other / outside the valley".
 
 ### 5.5 Consent language (draft, pending legal review)
 
@@ -211,9 +205,11 @@ Every submission table has: `id`, `created_at`, `updated_at`, `status`, `interna
 - Row-level security is on with no public policies. Only server code with the service role key reads or writes.
 - Migrations are SQL files in `supabase/migrations/`.
 
-### 6.2 Admin dashboard (`/admin/network`)
+### 6.2 Admin dashboard (`/admin`)
 
-- **The only login on the site.** One admin, Supabase Auth magic link, restricted to the email in `ADMIN_EMAIL`. No passwords in code. Not a member portal.
+- **The only login on the site.** One admin, restricted to the email in `ADMIN_EMAIL`. Not a member portal.
+- Sign-in: Supabase Auth sends a magic link. The callback verifies the link and checks the email against `ADMIN_EMAIL`, then issues an HMAC-signed, httpOnly session cookie (8 hours, `ADMIN_SESSION_SECRET`). Every admin page, action, and export checks that cookie. No passwords are stored anywhere, and no Next.js middleware is needed (keeps the Cloudflare build simple).
+- Optional extra layer: put `/admin*` behind Cloudflare Access (free for small teams).
 - Tabs for Applications, Referral partners, and Contact messages.
 - List views filtered by status, category, and service area, plus a date range and text search.
 - Detail view showing every field.
@@ -226,7 +222,7 @@ Every submission table has: `id`, `created_at`, `updated_at`, `status`, `interna
 - One email to the owner for each new submission: type, key fields, and a link to the admin detail view.
 - Provider: Resend free tier (needs domain DNS records). Configured with `RESEND_API_KEY`, `NOTIFY_EMAIL_TO`, and `NOTIFY_EMAIL_FROM`.
 - If email fails, the submission is still saved and the error is logged. The visitor never sees an email error.
-- No automated emails to applicants in v1. **[DECISION]** Add a simple "we received your application" auto-reply?
+- No automated emails to applicants in v1 (open item: add a simple "we received your application" auto-reply later?).
 
 ---
 
@@ -236,8 +232,8 @@ Every submission table has: `id`, `created_at`, `updated_at`, `status`, `interna
 - `sitemap.xml` for public pages; `robots.txt` that disallows `/admin`.
 - Structured data: `Organization` with Salt Lake Valley area served. No review or rating markup.
 - **Analytics:** basic and privacy-respecting. Track page views plus `form_start` and `form_submit` events for each form, with the form name and step. No personal data goes into analytics.
-- **[DECISION] Analytics provider.** If Google Analytics already runs on somethingclicks.com, reuse that property. Otherwise the recommendation is **Cloudflare Web Analytics** or **Vercel Web Analytics**: both free, cookieless, and no consent banner needed. GA4 is free too, but it sets cookies and the privacy policy would need to say so.
-- Only one analytics tool. Configured by environment variable; with nothing set, no tracking script loads.
+- **Decided:** page views come from **Cloudflare Web Analytics** (free, cookieless, no consent banner). It does not support custom events, so `form_start` and `form_submit` are recorded **first-party** in a small `form_events` table: no cookies, no personal data, just form name, event, step, source page, and UTM fields. Counts appear in the admin dashboard.
+- No other trackers. The Cloudflare beacon loads only when `NEXT_PUBLIC_CF_ANALYTICS_TOKEN` is set, or Web Analytics can be switched on in the Cloudflare dashboard with no code.
 
 ---
 
@@ -266,12 +262,16 @@ Every submission table has: `id`, `created_at`, `updated_at`, `status`, `interna
 | Framework | Next.js (App Router) + TypeScript |
 | Styling | Tailwind CSS with the section 3 tokens |
 | Database and admin auth | Supabase (Postgres + Auth) |
-| Email | Resend |
 | Validation | Zod (shared client/server) |
-| Tests | Vitest for schemas, server actions, rate limiting, and CSV export, with DB and email mocked; Playwright smoke test for the join flow |
-| Hosting | **[DECISION]** Vercel Hobby is free but limited to non-commercial use, so Vercel Pro ($20/month) is the compliant Vercel option. Cloudflare Pages and Netlify have free tiers that allow commercial use. |
+| Tests | Vitest for schemas, submission handling, rate limiting, sessions, and CSV export (DB and email replaced with in-memory fakes) |
+| Hosting | **Cloudflare Workers** using the OpenNext Cloudflare adapter (`@opennextjs/cloudflare`); DNS is already on Cloudflare |
+| Email | Resend REST API called with `fetch` (no SDK) |
 
-Known free-tier tradeoff: Supabase free projects pause after about 1 week of inactivity. A scheduled keep-alive ping, or the steady flow of submissions, prevents it.
+Known free-tier tradeoffs:
+
+- Supabase free projects pause after about 1 week of inactivity. A scheduled keep-alive ping, or the steady flow of submissions, prevents it.
+- The Cloudflare Workers free plan caps the compressed worker at 3 MiB and CPU time at 10 ms per request. Content pages are prerendered to keep CPU low. If either limit is hit, Workers Paid is $5/month and needs Matt's approval.
+- Next.js image optimization is not used (SVG and icons only), so no Cloudflare Images setup is needed.
 
 ### 9.2 In scope
 
@@ -296,23 +296,32 @@ Design the data model so these can be added later, but build none of them.
 
 ---
 
-## 10. Open decisions
+## 10. Decisions
 
-| # | Decision | Recommendation / default until decided |
+### Decided (2026-10-30)
+
+| Decision | Outcome |
+|---|---|
+| Site location | Root of somethingclicks.com; no `/network` base path |
+| First partnership journey | Small-business setup (`src/content/pilot.ts`) |
+| Hosting | Cloudflare Workers via OpenNext |
+| Brand colors | Official values in section 3.2 |
+| Logo | Marked temporary placeholder until Matt supplies the file |
+| Analytics | Cloudflare Web Analytics plus first-party form events |
+| Privacy/terms | Flagged draft pages at `/privacy` and `/terms` |
+
+### Still open (marked placeholders in the site)
+
+| # | Item | Where |
 |---|---|---|
-| 1 | First partnership journey | Moving / new home (all copy reads from `pilot.ts`) |
-| 2 | Confirm hex values | Use the section 3.2 values |
-| 3 | Logo: approve developer concept or supply professional mark | Developer drafts the SVG concept from section 3.5 |
-| 4 | Host and domain approach (`/network` forwarding vs subdomain) | Build under `/network` with a configurable base path |
-| 5 | Hosting provider | Cloudflare Pages or Netlify (free, commercial use allowed), or Vercel Pro |
-| 6 | Analytics provider / existing GA | Cloudflare Web Analytics; off until configured |
-| 7 | Existing privacy policy URL | Create flagged placeholder `/network/privacy` and `/network/terms` |
-| 8 | Contact email and notification inbox | Placeholder `hello@somethingclicks.com` |
-| 9 | Response window (thanks pages, contact) | Placeholder "within [X] business days" |
-| 10 | Service-area city list | Section 5.4 list |
-| 11 | Founder note | Placeholder for Matt |
-| 12 | Pilot cycle length and application window | Placeholders in `pilot.ts` |
-| 13 | Applicant auto-reply email | Off in v1 |
+| 1 | Contact email and notification inbox | `src/content/site.ts`, env vars |
+| 2 | Response window (thanks pages, contact) | `src/content/site.ts` |
+| 3 | Founder note | `src/content/site.ts` |
+| 4 | Pilot cycle length and application window | `src/content/pilot.ts` |
+| 5 | Service-area city list (approved draft) | `src/content/site.ts` |
+| 6 | Logo file, favicon, OG image | `src/components/LogoPlaceholder.tsx`, `public/` |
+| 7 | Legal review of privacy, terms, and consent wording | `/privacy`, `/terms`, `src/content/site.ts` |
+| 8 | Applicant auto-reply email | Off in v1 |
 
 ---
 
