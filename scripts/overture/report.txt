@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 203, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/user/something-clicks/scripts/overture/sc_overture/__main__.py", line 89, in <module>
+    main()
+    ~~~~^^
+  File "/home/user/something-clicks/scripts/overture/sc_overture/__main__.py", line 67, in main
+    with connect() as conn:
+         ~~~~~~~^^
+  File "/home/user/something-clicks/scripts/overture/sc_overture/db.py", line 14, in connect
+    return psycopg.connect(url, autocommit=False)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/claude-0/-home-user-something-clicks/945f0aa5-1dd0-5e95-affe-f696cb464fc7/scratchpad/venv/lib/python3.13/site-packages/psycopg/connection.py", line 126, in connect
+    raise last_ex.with_traceback(None)
+psycopg.OperationalError: connection failed: connection to server on socket "/tmp/.s.PGSQL.5499" failed: FATAL:  database "nosuchdb" does not exist

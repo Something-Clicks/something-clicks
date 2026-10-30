@@ -23,7 +23,9 @@ If you already created the project, skip to step 4.
 
 ## Part 2: Run the migrations
 
-Run all five files, **in this order**, from the `supabase/migrations` folder in the GitHub repo. If you already ran the first four, just run the fifth:
+**Easiest (works from a phone):** once the GitHub secret from Part 5 is set, go to **Actions** → **Overture import** → **Run workflow**, set **job** to `migrate` and **mode** to `dry-run`, and run it. The summary lists the files it would apply. Run it again with **mode** `load` to apply them. It applies only the files that are missing, in order, each in its own transaction, and stops at the first error. Files you already ran in the SQL Editor are recognised by name and skipped. Running it again when nothing is missing changes nothing.
+
+**Or by hand:** run all five files, **in this order**, from the `supabase/migrations` folder in the GitHub repo. If you already ran the first four, just run the fifth:
 
 1. `20261030000000_init.sql`
 2. `20261031000000_network_foundation.sql`
@@ -91,6 +93,7 @@ All of these run from GitHub: **Actions** tab → **Overture import** (left list
 
 | Order | job | cluster | mode | What it does |
 |---|---|---|---|---|
+| 0 | `migrate` | (ignored) | `dry-run`, then `load` | Applies any missing database migrations (seconds) |
 | 1 | `national` | (ignored) | `dry-run`, then `load` | ZIP-by-category counts and the location lookup, so search works everywhere (~33 MB, ~15 min) |
 | 2 | `import` | `us-weddings` | `dry-run`, then `load` | Wedding-specific businesses across the US (~15 min) |
 | 3 | `import` | `dfw-weddings` | `dry-run`, then `load` | Adds the metro's broad categories (salons, bakeries…) for later AI review |

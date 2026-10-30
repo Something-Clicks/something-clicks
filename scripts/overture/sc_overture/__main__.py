@@ -26,6 +26,8 @@ def main() -> None:
     nat.add_argument("--release")
     nat.add_argument("--journey", default="weddings")
     nat.add_argument("--max-files", type=int, help="scan only the first N files (for testing)")
+    mig = sub.add_parser("migrate", help="Apply missing supabase/migrations files, in order")
+    mig.add_argument("--dry-run", action="store_true", help="list what would be applied; change nothing")
     mat = sub.add_parser("matches", help="Generate matches for one metro cluster")
     mat.add_argument("cluster", help="metro cluster slug, e.g. dfw-weddings")
     args = p.parse_args()
@@ -57,6 +59,13 @@ def main() -> None:
             report = run_national(conn, dry_run=args.dry_run, release=args.release, journey_id=args.journey,
                                   max_files=args.max_files)
         print(json.dumps(report, indent=2))
+
+    elif args.cmd == "migrate":
+        from .db import connect
+        from .migrate import apply, migration_files
+
+        with connect() as conn:
+            apply(conn, migration_files(), dry_run=args.dry_run)
 
     elif args.cmd == "matches":
         import time
