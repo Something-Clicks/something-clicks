@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { gaMeasurementId } from "@/components/GoogleAnalytics";
 import { LegalPage } from "@/components/LegalPage";
 import { P } from "@/components/Placeholder";
 import { pilot } from "@/content/pilot";
@@ -12,6 +13,7 @@ export const metadata = pageMeta({
 });
 
 export default function TermsPage() {
+  const ga = Boolean(gaMeasurementId());
   return (
     <LegalPage title="Terms of Use" updated="[PLACEHOLDER: date]">
       <p>
@@ -47,10 +49,12 @@ export default function TermsPage() {
 
       <h2>4. Analytics and cookies</h2>
       <p>
-        The site uses Google Analytics, which sets cookies, and Vercel Web Analytics, which does not, to understand how
-        the site is used. We also record anonymous form-activity counts and a short-lived hashed IP for spam
-        prevention. We never send what you type into a form to analytics providers. Details and opt-out options are in
-        the <Link href="/privacy">Privacy Policy</Link>. By continuing to use the site, you agree to this use.
+        {ga
+          ? "The site uses Google Analytics, which sets cookies, and Vercel Web Analytics, which does not, to understand how the site is used. "
+          : "The site uses Vercel Web Analytics, which does not set cookies, to understand how the site is used. "}
+        We also record anonymous form-activity counts and a short-lived hashed IP for spam prevention. We never send
+        what you type into a form to analytics providers. Details{ga ? " and opt-out options" : ""} are in the{" "}
+        <Link href="/privacy">Privacy Policy</Link>.
       </p>
 
       <h2>5. Participation</h2>
@@ -81,7 +85,7 @@ export default function TermsPage() {
 
       <h2>7. Third-party services</h2>
       <p>
-        The site relies on service providers (Vercel, Google, Supabase, Resend, and Cloudflare) as described in the
+        The site relies on service providers (Vercel, {ga ? "Google, " : ""}Supabase, Resend, and Cloudflare) as described in the
         Privacy Policy. Their services are governed by their own terms, and we are not responsible for their
         availability.
       </p>

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { gaMeasurementId } from "@/components/GoogleAnalytics";
 import { LegalPage } from "@/components/LegalPage";
 import { site } from "@/content/site";
 import { pageMeta } from "@/lib/metadata";
@@ -14,6 +15,8 @@ const ContactLink = () => (
 );
 
 export default function PrivacyPage() {
+  // Google Analytics wording appears only when GA is actually configured.
+  const ga = Boolean(gaMeasurementId());
   return (
     <LegalPage title="Privacy Policy" updated="[PLACEHOLDER: date]">
       <p>
@@ -59,7 +62,7 @@ export default function PrivacyPage() {
           session storage so you don&rsquo;t lose them if you reload. They are not sent to us until you submit, and they
           clear when you close the tab or submit.
         </li>
-        <li>
+        {ga && (<li>
           <strong>Google Analytics:</strong> we use Google Analytics 4 to understand how people find and use the site
           (pages viewed, approximate location derived from IP address, device and browser type, referring site, and form
           events such as &ldquo;form started&rdquo; and &ldquo;form submitted&rdquo;). Google Analytics sets cookies
@@ -74,9 +77,9 @@ export default function PrivacyPage() {
             Google Analytics opt-out browser add-on
           </a>{" "}
           or by blocking cookies in your browser.
-        </li>
+        </li>)}
         <li>
-          <strong>Vercel Web Analytics:</strong> our host also counts page views in aggregate without cookies.
+          <strong>Vercel Web Analytics:</strong> our host counts page views in aggregate without cookies.
         </li>
         <li>
           <strong>Form activity counts:</strong> we record anonymous events (form started, step reached, form submitted)
@@ -95,9 +98,9 @@ export default function PrivacyPage() {
 
       <h2>3. Cookies and similar technologies</h2>
       <ul>
-        <li>
+        {ga && (<li>
           <strong>Analytics cookies:</strong> set by Google Analytics as described above.
-        </li>
+        </li>)}
         <li>
           <strong>Session storage:</strong> used for campaign tags and application drafts, as described above. It never
           leaves your browser unless you submit a form.
@@ -106,7 +109,10 @@ export default function PrivacyPage() {
           <strong>Administrator sign-in:</strong> a secure session cookie is set only for our site administrator.
         </li>
       </ul>
-      <p>We do not use advertising cookies or allow third parties to place advertising trackers on the site.</p>
+      <p>
+        {ga ? "" : "Visitors receive no cookies from us. "}We do not use advertising cookies or allow third parties to
+        place advertising trackers on the site.
+      </p>
 
       <h2>4. How we use information</h2>
       <ul>
@@ -130,9 +136,9 @@ export default function PrivacyPage() {
         <li>
           <strong>Vercel</strong>: website hosting and cookieless page-view analytics.
         </li>
-        <li>
+        {ga && (<li>
           <strong>Google</strong>: Google Analytics, as described above.
-        </li>
+        </li>)}
         <li>
           <strong>Supabase</strong>: our database, where submissions are stored, and administrator sign-in.
         </li>
@@ -154,8 +160,8 @@ export default function PrivacyPage() {
       <p>
         We keep submissions for as long as needed to review them and provide our services, then delete or anonymize
         them. [PLACEHOLDER: set a specific retention period.] Hashed IP records are deleted within about a day.
-        Anonymous form-activity counts may be kept longer. Google Analytics data is retained according to the setting in
-        our Google Analytics account [PLACEHOLDER: e.g., 14 months].
+        Anonymous form-activity counts may be kept longer.
+        {ga && " Google Analytics data is retained according to the setting in our Google Analytics account [PLACEHOLDER: e.g., 14 months]."}
       </p>
 
       <h2>7. Your choices and rights</h2>
@@ -165,7 +171,7 @@ export default function PrivacyPage() {
           our <ContactLink />.
         </li>
         <li>Unsubscribe from updates using the link in any update email.</li>
-        <li>Opt out of Google Analytics using Google&rsquo;s opt-out add-on or your browser&rsquo;s cookie settings.</li>
+        {ga && <li>Opt out of Google Analytics using Google&rsquo;s opt-out add-on or your browser&rsquo;s cookie settings.</li>}
       </ul>
       <p>[PLACEHOLDER: add any state-specific rights that apply.]</p>
 
