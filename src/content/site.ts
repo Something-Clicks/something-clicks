@@ -72,10 +72,8 @@ export const consentCopy = {
 } as const;
 
 export const nav = [
-  { href: "/", label: "Home" },
-  { href: "/how-it-works", label: "How It Works" },
-  { href: "/for-businesses", label: "For Businesses" },
-  { href: "/referral-partners", label: "Referral Partners" },
+  { href: "/#how-it-works", label: "How it works" },
+  { href: "/referral-partners", label: "Referral partners" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
 ] as const;

@@ -13,7 +13,7 @@ export function Footer() {
         <nav aria-label="Footer">
           <h2 className="text-sm font-semibold text-white">Explore</h2>
           <ul className="mt-3 space-y-2 text-sm">
-            {[...nav, { href: "/join", label: "Apply" }].map((item) => (
+            {[{ href: "/#find", label: "Find my matches" }, ...nav].map((item) => (
               <li key={item.href}>
                 <Link href={item.href} className="text-mist hover:text-white">
                   {item.label}
@@ -46,8 +46,7 @@ export function Footer() {
       </div>
       <div className="border-t border-white/10">
         <p className="container-page py-5 text-xs text-mist">
-          © {new Date().getFullYear()} {site.legalName}. The Something Clicks Network is in a founding pilot; results are
-          not guaranteed.
+          © {new Date().getFullYear()} {site.legalName}. Make the complicated click.
         </p>
       </div>
     </footer>

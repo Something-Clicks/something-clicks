@@ -78,7 +78,12 @@ export default async function ExplorerPage({ searchParams }: { searchParams: Pro
           ) : (
             <>
               <div className="rounded-2xl bg-white p-5 ring-1 ring-line">
-                <h2 className="text-2xl">{place.name}</h2>
+                <div className="flex flex-wrap items-baseline justify-between gap-2">
+                  <h2 className="text-2xl">{place.name}</h2>
+                  <Link href={`/admin/network/preview?place=${place.id}`} className="text-sm font-semibold text-royal hover:underline">
+                    Preview their match view
+                  </Link>
+                </div>
                 <p className="mt-1 text-sm text-navy-soft">
                   {place.category_label}{place.broad ? " (broad category)" : ""} · {stateLabels[place.state as PlaceState]} ·{" "}
                   {[place.street, place.locality, place.region].filter(Boolean).join(", ")}

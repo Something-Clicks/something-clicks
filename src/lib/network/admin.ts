@@ -202,6 +202,7 @@ export async function getPlace(id: number): Promise<PlaceDetail | null> {
 export type MatchRow = {
   place_b: number;
   name: string;
+  category_id: string;
   category_label: string;
   broad: boolean;
   state: string;
@@ -220,7 +221,7 @@ export type MatchRow = {
 
 export async function placeMatches(placeId: number): Promise<MatchRow[]> {
   return sql()<MatchRow[]>`
-    select m.place_b::int, b.name, c.label as category_label, c.broad, b.state::text, b.locality,
+    select m.place_b::int, b.name, b.category_id, c.label as category_label, c.broad, b.state::text, b.locality,
            m.score, m.c, m.d, m.s, m.distance_m, m.partnership_type, m.reason_key, m.ai_rationale,
            m.rationale_edited, m.status
     from matches m join places b on b.id = m.place_b join categories c on c.id = b.category_id
