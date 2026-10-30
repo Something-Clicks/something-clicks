@@ -112,10 +112,10 @@ export async function searchMatches(categoryId: string, place: Place, limit = 6)
   });
 }
 
-/** Live count of businesses mapped nationally for a journey (from place_counts). */
+/** Live count of a journey's imported businesses (wedding-specific; broad categories excluded). */
 export async function mappedCount(journeyId: string): Promise<number> {
   const [row] = await sql()<{ n: number }[]>`
-    select coalesce(sum(pc.n), 0)::int as n from place_counts pc join categories c on c.id = pc.category_id
-    where c.journey_id = ${journeyId}`;
+    select count(*)::int as n from places p join categories c on c.id = p.category_id
+    where c.journey_id = ${journeyId} and not c.broad and not p.stale and not p.suppressed`;
   return row?.n ?? 0;
 }

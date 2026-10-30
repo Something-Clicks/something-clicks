@@ -4,6 +4,7 @@ import { CategoryMatchCard } from "@/components/network/CategoryMatchCard";
 import { CategoryIcon } from "@/components/network/CategoryIcon";
 import { FindForm } from "@/components/network/FindForm";
 import { activeJourneys, categoryById } from "@/content/journeys";
+import { formatAtLeast } from "@/content/network";
 import { site } from "@/content/site";
 import { dbConfigured } from "@/lib/db";
 import { pageMeta } from "@/lib/metadata";
@@ -104,7 +105,7 @@ export default async function HomePage() {
             </p>
             {mapped > 0 && (
               <p className="mt-8 text-lg">
-                <span className="block text-5xl font-semibold tracking-tight text-royal tabular-nums">{mapped.toLocaleString()}</span>
+                <span className="block text-5xl font-semibold tracking-tight text-royal tabular-nums">{formatAtLeast(mapped)}</span>
                 {journey?.noun ?? "businesses"} mapped across the U.S.
               </p>
             )}
