@@ -6,7 +6,7 @@ import { NoBusiness } from "@/components/members/NoBusiness";
 import { Field, Notice } from "@/components/members/fields";
 import { SubmitButton } from "@/components/members/SubmitButton";
 import { partnershipLabels, type PartnershipType } from "@/content/journeys";
-import { consentCopy, site } from "@/content/site";
+import { site } from "@/content/site";
 import { loadDashboard } from "@/lib/members/dashboard";
 import { partnershipsFor, type PartnershipRow } from "@/lib/members/network";
 import { acceptPartnershipAction, endPartnershipAction, proposeAction } from "../actions";
@@ -114,7 +114,9 @@ function Partnership({ r, placeId }: { r: PartnershipRow; placeId: number }) {
             Visits from your link: <strong className="text-navy tabular-nums">{r.my_clicks}</strong> · from theirs:{" "}
             <strong className="text-navy tabular-nums">{r.their_clicks}</strong>
           </p>
-          <p className="text-sm text-navy-soft">{consentCopy.disclosed}</p>
+          <p className="text-sm text-navy-soft">
+            When you share a partner&rsquo;s offer, say it&rsquo;s a partner offer, for example &ldquo;Our partner {r.other_name} is offering…&rdquo;
+          </p>
           <form action={endPartnershipAction}>
             {hidden}
             <button type="submit" className="text-sm font-semibold text-navy-soft underline hover:text-royal">End partnership</button>

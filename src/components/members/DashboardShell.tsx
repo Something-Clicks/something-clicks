@@ -51,18 +51,18 @@ export function DashboardShell({
               </form>
             </div>
           </div>
-          <nav aria-label="Dashboard" className="-mb-px mt-6 flex gap-1 overflow-x-auto">
+          <nav aria-label="Dashboard" className="-mx-2.5 -mb-px mt-6 flex overflow-x-auto sm:mx-0 sm:gap-1">
             {tabs.map((t) => (
               <Link
                 key={t.href}
                 href={t.href + q}
                 aria-current={active === t.href ? "page" : undefined}
-                className="inline-flex items-center gap-2 whitespace-nowrap border-b-2 border-transparent px-4 py-3 font-semibold text-navy-soft hover:text-royal aria-[current=page]:border-royal aria-[current=page]:text-royal"
+                className="inline-flex items-center gap-2 whitespace-nowrap border-b-2 border-transparent px-2.5 py-3 text-[15px] font-semibold sm:px-4 sm:text-base text-navy-soft hover:text-royal aria-[current=page]:border-royal aria-[current=page]:text-royal"
               >
                 {t.label}
                 {t.href === "/dashboard/requests" && incoming > 0 && (
                   <span className="rounded-full bg-royal px-2 py-0.5 text-xs text-white">
-                    {incoming}<span className="sr-only"> new</span>
+                    <span className="sr-only">(</span>{incoming}<span className="sr-only"> new)</span>
                   </span>
                 )}
               </Link>
