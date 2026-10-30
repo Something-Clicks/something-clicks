@@ -16,6 +16,7 @@
   --color-navy-soft: #3d4b61; /* secondary text on light: 8.8:1 white, 7.7:1 ice */
   --color-mist: #c7d2e6; /* secondary text on navy: 10:1 */
   --color-line: #d5deef; /* hairline borders on light surfaces (decorative) */
+  --color-field: #71819d; /* form control borders: 3.9:1 white, 3.5:1 ice (WCAG 1.4.11) */
   --color-danger: #b42318; /* 6.5:1 on white */
   --color-success: #067647; /* 5.7:1 on white */
 
@@ -26,6 +27,8 @@
   html {
     -webkit-text-size-adjust: 100%;
     scroll-behavior: smooth;
+    /* keep focused/anchored elements clear of the sticky header (WCAG 2.4.11) */
+    scroll-padding-top: 5rem;
   }
   body {
     @apply bg-white text-navy antialiased;
