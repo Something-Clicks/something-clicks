@@ -5,12 +5,15 @@ import { Field, Notice } from "@/components/members/fields";
 import { SubmitButton } from "@/components/members/SubmitButton";
 import { loadDashboard } from "@/lib/members/dashboard";
 import { saveProfileAction } from "../actions";
+import { readiness } from "@/lib/readiness";
 
 export const metadata: Metadata = { title: "Profile", robots: { index: false } };
 
 type Search = { place?: string; done?: string; error?: string; welcome?: string };
 
 export default async function ProfilePage({ searchParams }: { searchParams: Promise<Search> }) {
+  // The layout shows "coming soon" until accounts are live; don't query tables that may not exist yet.
+  if (!(await readiness()).members) return null;
   const sp = await searchParams;
   const ctx = await loadDashboard("/dashboard/profile", sp.place);
   if (ctx.kind === "none") return <NoBusiness email={ctx.member.email} pending={ctx.pending} />;

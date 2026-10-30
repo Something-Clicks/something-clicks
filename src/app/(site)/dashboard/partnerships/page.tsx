@@ -10,6 +10,7 @@ import { site } from "@/content/site";
 import { loadDashboard } from "@/lib/members/dashboard";
 import { partnershipsFor, type PartnershipRow } from "@/lib/members/network";
 import { acceptPartnershipAction, endPartnershipAction, proposeAction } from "../actions";
+import { readiness } from "@/lib/readiness";
 
 export const metadata: Metadata = { title: "Partnerships", robots: { index: false } };
 
@@ -24,6 +25,8 @@ const done: Record<string, string> = {
 const steps = ["Matched", "Introduced", "Connected", "Partnership live"];
 
 export default async function PartnershipsPage({ searchParams }: { searchParams: Promise<Search> }) {
+  // The layout shows "coming soon" until accounts are live; don't query tables that may not exist yet.
+  if (!(await readiness()).members) return null;
   const sp = await searchParams;
   const ctx = await loadDashboard("/dashboard/partnerships", sp.place);
   if (ctx.kind === "none") return <NoBusiness email={ctx.member.email} pending={ctx.pending} />;

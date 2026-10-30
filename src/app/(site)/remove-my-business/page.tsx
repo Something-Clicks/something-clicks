@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Field, Notice } from "@/components/members/fields";
 import { SubmitButton } from "@/components/members/SubmitButton";
-import { dbConfigured } from "@/lib/db";
+import { readiness } from "@/lib/readiness";
 import { getClaimable } from "@/lib/members/claims";
 import { pageMeta } from "@/lib/metadata";
 import { removeBusiness } from "./actions";
@@ -21,7 +21,7 @@ const errors: Record<string, string> = {
 export default async function RemovePage({ searchParams }: { searchParams: Promise<{ place?: string; error?: string }> }) {
   const sp = await searchParams;
   const placeId = Number(sp.place);
-  const place = Number.isInteger(placeId) && placeId > 0 && dbConfigured() ? await getClaimable(placeId) : null;
+  const place = Number.isInteger(placeId) && placeId > 0 && (await readiness()).members ? await getClaimable(placeId).catch(() => null) : null;
   return (
     <>
       <section className="bg-navy text-white on-dark">

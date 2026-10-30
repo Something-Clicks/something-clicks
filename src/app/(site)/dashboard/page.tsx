@@ -11,6 +11,7 @@ import type { PlaceState } from "@/content/network";
 import { loadDashboard } from "@/lib/members/dashboard";
 import { myMatches, type MyMatch } from "@/lib/members/network";
 import { requestIntroAction } from "./actions";
+import { readiness } from "@/lib/readiness";
 
 export const metadata: Metadata = { title: "Your matches", robots: { index: false } };
 
@@ -22,6 +23,8 @@ const done: Record<string, string> = {
 };
 
 export default async function DashboardMatchesPage({ searchParams }: { searchParams: Promise<Search> }) {
+  // The layout shows "coming soon" until accounts are live; don't query tables that may not exist yet.
+  if (!(await readiness()).members) return null;
   const sp = await searchParams;
   const ctx = await loadDashboard("/dashboard", sp.place);
   if (ctx.kind === "none") return <NoBusiness email={ctx.member.email} pending={ctx.pending} />;
