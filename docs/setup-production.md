@@ -23,12 +23,13 @@ If you already created the project, skip to step 4.
 
 ## Part 2: Run the migrations
 
-Run all four files, **in this order**, from the `supabase/migrations` folder in the GitHub repo:
+Run all five files, **in this order**, from the `supabase/migrations` folder in the GitHub repo. If you already ran the first four, just run the fifth:
 
 1. `20261030000000_init.sql`
 2. `20261031000000_network_foundation.sql`
 3. `20261031010000_matching.sql`
 4. `20261031020000_metro_and_national.sql`
+5. `20261031030000_skip_unchanged_matches.sql`
 
 For each file:
 

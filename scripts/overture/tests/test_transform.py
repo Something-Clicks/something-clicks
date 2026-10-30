@@ -54,6 +54,13 @@ ROWS = [
     place("g-venue-a", "The Grand Ballroom", "event_venue", conf=0.8, website="https://grand.example", phone="8015550199"),
     place("g-venue-b", "Grand Ballroom Events", "event_venue", conf=0.9, website="https://www.grand.example/about",
           phone="+1 801 555 0199", lat=40.651),
+    # Same building, one name contains the other, different categories/phones: duplicate.
+    place("g-school-a", "The Schoolhouse", "event_venue", conf=0.85, lat=40.70, website="https://schoolhouseevents.example"),
+    place("g-school-b", "The SchoolHouse Dallas", "party_and_event_planning", conf=0.97, lat=40.70015,
+          website="https://theschoolhousedallas.example"),
+    # Short name inside a longer one at the same spot: too generic to merge.
+    place("g-bloom", "Bloom", "florist", lat=40.75),
+    place("g-bloom-photo", "Bloom Photography", "photography_service", lat=40.75005),
 ]
 
 
@@ -77,7 +84,7 @@ def test_every_row_is_kept_or_dropped_exactly_once(result):
 def test_drop_reasons(result):
     assert result.dropped == {
         "outside": 1, "not_us": 1, "closed": 1, "low_confidence": 1, "junk": 1,
-        "unmapped": 2, "suppressed": 2, "duplicate": 2,
+        "unmapped": 2, "suppressed": 2, "duplicate": 3,
     }
 
 
@@ -86,7 +93,7 @@ def test_classification_by_taxonomy_and_name_rule(result):
     assert k["g-florist"]["category_id"] == "florists" and k["g-florist"]["classified_by"] == "taxonomy"
     assert k["g-photo"]["category_id"] == "photographers" and k["g-photo"]["classified_by"] == "name_rule"
     assert "g-equipment" not in k  # "Rentals" alone doesn't make an event rental company
-    assert result.by_classifier == {"taxonomy": 5, "name_rule": 1}
+    assert result.by_classifier == {"taxonomy": 8, "name_rule": 1}
 
 
 def test_normalization(result):
@@ -106,6 +113,9 @@ def test_deduplication_keeps_higher_confidence_and_records_merges(result):
     assert "g-cater-a" in k and "g-cater-b" in k
     assert "g-venue-b" in k and "g-venue-a" not in k
     assert k["g-venue-b"]["merged_gers_ids"] == ["g-venue-a"]
+    assert "g-school-b" in k and "g-school-a" not in k
+    assert k["g-school-b"]["merged_gers_ids"] == ["g-school-a"]
+    assert "g-bloom" in k and "g-bloom-photo" in k
 
 
 def test_prefilter_keeps_us_journey_rows_only():

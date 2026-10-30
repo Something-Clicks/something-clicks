@@ -128,12 +128,22 @@ on conflict (gers_id) do update set
   region = case when places.state = 'listed' then excluded.region else places.region end,
   postcode = case when places.state = 'listed' then excluded.postcode else places.postcode end,
   geog = case when places.state = 'listed' then excluded.geog else places.geog end
+-- Skip unchanged rows: rewriting all ~240k rows on every re-import would leave
+-- that many dead row versions behind and trip the size guard.
+where (places.release, places.confidence, places.source_datasets, places.merged_gers_ids, places.stale,
+       places.taxonomy_primary, places.category_id, places.name, places.website, places.phone, places.email,
+       places.street, places.locality, places.region, places.postcode, places.cluster_ids)
+  is distinct from
+      (excluded.release, excluded.confidence, excluded.source_datasets, excluded.merged_gers_ids, false,
+       excluded.taxonomy_primary, excluded.category_id, excluded.name, excluded.website, excluded.phone, excluded.email,
+       excluded.street, excluded.locality, excluded.region, excluded.postcode,
+       array(select distinct unnest(places.cluster_ids || excluded.cluster_ids) order by 1))
 returning (xmax = 0) as inserted
 """
 
 
 def load(conn: psycopg.Connection, cluster_id: int, release: str, kept: list[dict]) -> dict[str, int]:
-    """Upsert kept rows and mark this cluster's records missing from the release as stale. Caller commits."""
+    """Upsert kept rows and mark this cluster's records missing from them as stale. Caller commits."""
     with conn.cursor() as cur:
         cur.execute("drop table if exists stage")
         cur.execute(
@@ -147,10 +157,14 @@ def load(conn: psycopg.Connection, cluster_id: int, release: str, kept: list[dic
                 copy.write_row([r[c] for c in STAGE_COLUMNS])
         cur.execute(UPSERT, {"release": release, "cluster_id": cluster_id})
         flags = [row[0] for row in cur.fetchall()]
+        # Anything this cluster imported before but not now (gone from Overture, or
+        # newly dropped as a duplicate or below threshold) is marked stale, not deleted.
         cur.execute(
-            """update places set stale = true
-               where %s = any(cluster_ids) and source = 'overture' and release is distinct from %s and not stale""",
-            (cluster_id, release),
+            """update places p set stale = true
+               where %s = any(p.cluster_ids) and p.source = 'overture' and not p.stale
+                 and not exists (select 1 from stage s where s.gers_id = p.gers_id)""",
+            (cluster_id,),
         )
         stale = cur.rowcount
-    return {"inserted": sum(flags), "updated": len(flags) - sum(flags), "marked_stale": stale}
+    inserted = sum(flags)
+    return {"inserted": inserted, "updated": len(flags) - inserted, "unchanged": len(kept) - len(flags), "marked_stale": stale}
