@@ -5,9 +5,7 @@ import os
 import psycopg
 import pytest
 
-from sc_overture import load as L
 from sc_overture.seed import seed
-from tests.test_load import row
 
 URL = os.environ.get("TEST_DATABASE_URL")
 pytestmark = pytest.mark.skipif(not URL, reason="TEST_DATABASE_URL not set")
@@ -30,10 +28,14 @@ def db():
 
 
 def add(conn, cluster, gers, category, lat_km=0.0, locality="Sandy", serves=None):
-    L.load(conn, cluster, "r1", [row(gers, name=gers, category=category, lat=10.0 + lat_km * KM, lng=-140.0, locality=locality)])
-    if serves is not None:
-        with conn.cursor() as cur:
-            cur.execute("update places set serves_journey = %s where gers_id = %s", (serves, gers))
+    # Direct insert: these tests exercise matching, not the loader (each load would
+    # mark the cluster's earlier rows stale).
+    with conn.cursor() as cur:
+        cur.execute(
+            """insert into places (gers_id, release, name, category_id, locality, geog, cluster_ids, serves_journey)
+               values (%s, 'r1', %s, %s, %s, st_setsrid(st_makepoint(-140.0, %s), 4326)::geography, array[%s]::bigint[], %s)""",
+            (gers, gers, category, locality, 10.0 + lat_km * KM, cluster, serves),
+        )
 
 
 def matches(conn, gers):

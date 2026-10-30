@@ -125,8 +125,12 @@ def transform(
         """
     )
 
-    # Duplicates among otherwise-kept rows: same normalized name within 50 m,
-    # or same website domain + phone within 200 m. Keep the higher-confidence row.
+    # Duplicates among otherwise-kept rows. Keep the higher-confidence row when:
+    #   - same normalized name within 50 m
+    #   - same website domain + phone within 200 m
+    #   - within 100 m and one name contains the other or they're nearly identical
+    #     ("The Schoolhouse" / "The SchoolHouse Dallas"); both names >= 6 chars
+    #     so short generic names never collapse distinct businesses
     hav = (
         "2 * 6371000 * asin(sqrt(pow(sin(radians(b.lat - a.lat) / 2), 2) + "
         "cos(radians(a.lat)) * cos(radians(b.lat)) * pow(sin(radians(b.lng - a.lng) / 2), 2)))"
@@ -135,7 +139,8 @@ def transform(
     con.execute(
         f"""
         CREATE TABLE dup_pairs AS
-        WITH c AS (SELECT * FROM classified WHERE drop_reason IS NULL)
+        WITH c AS (SELECT * FROM classified WHERE drop_reason IS NULL),
+        cells AS (SELECT *, floor(lat * 1000)::BIGINT AS cy, floor(lng * 1000)::BIGINT AS cx FROM c)
         SELECT a.gers_id AS loser, b.gers_id AS winner, b.confidence AS winner_conf
         FROM c a JOIN c b ON a.norm_name = b.norm_name AND a.norm_name <> '' AND a.gers_id <> b.gers_id
         WHERE {hav} < 50 AND {better}
@@ -144,6 +149,16 @@ def transform(
         FROM c a JOIN c b ON a.domain = b.domain AND a.phone_e164 = b.phone_e164
           AND a.domain <> '' AND a.phone_e164 <> '' AND a.gers_id <> b.gers_id
         WHERE {hav} < 200 AND {better}
+        UNION
+        SELECT a.gers_id, b.gers_id, b.confidence
+        -- ~100 m grid: each row probes its own and the 8 neighbouring cells, as
+        -- plain integer columns so DuckDB can hash-join them.
+        FROM (SELECT *, cy + dy AS ny, cx + dx AS nx FROM cells, (SELECT unnest([-1, 0, 1]) AS dy), (SELECT unnest([-1, 0, 1]) AS dx)) a
+        JOIN cells b ON b.cy = a.ny AND b.cx = a.nx AND a.gers_id <> b.gers_id
+        WHERE length(a.norm_name) >= 6 AND length(b.norm_name) >= 6
+          AND (contains(a.norm_name, b.norm_name) OR contains(b.norm_name, a.norm_name)
+               OR jaro_winkler_similarity(a.norm_name, b.norm_name) >= 0.93)
+          AND {hav} < 100 AND {better}
         """
     )
     con.execute(

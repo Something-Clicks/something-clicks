@@ -45,13 +45,13 @@ def place(conn, gers):
 def test_insert_then_update_and_stale(conn):
     cluster = L.get_cluster(conn, "test-load")["id"]
     assert L.load(conn, cluster, "2026-09-23.0", [row("t-a"), row("t-b", name="Old Venue", category="wedding_venues")]) == {
-        "inserted": 2, "updated": 0, "marked_stale": 0}
+        "inserted": 2, "updated": 0, "unchanged": 0, "marked_stale": 0}
     assert place(conn, "t-a")["cluster_ids"] == [cluster]
     assert round(place(conn, "t-a")["lat"], 2) == 40.57
 
-    # New release: t-a refreshed, t-b missing so it becomes stale.
+    # Next import: t-a refreshed, t-b missing so it becomes stale.
     stats = L.load(conn, cluster, "2026-10-21.0", [row("t-a", name="Bloom and Co", confidence=0.95)])
-    assert stats == {"inserted": 0, "updated": 1, "marked_stale": 1}
+    assert stats == {"inserted": 0, "updated": 1, "unchanged": 0, "marked_stale": 1}
     a, b = place(conn, "t-a"), place(conn, "t-b")
     assert a["name"] == "Bloom and Co" and a["release"] == "2026-10-21.0" and not a["stale"]
     assert b["stale"]
@@ -75,3 +75,24 @@ def test_suppression_and_budget_helpers(conn):
     assert "blocked.example" in L.suppression(conn).domains
     assert L.new_place_count(conn, ["t-x", "t-y"]) == 2
     assert L.database_bytes(conn) > 0
+
+
+def test_rows_dropped_on_reimport_of_same_release_become_stale(conn):
+    cluster = L.get_cluster(conn, "test-load")["id"]
+    L.load(conn, cluster, "r1", [row("t-d"), row("t-dup", name="Bloom Co Events")])
+    # Same release, but t-dup is now dropped as a duplicate.
+    assert L.load(conn, cluster, "r1", [row("t-d", merged_gers_ids=["t-dup"])])["marked_stale"] == 1
+    assert place(conn, "t-dup")["stale"] and place(conn, "t-d")["merged_gers_ids"] == ["t-dup"]
+
+
+def test_reimporting_identical_rows_writes_nothing(conn):
+    cluster = L.get_cluster(conn, "test-load")["id"]
+    rows = [row("t-e"), row("t-f", name="Petal Co")]
+    L.load(conn, cluster, "r1", rows)
+    with conn.cursor() as cur:
+        cur.execute("select xmin::text from places where gers_id = 't-e'")
+        before = cur.fetchone()[0]
+    assert L.load(conn, cluster, "r1", rows) == {"inserted": 0, "updated": 0, "unchanged": 2, "marked_stale": 0}
+    with conn.cursor() as cur:
+        cur.execute("select xmin::text from places where gers_id = 't-e'")
+        assert cur.fetchone()[0] == before  # row version untouched

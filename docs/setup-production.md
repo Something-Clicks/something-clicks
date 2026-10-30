@@ -23,12 +23,13 @@ If you already created the project, skip to step 4.
 
 ## Part 2: Run the migrations
 
-Run all four files, **in this order**, from the `supabase/migrations` folder in the GitHub repo:
+Run all five files, **in this order**, from the `supabase/migrations` folder in the GitHub repo. If you already ran the first four, just run the fifth:
 
 1. `20261030000000_init.sql`
 2. `20261031000000_network_foundation.sql`
 3. `20261031010000_matching.sql`
 4. `20261031020000_metro_and_national.sql`
+5. `20261031030000_skip_unchanged_matches.sql`
 
 For each file:
 
@@ -92,8 +93,11 @@ All of these run from GitHub: **Actions** tab → **Overture import** (left list
 |---|---|---|---|---|
 | 1 | `national` | (ignored) | `dry-run`, then `load` | ZIP-by-category counts and the location lookup, so search works everywhere (~33 MB, ~15 min) |
 | 2 | `import` | `us-weddings` | `dry-run`, then `load` | Wedding-specific businesses across the US (~15 min) |
-| 3 | `import` | `dfw-weddings` | `dry-run`, then `load` | Adds DFW's broad categories (salons, bakeries…); everything else is already loaded |
-| 4 | `matches` | `dfw-weddings` | (ignored) | Generates DFW's matches |
+| 3 | `import` | `dfw-weddings` | `dry-run`, then `load` | Adds the metro's broad categories (salons, bakeries…) for later AI review |
+| 4 | `matches` | `dfw-weddings` | (ignored) | Generates the metro's matches (wedding-specific only) |
+| 5 | repeat steps 3–4 for `atl-weddings`, `hou-weddings`, `phx-weddings`, `bna-weddings` | | | Atlanta, Houston, Phoenix, Nashville |
+
+Check the **Projected total** line in each dry run before loading.
 
 A load that would take the database past 400 MB is refused automatically. After step 4, the admin shows the clusters at **somethingclicks.com/admin/network**.
 
