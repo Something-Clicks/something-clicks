@@ -3,6 +3,7 @@ import Link from "next/link";
 import { SubmitButton } from "@/components/members/SubmitButton";
 import { adminConfig } from "@/lib/admin-auth";
 import { readUnsubscribeToken } from "@/lib/invitations";
+import { readiness } from "@/lib/readiness";
 import { unsubscribeAction } from "./actions";
 
 export const metadata: Metadata = { title: "Unsubscribe", robots: { index: false, follow: false } };
@@ -11,6 +12,9 @@ const mask = (email: string) => email.replace(/^(.)[^@]*(@.*)$/, "$1•••$2"
 
 /** Unsubscribing takes effect immediately; the button guards against link scanners unsubscribing people by accident. */
 export default async function UnsubscribePage({ searchParams }: { searchParams: Promise<{ t?: string; done?: string; error?: string }> }) {
+  // The layout shows "coming soon" until the database and signing secret are set.
+  const ready = await readiness();
+  if (!ready.db || !ready.secret) return null;
   const sp = await searchParams;
   const email = sp.t ? await readUnsubscribeToken(sp.t, adminConfig().secret) : null;
   return (

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Plus, Search } from "lucide-react";
 import { stateLabels } from "@/content/network";
-import { dbConfigured } from "@/lib/db";
+import { readiness } from "@/lib/readiness";
 import { searchClaimable } from "@/lib/members/claims";
 import { allow } from "@/lib/members/limits";
 import { resolveLocation } from "@/lib/network/search";
@@ -53,7 +53,8 @@ export default async function ClaimSearchPage({ searchParams }: { searchParams: 
 }
 
 async function Results({ q, where }: { q: string; where: string }) {
-  if (!dbConfigured()) return <p className="text-lg text-navy-soft">Search is being set up. Please check back soon.</p>;
+  const ready = await readiness();
+  if (!ready.members || !ready.listings) return null; // the layout shows "coming soon"
   if (!(await allow("claim-search", 60, 30))) {
     return <p role="alert" className="text-lg">You&rsquo;ve searched a lot in the last minute. Please wait a moment and try again.</p>;
   }
