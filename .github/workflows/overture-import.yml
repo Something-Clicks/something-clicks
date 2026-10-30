@@ -5,17 +5,17 @@ on:
   workflow_dispatch:
     inputs:
       job:
-        description: "import = one cluster; national = ZIP counts + location lookup; matches = generate a metro's matches"
+        description: "migrate = apply missing database migrations; import = one cluster; national = ZIP counts + location lookup; matches = generate a metro's matches"
         required: true
         type: choice
-        options: [import, national, matches]
+        options: [migrate, import, national, matches]
         default: import
       cluster:
-        description: "Cluster slug (us-weddings, dfw-weddings…); not used by national"
+        description: "Cluster slug (us-weddings, dfw-weddings…); not used by migrate or national"
         required: false
         default: us-weddings
       mode:
-        description: "dry-run reports counts and projected size; load writes (import and national only)"
+        description: "dry-run reports what would change; load writes (not used by matches)"
         required: true
         type: choice
         options: [dry-run, load]
@@ -44,6 +44,7 @@ jobs:
       - run: pip install -r requirements.txt
       - run: python -m pytest -q
       - name: Run
+        shell: bash
         env:
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
           JOB: ${{ inputs.job }}
@@ -51,10 +52,17 @@ jobs:
           MODE: ${{ inputs.mode }}
           RELEASE: ${{ inputs.release }}
         run: |
-          python -m sc_overture seed
-          case "$JOB" in
-            import)   python -m sc_overture import "$CLUSTER" "--$MODE" ${RELEASE:+--release "$RELEASE"} | tee report.txt ;;
-            national) python -m sc_overture national "--$MODE" ${RELEASE:+--release "$RELEASE"} | tee report.txt ;;
-            matches)  python -m sc_overture matches "$CLUSTER" | tee report.txt ;;
-          esac
+          set -o pipefail
+          status=0
+          {
+            # Seeding needs the tables, so migrate runs on its own.
+            [ "$JOB" = migrate ] || python -m sc_overture seed
+            case "$JOB" in
+              migrate)  python -m sc_overture migrate $([ "$MODE" = dry-run ] && echo --dry-run) ;;
+              import)   python -m sc_overture import "$CLUSTER" "--$MODE" ${RELEASE:+--release "$RELEASE"} ;;
+              national) python -m sc_overture national "--$MODE" ${RELEASE:+--release "$RELEASE"} ;;
+              matches)  python -m sc_overture matches "$CLUSTER" ;;
+            esac
+          } 2>&1 | tee report.txt || status=$?
           { echo '```'; cat report.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          exit $status
