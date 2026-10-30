@@ -24,7 +24,7 @@ def format_report(r: dict) -> str:
     lines += [
         "",
         f"  Database now         {mb(r['database_bytes_before']):>10}",
-        f"  This import adds     {mb(r['projected_bytes']):>10}   (places + room for matches)",
+        f"  This import adds     {mb(r['projected_bytes']):>10}   ({'places + room for matches' if r.get('scope', 'metro') == 'metro' else 'places; matches are generated per metro'})",
         f"  Projected total      {mb(total):>10}   budget {mb(r['budget_bytes'])}, free tier {mb(r['free_tier_bytes'])}",
         "  " + ("✓ Within budget." if r["within_budget"] else "✗ Over budget: Supabase Pro would be required."),
         "",
