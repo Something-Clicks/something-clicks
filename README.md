@@ -61,6 +61,7 @@ Set these in **Vercel → Project → Settings → Environment Variables**. Prod
 | `RESEND_API_KEY` | required | optional | Without it, notifications are skipped and logged |
 | `NOTIFY_EMAIL_TO` | required | optional | Comma-separated list is allowed |
 | `NOTIFY_EMAIL_FROM` | required | optional | Must be on a domain verified in Resend, e.g. `Something Clicks <alerts@somethingclicks.com>` |
+| `SUPABASE_DB_URL` | required | required | Supabase → **Connect** → *Transaction pooler* connection string (port 6543), with your database password. Used by the network features and the import job. Also add it as a **GitHub Actions secret** with the same name |
 | `NEXT_PUBLIC_GA_MEASUREMENT_ID` | optional | leave unset | Google Analytics 4 → Admin → Data streams → your web stream → **Measurement ID** (`G-…`). GA loads only when set; it is never loaded on admin pages |
 
 Recommended: point Preview at a **second free Supabase project**, so test submissions from preview deployments don't land in your real data.
@@ -128,6 +129,47 @@ These are Vercel's standard values. Vercel's **Settings → Domains** page shows
 3. Only a failed save is shown to the visitor. Email or analytics failures are logged and never lose a submission.
 
 No customer lists or customer personal data are collected anywhere. The only visitor cookies come from Google Analytics, when it is configured; everything it does is disclosed on `/privacy` and `/terms`.
+
+## Partnership network (Overture data)
+
+The specification is [`docs/ai-network-spec.md`](docs/ai-network-spec.md). The first cluster is **Salt Lake Valley weddings**; its dry-run report is in [`docs/imports/`](docs/imports).
+
+### Database
+
+Run every file in `supabase/migrations/` in order, either in the Supabase SQL Editor or with `supabase db push`. The network migrations enable PostGIS, `pg_trgm`, and `btree_gist`, all of which Supabase supports.
+
+### Import job (`scripts/overture`, Python)
+
+The import job runs from GitHub Actions or a laptop, never inside the website.
+
+```bash
+cd scripts/overture
+pip install -r requirements.txt
+export SUPABASE_DB_URL='postgresql://…'
+python -m sc_overture seed                              # journeys, categories, complements, starter clusters
+python -m sc_overture import slv-weddings --dry-run     # counts, drops by reason, projected size; writes nothing to places
+python -m sc_overture import slv-weddings --load        # only after reviewing the dry run
+python -m sc_overture national --load                   # ZIP x category counts and location lookup (no names)
+python -m pytest -q                                     # TEST_DATABASE_URL enables the database tests
+```
+
+From GitHub: **Actions → Overture import → Run workflow** (choose `dry-run` or `load`). The report appears in the run summary.
+
+How it works:
+
+- **Release:** the latest Overture release comes from the STAC catalog, or from the S3 bucket listing when STAC doesn't respond.
+- **Extract:** DuckDB reads S3 directly where its `httpfs` extension can load. Otherwise PyArrow reads only the matching row groups.
+- **Budget:** a load that would take the database past `DB_BUDGET_MB` (default 400 MB of the free tier's 500 MB) is refused.
+- **Journey map:** `src/content/journeys.json` holds the journeys, categories, Overture taxonomy mapping, name rules, and reason copy. Both the app and the import job read it; edit the JSON and re-run `seed`.
+
+### Admin
+
+`/admin/network` shows each cluster's listed, claimed, verified, and member counts, plus match totals and import history.
+
+- **Clusters:** create or edit a cluster (bounding box, journey, distance settings, status) and click **Recompute matches**. That takes about 5 seconds for 2,400 businesses.
+- **Match explorer:** pick a business to see its matches and their score components (complement, distance, service overlap).
+  - Approve or hide a match, or replace the standard reason line.
+  - Mark a business **"Serves weddings? no"** to remove a miscategorized Overture record from matching, then recompute.
 
 ## Project structure
 

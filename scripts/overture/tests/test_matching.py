@@ -58,6 +58,7 @@ def test_rules(db):
     add(conn, cl, "salon-unknown", "salons", lat_km=1)                   # broad, unconfirmed
     add(conn, cl, "salon-no", "salons", lat_km=1, serves=False)          # broad, confirmed not to serve weddings
     add(conn, cl, "photo-far", "photographers", lat_km=60)               # beyond 40 km
+    add(conn, cl, "tires", "wedding_venues", lat_km=0.2, serves=False)    # miscategorized by Overture, marked by admin
     compute(conn, cl)
 
     m = matches(conn, "florist")
@@ -68,7 +69,8 @@ def test_rules(db):
     assert m["photo"]["s"] == pytest.approx(0.75) and m["planner"]["s"] == pytest.approx(0.5)  # same locality
     assert m["photo"]["distance_m"] == pytest.approx(1000, rel=0.02)
     assert m["photo"]["score"] == pytest.approx(0.5 * 0.9 + 0.3 * m["photo"]["d"] + 0.2 * 0.75, rel=1e-4)
-    assert "salon-no" not in matches(conn, "planner")
+    assert "salon-no" not in matches(conn, "planner") and "tires" not in matches(conn, "photo")
+    assert matches(conn, "tires") == {}
     assert matches(conn, "salon-no") == {}
 
 

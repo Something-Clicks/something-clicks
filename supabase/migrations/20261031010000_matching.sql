@@ -4,7 +4,8 @@ create extension if not exists btree_gist;
 --
 -- score = 0.5 * C + 0.3 * D + 0.2 * S
 --   C  complement strength from `complements`, x0.6 for each side in a broad
---      category whose wedding service is unconfirmed; 0 if confirmed not to serve
+--      category whose wedding service is unconfirmed. Businesses marked as not
+--      serving the journey (serves_journey = false) are excluded entirely.
 --   D  exp(-distance / cluster.distance_scale_km), within cluster.max_match_km
 --   S  service overlap: 0.75 when both list the same locality, else 0.5 (unknown)
 --
@@ -41,7 +42,7 @@ begin
     from places pl join categories c on c.id = pl.category_id
     where p_cluster = any (pl.cluster_ids) and not pl.stale and not pl.suppressed
       and c.journey_id = cl.journey_id
-      and not (c.broad and pl.serves_journey is false);
+      and pl.serves_journey is not false;  -- marked as not a wedding business (admin, owner, or AI)
   create index on cluster_places using gist (category_id, geog);
   analyze cluster_places;
 
