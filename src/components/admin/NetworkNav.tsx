@@ -4,6 +4,8 @@ const links = [
   { href: "/admin/network", label: "Clusters" },
   { href: "/admin/network/explorer", label: "Match explorer" },
   { href: "/admin/network/imports", label: "Imports" },
+  { href: "/admin/network/outcomes", label: "Outcomes" },
+  { href: "/admin/network/ai", label: "AI review" },
   { href: "/admin/network/claims", label: "Claims" },
   { href: "/admin/network/removals", label: "Removals" },
   { href: "/admin/network/invitations", label: "Invitations" },

@@ -10,4 +10,5 @@ export const MIGRATIONS = [
   { version: "20261031020000", name: "metro_and_national" },
   { version: "20261031030000", name: "skip_unchanged_matches" },
   { version: "20261101000000", name: "members_claims_introductions" },
+  { version: "20261102000000", name: "ai_review_and_outcomes" },
 ] as const;
