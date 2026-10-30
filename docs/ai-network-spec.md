@@ -100,7 +100,7 @@ The free tier allows 500 MB. After existing tables, `geo_lookup` and `place_coun
 | **Test cluster:** Salt Lake Valley × weddings | 2,450 | ~1.8 MB | ~5 MB | ✅ |
 | Salt Lake Valley, every mapped category | ≤ 56,181 | ≤ 42 MB | only for active-cluster categories | ✅ |
 | Utah statewide, every category | ~136,000 | ~100 MB | — | ✅ |
-| National, wedding categories (SLV share 4.4% of cleaned places) | ~640,000 | ~480 MB | — | ❌ **Supabase Pro required** |
+| National, wedding categories (measured: 685,545) | ~685,000 | ~515 MB | — | ❌ **Supabase Pro required** |
 | National, every category | ~14.5 million | ~10.9 GB | — | ❌ **Pro plus about 3 GB of extra disk** |
 | National counts table (mapped categories only) | 0.35–0.55M rows | ~20–35 MB | — | ✅ |
 

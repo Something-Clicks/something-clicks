@@ -55,3 +55,16 @@
 - Some Overture categories are wrong. Examples: "All Media Restoration" (photo restoration) filed as a photography service, and "Realtypath" filed as an event venue. Phase 3 enrichment and the admin "hide" action handle these.
 - Restaurants that cater ("Q4U Barbeque Restaurant and Catering") count as caterers through the name rule.
 - Home-based vendors (photographers, DJs, makeup artists, cake makers) are under-represented. **Add your business** (phase 2) covers them.
+
+## National tables (run 2026-10-30, local dev database)
+
+`python -m sc_overture national --load` scanned all 18,445,270 US places in about 13 minutes.
+
+| | Rows | Size with indexes |
+|---|---|---|
+| `place_counts`: wedding categories per ZIP code (no names) | 144,856 (685,545 places counted) | 15 MB |
+| `geo_lookup`: ZIP-code and city centers | 65,196 (36,371 ZIPs, 28,825 cities) | 18 MB |
+
+**National wedding-category places:** salons 302,298 · planners 61,446 · bakeries 56,394 · flower and gift shops 54,930 · photographers 44,439 · jewelers 43,391 · hair and makeup 25,883 · caterers 20,862 · florists 17,054 · venues 14,759 · event rentals 13,178 · bridal and formal wear 10,318 · DJs and musicians 7,236 · limos 6,999 · cake makers 3,427 · stationery 1,489 · videographers 1,442.
+
+The local dev database holds both tables, the test cluster and its matches, and the earlier v1 tables, for a total of **83 MB** (free tier: 500 MB).
