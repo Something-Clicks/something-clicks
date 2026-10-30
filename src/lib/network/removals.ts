@@ -1,19 +1,12 @@
 import { sql } from "@/lib/db";
 import { websiteDomain } from "@/lib/members/domains";
 
-/** Release and source datasets actually present in the imported listings, for the attribution page. */
-export async function dataSources(): Promise<{ release: string | null; datasets: string[] }> {
-  const [[run], rows] = await Promise.all([
-    sql()<{ release: string | null }[]>`
-      select release from import_runs where status = 'succeeded' and mode = 'load' and release is not null
-      order by finished_at desc limit 1`,
-    sql()<{ d: string }[]>`
-      select d from (select source_datasets from places where source = 'overture' and not suppressed) p, unnest(p.source_datasets) d
-      -- Overture's own records are covered by the Overture license line itself.
-      where d not like 'Overture%'
-      group by d order by lower(d)`,
-  ]);
-  return { release: run?.release ?? null, datasets: rows.map((r) => r.d) };
+/** The Overture release behind the current listings (latest successful load). */
+export async function overtureRelease(): Promise<string | null> {
+  const [run] = await sql()<{ release: string | null }[]>`
+    select release from import_runs where status = 'succeeded' and mode = 'load' and release is not null
+    order by finished_at desc limit 1`;
+  return run?.release ?? null;
 }
 
 export type RemovalInput = { place_id: number | null; business_name: string; city: string; contact_email: string; website: string; notes: string };

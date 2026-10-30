@@ -1,9 +1,7 @@
 import Link from "next/link";
-import { P } from "@/components/Placeholder";
-import { placeholder } from "@/content/site";
 import { dbConfigured } from "@/lib/db";
 import { pageMeta } from "@/lib/metadata";
-import { dataSources } from "@/lib/network/removals";
+import { overtureRelease } from "@/lib/network/removals";
 
 export const metadata = pageMeta({
   title: "Data sources",
@@ -14,15 +12,37 @@ export const metadata = pageMeta({
 // Reflects the latest import; refresh daily.
 export const revalidate = 86400;
 
-/** Licenses we have confirmed. Anything else is shown with a visible marker until legal review fills it in. */
-const LICENSES: Record<string, { label: string; license: string; url: string }> = {
-  Foursquare: { label: "Foursquare Open Source Places", license: "Apache License 2.0", url: "https://www.apache.org/licenses/LICENSE-2.0" },
-  meta: { label: "Meta", license: "", url: "" },
-  AllThePlaces: { label: "All the Places", license: "CC0 1.0", url: "https://creativecommons.org/publicdomain/zero/1.0/" },
+/** Overture's attribution page, which carries its NOTICE. Swap in a direct NOTICE.txt link if Overture publishes one. */
+const OVERTURE_NOTICE_URL = "https://docs.overturemaps.org/attribution/";
+
+const CDLA = { name: "CDLA Permissive 2.0", url: "https://cdla.dev/permissive-2-0/" };
+
+/** Places sources and credits, as stated in Overture's attribution requirements. */
+const SOURCES: { license: { name: string; url: string }; credits: string[]; note?: "notice" }[] = [
+  {
+    license: CDLA,
+    credits: ["Meta", "Microsoft", "PinMeTo", "Krick", "RenderSEO", "DAC", "BrightQuery", "Birdeye", "Uberall", "OpenTravel Alliance"].map((s) => `Data from ${s}.`),
+  },
+  {
+    license: { name: "Apache License 2.0", url: "https://www.apache.org/licenses/LICENSE-2.0" },
+    credits: ["Copyright 2024 Foursquare Labs, Inc. All rights reserved."],
+    note: "notice",
+  },
+  {
+    license: { name: "CC0 1.0", url: "https://creativecommons.org/publicdomain/zero/1.0/" },
+    credits: ["Data from AllThePlaces."],
+  },
+];
+
+/** "2026-10-21.0" -> "October 21, 2026". */
+const releaseDate = (release: string) => {
+  const m = release.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (!m) return release;
+  return new Date(Date.UTC(+m[1], +m[2] - 1, +m[3])).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric", timeZone: "UTC" });
 };
 
 export default async function DataSourcesPage() {
-  const { release, datasets } = dbConfigured() ? await dataSources().catch(() => ({ release: null, datasets: [] })) : { release: null, datasets: [] };
+  const release = dbConfigured() ? await overtureRelease().catch(() => null) : null;
   return (
     <>
       <section className="bg-navy text-white on-dark">
@@ -37,34 +57,26 @@ export default async function DataSourcesPage() {
             <h2 className="text-3xl">Public business listings</h2>
             <p className="mt-4">
               Business listings include data from the{" "}
-              <a href="https://overturemaps.org" rel="noopener noreferrer" className="text-royal underline">Overture Maps Foundation</a>
-              {release ? <>, release {release},</> : ""} made available under the{" "}
-              <a href="https://cdla.dev/permissive-2-0/" rel="noopener noreferrer" className="text-royal underline">
-                Community Data License Agreement – Permissive 2.0
-              </a>.
+              <a href="https://overturemaps.org" rel="noopener noreferrer" className="text-royal underline">Overture Maps Foundation, overturemaps.org</a>
+              {release ? <>, release of {releaseDate(release)} ({release})</> : ""}.
             </p>
-            {datasets.length > 0 && (
-              <>
-                <p className="mt-4 text-navy-soft">Overture combines these underlying sources:</p>
-                <ul className="mt-3 divide-y divide-line rounded-2xl ring-1 ring-line">
-                  {datasets.map((d) => {
-                    const known = LICENSES[d]?.license ? LICENSES[d] : undefined;
-                    return (
-                      <li key={d} className="flex flex-wrap justify-between gap-2 px-5 py-3">
-                        <span className="font-medium">{LICENSES[d]?.label ?? d}</span>
-                        <span className="text-navy-soft">
-                          {known ? (
-                            <a href={known.url} rel="noopener noreferrer" className="underline">{known.license}</a>
-                          ) : (
-                            <P value={placeholder("[Legal review: confirm license]")} />
-                          )}
-                        </span>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </>
-            )}
+            <p className="mt-4 text-navy-soft">Overture&rsquo;s places data combines these sources, under these licenses:</p>
+            <ul className="mt-4 space-y-4">
+              {SOURCES.map((s) => (
+                <li key={s.license.name} className="rounded-2xl p-5 ring-1 ring-line">
+                  <a href={s.license.url} rel="noopener noreferrer" className="font-semibold text-royal underline">{s.license.name}</a>
+                  <ul className="mt-2 grid gap-x-6 gap-y-1 text-base sm:grid-cols-2">
+                    {s.credits.map((c) => <li key={c}>{c}</li>)}
+                  </ul>
+                  {s.note === "notice" && (
+                    <p className="mt-2 text-base text-navy-soft">
+                      This data was transformed to the Overture schema. See{" "}
+                      <a href={OVERTURE_NOTICE_URL} rel="noopener noreferrer" className="underline">Overture&rsquo;s NOTICE</a>.
+                    </p>
+                  )}
+                </li>
+              ))}
+            </ul>
             <p className="mt-4 text-base text-navy-soft">
               Businesses that add or claim their own listing provide those details themselves. They are not part of the Overture data.
             </p>
