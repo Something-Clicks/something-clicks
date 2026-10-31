@@ -46,12 +46,19 @@ def _ensure_history_table(conn: psycopg.Connection) -> None:
     conn.commit()
 
 
-def plan(conn: psycopg.Connection, files: list[Migration]) -> list[Migration]:
-    """Missing migrations, in order. Refuses if an earlier file is missing but a later one is applied."""
-    _ensure_history_table(conn)
+def _history(conn: psycopg.Connection) -> list[tuple[str, str]]:
+    """Recorded migrations; empty when the history table doesn't exist yet. Read-only."""
     with conn.cursor() as cur:
+        cur.execute("select to_regclass('supabase_migrations.schema_migrations') is not null")
+        if not cur.fetchone()[0]:
+            return []
         cur.execute("select version, coalesce(name, '') from supabase_migrations.schema_migrations")
-        rows = cur.fetchall()
+        return cur.fetchall()
+
+
+def plan(conn: psycopg.Connection, files: list[Migration]) -> list[Migration]:
+    """Missing migrations, in order. Refuses if an earlier file is missing but a later one is applied. Read-only."""
+    rows = _history(conn)
     versions = {v for v, _ in rows}
     names = {n for _, n in rows}
     applied = [f.version in versions or f.name in names for f in files]
@@ -62,7 +69,22 @@ def plan(conn: psycopg.Connection, files: list[Migration]) -> list[Migration]:
     return [f for f, a in zip(files, applied) if not a]
 
 
+def require_migrated(conn: psycopg.Connection, files: list[Migration] | None = None) -> None:
+    """Stops a data job (seed, import, national, matches) before it touches a database with missing migrations."""
+    pending = plan(conn, migration_files() if files is None else files)
+    conn.rollback()  # plan only reads; leave no transaction open for the job that follows
+    if pending:
+        names = "\n".join(f"  {m.path.name}" for m in pending)
+        raise SystemExit(
+            f"The database is missing {len(pending)} migration(s), so this job can't run yet:\n{names}\n"
+            "Apply them first: GitHub → Actions → Overture import → Run workflow: job migrate, mode load. "
+            "Then run this job again."
+        )
+
+
 def apply(conn: psycopg.Connection, files: list[Migration], *, dry_run: bool, log=print) -> list[str]:
+    if not dry_run:
+        _ensure_history_table(conn)
     pending = plan(conn, files)
     if not pending:
         log("All migrations are already applied.")

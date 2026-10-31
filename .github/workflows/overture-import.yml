@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       job:
-        description: "migrate = apply missing database migrations; import = one cluster; national = ZIP counts + location lookup; matches = generate a metro's matches"
+        description: "migrate = apply missing database migrations (run with mode load before any data job); import = one cluster; national = ZIP counts + location lookup; matches = generate a metro's matches"
         required: true
         type: choice
         options: [migrate, import, national, matches]
@@ -55,8 +55,9 @@ jobs:
           set -o pipefail
           status=0
           {
-            # Seeding needs the tables, so migrate runs on its own.
-            [ "$JOB" = migrate ] || python -m sc_overture seed
+            # Seeding needs the tables, so migrate runs on its own. If seeding fails
+            # (for example, migrations still pending), stop before the job itself.
+            [ "$JOB" = migrate ] || python -m sc_overture seed || exit 1
             case "$JOB" in
               migrate)  python -m sc_overture migrate $([ "$MODE" = dry-run ] && echo --dry-run) ;;
               import)   python -m sc_overture import "$CLUSTER" "--$MODE" ${RELEASE:+--release "$RELEASE"} ;;

@@ -11,9 +11,9 @@
 -- national import makes businesses available to every metro without re-importing.
 
 alter table clusters
-  add column scope text not null default 'metro' check (scope in ('metro', 'national')),
-  add column include_broad boolean not null default true,
-  add column match_unconfirmed_broad boolean not null default false;
+  add column if not exists scope text not null default 'metro' check (scope in ('metro', 'national')),
+  add column if not exists include_broad boolean not null default true,
+  add column if not exists match_unconfirmed_broad boolean not null default false;
 
 -- Bounding box as geography, for index-backed "inside this metro" queries.
 create or replace function cluster_box(c clusters) returns geography
