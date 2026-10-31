@@ -1,7 +1,7 @@
 import { NetworkNav } from "@/components/admin/NetworkNav";
 import { NetworkNotConfigured } from "@/components/admin/NotConfigured";
 import { dbConfigured } from "@/lib/db";
-import { clusterOutcomes, type ClusterOutcome } from "@/lib/network/outcomes";
+import { claimsByCity, clusterOutcomes, type ClusterOutcome } from "@/lib/network/outcomes";
 
 const cols: { key: keyof ClusterOutcome; label: string; hint?: string }[] = [
   { key: "listed", label: "Businesses", hint: "Wedding businesses in the network's matching (broad ones once confirmed)" },
@@ -19,7 +19,7 @@ const cols: { key: keyof ClusterOutcome; label: string; hint?: string }[] = [
 
 export default async function OutcomesPage() {
   if (!dbConfigured()) return <NetworkNotConfigured />;
-  const rows = await clusterOutcomes();
+  const [rows, cities] = await Promise.all([clusterOutcomes(), claimsByCity()]);
   const total = Object.fromEntries(cols.map((c) => [c.key, rows.reduce((s, r) => s + (r[c.key] as number), 0)])) as Record<string, number>;
   const rate = (a: number, b: number) => (b ? `${Math.round((a / b) * 100)}%` : "—");
 
@@ -69,6 +69,37 @@ export default async function OutcomesPage() {
           </tbody>
         </table>
       </div>
+
+      <section className="mt-10" aria-labelledby="cities-heading">
+        <h2 id="cities-heading" className="text-2xl">Claims by city</h2>
+        <p className="mt-1 text-sm text-navy-soft">Pending and verified claims. Cities outside the five metros come first: that&rsquo;s demand for the next metro.</p>
+        <div className="mt-4 overflow-x-auto rounded-2xl bg-white ring-1 ring-line">
+          <table className="w-full min-w-[560px] text-sm">
+            <caption className="sr-only">Claims by city</caption>
+            <thead className="bg-ice text-left">
+              <tr>
+                <th scope="col" className="px-3 py-3 font-semibold">City</th>
+                <th scope="col" className="px-3 py-3 font-semibold">Area</th>
+                <th scope="col" className="px-3 py-3 text-right font-semibold">Claims</th>
+                <th scope="col" className="px-3 py-3 text-right font-semibold">Verified</th>
+                <th scope="col" className="px-3 py-3 text-right font-semibold">Pending</th>
+              </tr>
+            </thead>
+            <tbody>
+              {cities.length === 0 && <tr><td colSpan={5} className="px-3 py-6 text-center text-navy-soft">No claims yet.</td></tr>}
+              {cities.map((c) => (
+                <tr key={`${c.city}-${c.region}-${c.in_metro}`} className="border-t border-line">
+                  <th scope="row" className="px-3 py-3 text-left font-semibold">{[c.city || "Unknown", c.region].filter(Boolean).join(", ")}</th>
+                  <td className="px-3 py-3">{c.in_metro ? "In a launch metro" : <strong className="text-royal">Outside the metros</strong>}</td>
+                  <td className="px-3 py-3 text-right tabular-nums">{c.claims}</td>
+                  <td className="px-3 py-3 text-right tabular-nums">{c.verified}</td>
+                  <td className="px-3 py-3 text-right tabular-nums">{c.pending}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
     </>
   );
 }
