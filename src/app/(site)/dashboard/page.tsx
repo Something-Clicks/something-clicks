@@ -68,9 +68,13 @@ export default async function DashboardMatchesPage({ searchParams }: { searchPar
 
       {matches.length === 0 ? (
         <div className="mt-6 rounded-2xl bg-white p-8 ring-1 ring-line">
-          <h2 className="text-2xl">{place.in_metro ? "Your matches are on their way." : "Matches are coming to your area."}</h2>
+          <h2 className="text-2xl">
+            {!place.category_id ? "We don't match your type of business yet." : place.in_metro ? "Your matches are on their way." : "Matches are coming to your area."}
+          </h2>
           <p className="mt-2 text-lg text-navy-soft">
-            {place.in_metro
+            {!place.category_id
+              ? "We've noted what you do. As soon as we add businesses like yours, you'll get matches here, with nothing more to do."
+              : place.in_metro
               ? "We refresh matches regularly. New businesses show up here as soon as they're ready."
               : "We're starting in Dallas–Fort Worth, Atlanta, Houston, Phoenix and Nashville. Your business is saved, and your matches will appear here as soon as your area opens."}
           </p>

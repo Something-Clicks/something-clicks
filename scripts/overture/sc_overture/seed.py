@@ -36,9 +36,11 @@ def seed(conn: psycopg.Connection, data: dict | None = None) -> dict[str, int]:
                      c.get("unconfirmedTaxonomy", [])),
                 )
                 counts["categories"] += 1
-            # Complements are derived data: replace them wholesale for this journey.
+            # Complements from the journey map are derived data: replace them wholesale for this journey.
+            # Pairs for categories created in admin (source 'admin') are kept, as are admin-added synonyms
+            # (categories.extra_synonyms), which the upsert above never touches.
             cur.execute(
-                "delete from complements where category_a in (select id from categories where journey_id = %s)",
+                "delete from complements where source = 'journey' and category_a in (select id from categories where journey_id = %s)",
                 (j["id"],),
             )
             rows = J.complements(j)
