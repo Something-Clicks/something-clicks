@@ -96,3 +96,11 @@ def test_reimporting_identical_rows_writes_nothing(conn):
     with conn.cursor() as cur:
         cur.execute("select xmin::text from places where gers_id = 't-e'")
         assert cur.fetchone()[0] == before  # row version untouched
+
+
+def test_merge_taxonomy_keeps_journey_mapping():
+    from sc_overture.load import merge_taxonomy
+
+    journey = {"photographer": "photographers", "florist": "florists"}
+    custom = {"photographer": "photo_booths", "officiant": "officiants"}
+    assert merge_taxonomy(journey, custom) == {"photographer": "photographers", "florist": "florists", "officiant": "officiants"}

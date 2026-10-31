@@ -160,7 +160,7 @@ def run_national(conn: psycopg.Connection, *, dry_run: bool, release: str | None
     run_id = L.start_run(conn, None, "counts", "dry_run" if dry_run else "load", release)
     try:
         data = J.load()
-        tax = J.taxonomy_map(data, journey_id)
+        tax = L.merge_taxonomy(J.taxonomy_map(data, journey_id), L.custom_taxonomy(conn, journey_id))
         rules = [(c, p.pattern) for c, p in J.name_rules(data, journey_id)]
         agg = scan(release, lambda: Aggregator(tax, rules, min_confidence), log, max_files)
         counts, geo = agg.place_counts(), agg.geo_rows()

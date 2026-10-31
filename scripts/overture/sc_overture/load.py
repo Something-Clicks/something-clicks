@@ -168,3 +168,19 @@ def load(conn: psycopg.Connection, cluster_id: int, release: str, kept: list[dic
         stale = cur.rowcount
     inserted = sum(flags)
     return {"inserted": inserted, "updated": len(flags) - inserted, "unchanged": len(kept) - len(flags), "marked_stale": stale}
+
+
+def custom_taxonomy(conn: psycopg.Connection, journey_id: str | None, include_broad: bool = True) -> dict[str, str]:
+    """Overture taxonomy value -> category id for categories created in admin (not in journeys.json)."""
+    with conn.cursor() as cur:
+        cur.execute(
+            """select t, c.id from categories c, unnest(c.taxonomy) as t
+               where c.custom and (%s::text is null or c.journey_id = %s) and (%s or not c.broad)""",
+            (journey_id, journey_id, include_broad),
+        )
+        return {t: cid for t, cid in cur.fetchall()}
+
+
+def merge_taxonomy(journey_map: dict[str, str], custom: dict[str, str]) -> dict[str, str]:
+    """The journey map wins: a custom category never takes over a value journeys.json already maps."""
+    return {**{t: c for t, c in custom.items() if t not in journey_map}, **journey_map}

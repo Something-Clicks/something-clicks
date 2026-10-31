@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Field, Notice, inputClass } from "@/components/members/fields";
 import { SubmitButton } from "@/components/members/SubmitButton";
-import { activeJourneys } from "@/content/journeys";
+import { matchVocabulary } from "@/content/journeys";
+import { liveVocabulary } from "@/lib/network/vocabulary";
 import { addBusiness } from "../actions";
 
 export const metadata: Metadata = { title: "Add your business", robots: { index: false } };
@@ -10,6 +11,7 @@ export const metadata: Metadata = { title: "Add your business", robots: { index:
 const errors: Record<string, string> = {
   name: "Enter your business name.",
   category: "Choose what your business does.",
+  other: "Tell us what your business does.",
   website: "Check the website address.",
   email: "Enter a valid email address.",
   where: "We couldn't find that place. Try a city and state, like Plano, TX, or a ZIP code.",
@@ -17,11 +19,17 @@ const errors: Record<string, string> = {
   owned: "Someone has already claimed this business.",
 };
 
-type Search = Partial<Record<"error" | "name" | "category" | "website" | "where" | "service_area" | "note", string>>;
+type Search = Partial<Record<"error" | "name" | "category" | "other" | "what" | "website" | "where" | "service_area" | "note", string>>;
 
 export default async function AddBusinessPage({ searchParams }: { searchParams: Promise<Search> }) {
   const sp = await searchParams;
-  const categories = activeJourneys().flatMap((j) => j.categories);
+  const vocab = await liveVocabulary();
+  const categories = [...vocab].sort((a, b) => a.label.localeCompare(b.label));
+  // Arriving from a search: preselect what they searched for, or "Something else" with their words.
+  const searched = sp.what?.trim() ?? "";
+  const match = searched ? matchVocabulary(searched, vocab, 1)[0] : undefined;
+  const category = sp.category ?? (searched ? (match?.id ?? "other") : "");
+  const other = sp.other ?? (searched && !match ? searched : "");
   return (
     <section className="bg-cloud">
       <div className="container-page max-w-2xl py-12 sm:py-20">
@@ -33,11 +41,14 @@ export default async function AddBusinessPage({ searchParams }: { searchParams: 
           <Field label="Business name" name="name" required maxLength={120} autoComplete="organization" defaultValue={sp.name} />
           <div>
             <label htmlFor="f-category" className="block font-medium">What does your business do?</label>
-            <select id="f-category" name="category" required defaultValue={sp.category ?? ""} className={inputClass}>
+            <select id="f-category" name="category" required defaultValue={category} className={inputClass}>
               <option value="" disabled>Choose one</option>
               {categories.map((c) => <option key={c.id} value={c.id}>{c.label}</option>)}
+              <option value="other">Something else</option>
             </select>
           </div>
+          <Field label="If something else, what do you do?" name="other" optional maxLength={80} placeholder="Wedding officiant" defaultValue={other}
+                 hint="We'll match you as soon as we add businesses like yours." />
           <Field label="City or ZIP" name="where" required maxLength={80} autoComplete="address-level2" placeholder="Dallas, TX" defaultValue={sp.where}
                  hint="Where you're based. We use it to find businesses near you." />
           <Field label="Area you serve" name="service_area" optional maxLength={200} placeholder="Dallas–Fort Worth" defaultValue={sp.service_area} />

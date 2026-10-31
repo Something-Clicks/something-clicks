@@ -1,9 +1,5 @@
 import { Search } from "lucide-react";
-import { activeJourneys } from "@/content/journeys";
-
-const suggestions = Array.from(
-  new Set(activeJourneys().flatMap((j) => j.categories.flatMap((c) => [c.label, ...c.synonyms.slice(0, 3)]))),
-).sort();
+import { WhatField } from "./WhatField";
 
 /** The central action. A plain GET form, so results have a shareable URL and work without JavaScript. */
 export function FindForm({
@@ -34,20 +30,7 @@ export function FindForm({
           <label htmlFor={`${id}-what`} className="block text-xs font-semibold text-navy">
             What you do
           </label>
-          <input
-            id={`${id}-what`}
-            name="what"
-            required
-            defaultValue={what}
-            list={`${id}-what-list`}
-            autoComplete="off"
-            maxLength={80}
-            placeholder="Wedding photographer"
-            className={`${input} ${compact ? "text-base" : "text-lg"}`}
-          />
-          <datalist id={`${id}-what-list`}>
-            {suggestions.map((s) => <option key={s} value={s} />)}
-          </datalist>
+          <WhatField id={`${id}-what`} defaultValue={what} className={`${input} ${compact ? "text-base" : "text-lg"}`} />
         </div>
         <div className={`${field} border-t border-line sm:border-t-0`}>
           <label htmlFor={`${id}-where`} className="block text-xs font-semibold text-navy">
