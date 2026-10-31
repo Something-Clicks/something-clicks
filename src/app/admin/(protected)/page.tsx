@@ -22,7 +22,7 @@ export default async function AdminOverview() {
           return (
             <section key={k} className="rounded-2xl bg-white p-6 ring-1 ring-line" aria-labelledby={`h-${k}`}>
               <h2 id={`h-${k}`} className="text-lg">
-                <Link href={`/admin/${k}`} className="hover:text-royal hover:underline">
+                <Link href={`/admin/${k}`} className="hover:underline">
                   {kindMeta[k].title}
                 </Link>
               </h2>
@@ -30,7 +30,7 @@ export default async function AdminOverview() {
               <ul className="mt-4 space-y-1 text-sm">
                 {byStatus.map(([s, n]) => (
                   <li key={s} className="flex justify-between">
-                    <Link href={`/admin/${k}?status=${s}`} className="capitalize text-royal hover:underline">
+                    <Link href={`/admin/${k}?status=${s}`} className="capitalize text-navy hover:underline">
                       {s}
                     </Link>
                     <span className="tabular-nums">{n}</span>

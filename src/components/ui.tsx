@@ -4,8 +4,8 @@ import type { ComponentProps, ReactNode } from "react";
 type Variant = "primary" | "secondary" | "onDark";
 
 const variants: Record<Variant, string> = {
-  primary: "bg-royal text-white hover:bg-navy shadow-sm",
-  secondary: "bg-white text-royal ring-1 ring-inset ring-royal hover:bg-ice",
+  primary: "bg-navy text-white hover:bg-navy/90 shadow-sm",
+  secondary: "bg-white text-navy ring-1 ring-inset ring-navy hover:bg-ice",
   onDark: "bg-white text-navy hover:bg-ice",
 };
 

@@ -1,6 +1,5 @@
 import { Search } from "lucide-react";
 import { activeJourneys } from "@/content/journeys";
-import { CategoryChips } from "./CategoryChips";
 
 const suggestions = Array.from(
   new Set(activeJourneys().flatMap((j) => j.categories.flatMap((c) => [c.label, ...c.synonyms.slice(0, 3)]))),
@@ -11,14 +10,11 @@ export function FindForm({
   what = "",
   where = "",
   id = "find",
-  chips = false,
   compact = false,
 }: {
   what?: string;
   where?: string;
   id?: string;
-  /** Category chips under the form that fill in "What you do". */
-  chips?: boolean;
   compact?: boolean;
 }) {
   const field = "min-w-0 flex-1 px-5 py-2.5 sm:px-7";
@@ -32,7 +28,7 @@ export function FindForm({
         method="get"
         role="search"
         aria-label="Find your business matches"
-        className={`scroll-mt-24 flex flex-col text-left gap-1 rounded-3xl bg-white p-2 shadow-[0_6px_30px_rgba(21,38,61,0.12)] ring-1 ring-line has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-royal sm:flex-row sm:items-center sm:rounded-full ${compact ? "" : "sm:p-2.5"}`}
+        className={`scroll-mt-24 flex flex-col text-left gap-1 rounded-3xl bg-white p-2 shadow-[0_6px_30px_rgba(1,19,53,0.12)] ring-1 ring-line has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-royal sm:flex-row sm:items-center sm:rounded-full ${compact ? "" : "sm:p-2.5"}`}
       >
         <div className={`${field} border-line sm:border-r`}>
           <label htmlFor={`${id}-what`} className="block text-xs font-semibold text-navy">
@@ -70,13 +66,12 @@ export function FindForm({
         </div>
         <button
           type="submit"
-          className={`inline-flex shrink-0 items-center justify-center gap-2 rounded-2xl bg-royal font-semibold text-white hover:bg-navy sm:rounded-full ${compact ? "h-12 px-6" : "h-14 px-7 text-lg"}`}
+          className={`inline-flex shrink-0 items-center justify-center gap-2 rounded-2xl bg-navy font-semibold text-white hover:bg-navy/90 sm:rounded-full ${compact ? "h-12 px-6" : "h-14 px-7 text-lg"}`}
         >
           <Search aria-hidden="true" className="h-5 w-5" strokeWidth={2.4} />
           Find matches
         </button>
       </form>
-      {chips && <CategoryChips inputId={`${id}-what`} selected={what} />}
     </div>
   );
 }

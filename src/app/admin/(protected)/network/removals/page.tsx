@@ -38,7 +38,7 @@ export default async function RemovalsPage() {
                   <input id={`pid-${r.id}`} name="place_id" inputMode="numeric" placeholder="Listing ID" className="w-32 rounded-lg border border-field px-3 py-2 text-sm" />
                 </>
               )}
-              <button name="decision" value="remove" className="rounded-lg bg-royal px-4 py-2 text-sm font-semibold text-white">Remove</button>
+              <button name="decision" value="remove" className="rounded-lg bg-navy px-4 py-2 text-sm font-semibold text-white">Remove</button>
               <button name="decision" value="reject" className="rounded-lg px-4 py-2 text-sm font-semibold ring-1 ring-line">Reject</button>
               {r.place_suppressed && <button name="decision" value="restore" className="rounded-lg px-4 py-2 text-sm font-semibold text-danger ring-1 ring-line">Restore</button>}
             </form>

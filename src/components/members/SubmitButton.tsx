@@ -4,8 +4,8 @@ import { useFormStatus } from "react-dom";
 import type { ComponentProps } from "react";
 
 const styles = {
-  primary: "bg-royal text-white hover:bg-navy",
-  secondary: "bg-white text-royal ring-1 ring-inset ring-royal hover:bg-ice",
+  primary: "bg-navy text-white hover:bg-navy/90",
+  secondary: "bg-white text-navy ring-1 ring-inset ring-navy hover:bg-ice",
   quiet: "bg-white text-navy ring-1 ring-inset ring-line hover:bg-cloud",
 };
 

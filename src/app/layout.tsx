@@ -16,6 +16,11 @@ export const metadata: Metadata = {
   title: { default: site.name, template: `%s | ${site.name}` },
   description: site.description,
   applicationName: site.name,
+  // Search Console and Bing Webmaster Tools: set these in Vercel to verify the site by meta tag.
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION || undefined,
+    other: process.env.BING_SITE_VERIFICATION ? { "msvalidate.01": process.env.BING_SITE_VERIFICATION } : undefined,
+  },
   icons: {
     icon: [{ url: "/brand/icon-blue-square.svg", type: "image/svg+xml" }],
     apple: [{ url: "/brand/apple-touch-icon.png", sizes: "180x180" }],

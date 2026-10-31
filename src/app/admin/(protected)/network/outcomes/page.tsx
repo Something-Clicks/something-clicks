@@ -90,7 +90,7 @@ export default async function OutcomesPage() {
               {cities.map((c) => (
                 <tr key={`${c.city}-${c.region}-${c.in_metro}`} className="border-t border-line">
                   <th scope="row" className="px-3 py-3 text-left font-semibold">{[c.city || "Unknown", c.region].filter(Boolean).join(", ")}</th>
-                  <td className="px-3 py-3">{c.in_metro ? "In a launch metro" : <strong className="text-royal">Outside the metros</strong>}</td>
+                  <td className="px-3 py-3">{c.in_metro ? "In a launch metro" : <strong className="text-navy">Outside the metros</strong>}</td>
                   <td className="px-3 py-3 text-right tabular-nums">{c.claims}</td>
                   <td className="px-3 py-3 text-right tabular-nums">{c.verified}</td>
                   <td className="px-3 py-3 text-right tabular-nums">{c.pending}</td>

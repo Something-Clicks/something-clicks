@@ -52,7 +52,7 @@ export default async function RemovePage({ searchParams }: { searchParams: Promi
             <SubmitButton pendingLabel="Sending…">Remove this business</SubmitButton>
           </form>
           <p className="mt-6 text-navy-soft">
-            Own the business and want to keep it? <Link href="/claim" className="font-semibold text-royal underline">Claim it instead</Link> and
+            Own the business and want to keep it? <Link href="/claim" className="font-semibold text-navy underline">Claim it instead</Link> and
             control what&rsquo;s shown.
           </p>
         </div>

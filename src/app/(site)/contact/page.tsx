@@ -35,7 +35,7 @@ export default function ContactPage() {
               {shortcuts.map((s) => (
                 <li key={s.href}>
                   <Link href={s.href} className="block rounded-2xl bg-cloud p-5 hover:bg-ice">
-                    <span className="block font-semibold text-royal">{s.title}</span>
+                    <span className="block font-semibold text-navy">{s.title}</span>
                     <span className="block text-navy-soft">{s.body}</span>
                   </Link>
                 </li>

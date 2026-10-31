@@ -8,7 +8,7 @@ export function DevLink({ email }: { email?: string }) {
   return (
     <p className="mt-8 rounded-xl bg-white p-4 text-left text-sm ring-1 ring-line">
       <strong>Development:</strong> email isn&rsquo;t configured, so here is the link it would contain.{" "}
-      <a href={url} className="break-all font-semibold text-royal" data-dev-link>
+      <a href={url} className="break-all font-semibold text-navy" data-dev-link>
         Open sign-in link
       </a>
     </p>

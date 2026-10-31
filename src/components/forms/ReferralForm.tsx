@@ -52,11 +52,11 @@ export function ReferralForm() {
       <TextArea name="notes" label="Anything else we should know?" rows={3} errors={errors} />
       <ConsentCheckbox name="consent_contact" required errors={errors}>
         I agree to be contacted by Something Clicks about this submission, and I agree to the{" "}
-        <Link href="/privacy" className="text-royal underline">
+        <Link href="/privacy" className="text-navy underline">
           Privacy Policy
         </Link>{" "}
         and{" "}
-        <Link href="/terms" className="text-royal underline">
+        <Link href="/terms" className="text-navy underline">
           Terms
         </Link>
         .

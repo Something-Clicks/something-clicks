@@ -32,7 +32,7 @@ export function CategoryMatchCard({ r, radiusMiles, claimHref }: { r: CategoryRe
       </div>
       <Link
         href={claimHref}
-        className="flex h-14 items-center justify-between border-t border-line px-5 font-semibold text-royal hover:bg-ice sm:px-6"
+        className="flex h-14 items-center justify-between border-t border-line px-5 font-semibold text-navy hover:bg-ice sm:px-6"
       >
         See who they are <ArrowRight aria-hidden="true" className="h-5 w-5" />
       </Link>

@@ -11,6 +11,7 @@ const columns = [
       { href: "/claim", label: "Claim your business" },
       { href: "/sign-in", label: "Sign in" },
       { href: "/referral-partners", label: "Referral partners" },
+      { href: "/faq", label: "FAQ" },
       { href: "/about", label: "About" },
       { href: "/contact", label: "Contact" },
     ],
@@ -36,7 +37,8 @@ export function Footer() {
       <div className="container-page grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
         <div>
           <Logo tone="dark" />
-          <p className="mt-4 max-w-sm text-lg text-white">{site.brandLine}</p>
+          <p className="mt-4 text-lg font-semibold text-white">{site.tagline}</p>
+          <p className="mt-3 max-w-sm text-sm leading-relaxed text-mist">{site.about}</p>
         </div>
         {columns.map((c) => (
           <nav key={c.title} aria-label={c.title === "Something Clicks" ? "Footer" : c.title}>

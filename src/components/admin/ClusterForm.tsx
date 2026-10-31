@@ -67,7 +67,7 @@ export function ClusterForm({ cluster, journeys }: { cluster?: ClusterRow | null
         {field("max_match_km", "Maximum match distance (km)", { step: "any", def: 40 })}
         {field("min_confidence", "Minimum Overture confidence", { step: "0.05", def: 0.6 })}
       </div>
-      <button type="submit" disabled={pending} className="rounded-lg bg-royal px-5 py-2.5 font-semibold text-white disabled:opacity-60">
+      <button type="submit" disabled={pending} className="rounded-lg bg-navy px-5 py-2.5 font-semibold text-white disabled:opacity-60">
         {pending ? "Saving…" : "Save cluster"}
       </button>
     </form>

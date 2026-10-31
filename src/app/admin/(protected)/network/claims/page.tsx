@@ -53,7 +53,7 @@ export default async function ClaimsPage({ searchParams }: { searchParams: Promi
               <form action={approveClaimAction}>
                 <input type="hidden" name="claim_id" value={c.id} />
                 <button type="submit" disabled={!c.email_confirmed_at}
-                        className="rounded-lg bg-royal px-4 py-2 text-sm font-semibold text-white disabled:opacity-50">
+                        className="rounded-lg bg-navy px-4 py-2 text-sm font-semibold text-white disabled:opacity-50">
                   Approve
                 </button>
               </form>

@@ -5,12 +5,13 @@ import { CtaBand } from "@/components/CtaBand";
 import { CategoryIcon } from "@/components/network/CategoryIcon";
 import { CategoryMatchCard } from "@/components/network/CategoryMatchCard";
 import { FindForm } from "@/components/network/FindForm";
-import { categoryById, partnershipLabels } from "@/content/journeys";
+import { categoryById, categorySlug, partnershipLabels } from "@/content/journeys";
 import { metroBySlug, metros } from "@/content/metros";
 import { formatAtLeast } from "@/content/network";
 import { dbConfigured } from "@/lib/db";
+import { breadcrumbJsonLd, JsonLd } from "@/lib/jsonld";
 import { pageMeta } from "@/lib/metadata";
-import { metroCounts } from "@/lib/network/metros";
+import { categoryPageEligible, complementRules, metroCounts } from "@/lib/network/metros";
 import { resolveLocation, searchMatches, SEARCH_RADIUS_MILES } from "@/lib/network/search";
 
 // Counts change when data is imported; refresh hourly (and redeploy after a load).
@@ -47,9 +48,10 @@ const progress = ["Matched", "Introduced", "Connected", "Partnership live"];
 export default async function MetroPage({ params }: Params) {
   const m = metroBySlug((await params).metro);
   if (!m) notFound();
-  const [counts, example] = dbConfigured()
-    ? await Promise.all([metroCounts(m.cluster).catch(() => []), exampleResults(m.where)])
-    : [[], null];
+  const [counts, example, rules] = dbConfigured()
+    ? await Promise.all([metroCounts(m.cluster).catch(() => []), exampleResults(m.where), complementRules().catch(() => [])])
+    : [[], null, []];
+  const byId = Object.fromEntries(counts.map((c) => [c.category_id, c.n]));
   const total = counts.reduce((s, c) => s + c.n, 0);
   // A tile for every category with a meaningful number; a lone confirmed salon reads as noise.
   const tiles = counts.filter((c) => c.n >= MIN_TILE);
@@ -89,13 +91,24 @@ export default async function MetroPage({ params }: Params) {
               {tiles.map((c) => {
                 const cat = categoryById(c.category_id);
                 if (!cat) return null;
-                return (
-                  <li key={c.category_id} className="flex items-center gap-3 rounded-2xl bg-cloud p-4">
+                const body = (
+                  <>
                     <CategoryIcon id={c.category_id} className="h-6 w-6 shrink-0 text-royal" />
                     <span>
                       <span className="block text-2xl font-semibold tabular-nums">{c.n.toLocaleString()}</span>
                       <span className="block text-sm text-navy-soft">{cat.plural}</span>
                     </span>
+                  </>
+                );
+                return (
+                  <li key={c.category_id}>
+                    {categoryPageEligible(byId, rules, c.category_id) ? (
+                      <Link href={`/weddings/${m.slug}/${categorySlug(c.category_id)}`} className="flex h-full items-center gap-3 rounded-2xl bg-cloud p-4 ring-1 ring-transparent hover:ring-royal">
+                        {body}
+                      </Link>
+                    ) : (
+                      <div className="flex h-full items-center gap-3 rounded-2xl bg-cloud p-4">{body}</div>
+                    )}
                   </li>
                 );
               })}
@@ -144,8 +157,8 @@ export default async function MetroPage({ params }: Params) {
           <ol className="mt-12 grid gap-3 rounded-2xl bg-ice p-6 sm:grid-cols-4 sm:p-8" aria-label="Partnership progress">
             {progress.map((p, n) => (
               <li key={p} className="flex items-center gap-3">
-                <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-royal text-white">
-                  {n < 3 ? <Check aria-hidden="true" className="h-4 w-4" /> : <span aria-hidden="true" className="h-2 w-2 rounded-full bg-royal" />}
+                <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-navy text-white">
+                  {n < 3 ? <Check aria-hidden="true" className="h-4 w-4" /> : <span aria-hidden="true" className="h-2 w-2 rounded-full bg-white" />}
                 </span>
                 <span className="font-medium">{p}</span>
               </li>
@@ -161,7 +174,7 @@ export default async function MetroPage({ params }: Params) {
           <ul className="mt-4 flex flex-wrap gap-2">
             {metros.filter((o) => o.slug !== m.slug).map((o) => (
               <li key={o.slug}>
-                <Link href={`/weddings/${o.slug}`} className="inline-block rounded-full bg-white px-4 py-2 font-semibold text-royal ring-1 ring-line hover:bg-ice">{o.name}</Link>
+                <Link href={`/weddings/${o.slug}`} className="inline-block rounded-full bg-white px-4 py-2 font-semibold text-navy ring-1 ring-line hover:bg-ice">{o.name}</Link>
               </li>
             ))}
           </ul>
@@ -169,6 +182,7 @@ export default async function MetroPage({ params }: Params) {
       </section>
 
       <CtaBand />
+      <JsonLd data={breadcrumbJsonLd([{ name: "Home", path: "/" }, { name: "Cities", path: "/weddings" }, { name: m.name, path: `/weddings/${m.slug}` }])} />
     </>
   );
 }

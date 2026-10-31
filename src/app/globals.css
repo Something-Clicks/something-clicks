@@ -4,9 +4,9 @@
  * Brand tokens: exactly two brand colors, navy and blue, plus white.
  * Change colors here only. Contrast (WCAG 2.2):
  *  - white on navy 18.3:1; navy on white/ice/cloud 16:1 or more
- *  - white on blue and blue on white 4.4:1: AA for large text (18.66px bold, 24px)
- *    and UI parts (3:1); short of the 4.5:1 AA for small text
- *  - blue on navy 4.1:1: fine for focus rings and icons, not for small text
+ *  - blue on white 4.4:1, so blue is for icons, large text and accents only
+ *  - small text, links, and buttons (white label on navy) are navy
+ *  - blue on navy 4.1:1: fine for focus rings and icons, not for text
  */
 @theme {
   --color-navy: #011335;

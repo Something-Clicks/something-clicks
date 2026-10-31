@@ -80,7 +80,7 @@ export default async function ExplorerPage({ searchParams }: { searchParams: Pro
               <div className="rounded-2xl bg-white p-5 ring-1 ring-line">
                 <div className="flex flex-wrap items-baseline justify-between gap-2">
                   <h2 className="text-2xl">{place.name}</h2>
-                  <Link href={`/admin/network/preview?place=${place.id}`} className="text-sm font-semibold text-royal hover:underline">
+                  <Link href={`/admin/network/preview?place=${place.id}`} className="text-sm font-semibold text-navy hover:underline">
                     Preview their match view
                   </Link>
                 </div>
@@ -106,7 +106,7 @@ export default async function ExplorerPage({ searchParams }: { searchParams: Pro
                     const current = place.serves_journey === true ? "yes" : place.serves_journey === false ? "no" : "unknown";
                     return (
                       <button key={v} name="value" value={v} type="submit" aria-pressed={current === v}
-                              className="rounded-lg px-3 py-1 font-semibold ring-1 ring-line aria-pressed:bg-royal aria-pressed:text-white">
+                              className="rounded-lg px-3 py-1 font-semibold ring-1 ring-line aria-pressed:bg-navy aria-pressed:text-white">
                         {v}
                       </button>
                     );
@@ -133,7 +133,7 @@ export default async function ExplorerPage({ searchParams }: { searchParams: Pro
                     {matches.map((m) => (
                       <tr key={m.place_b} className={`border-t border-line align-top ${m.status === "hidden" ? "opacity-60" : ""}`}>
                         <td className="px-3 py-3">
-                          <Link href={`/admin/network/explorer${qs({ place: m.place_b })}`} className="font-semibold text-royal hover:underline">{m.name}</Link>
+                          <Link href={`/admin/network/explorer${qs({ place: m.place_b })}`} className="font-semibold text-navy hover:underline">{m.name}</Link>
                           <div className="text-xs text-navy-soft">
                             {m.category_label}{m.broad ? " (needs confirmation)" : ""} · {stateLabels[m.state as PlaceState]}
                           </div>
@@ -153,7 +153,7 @@ export default async function ExplorerPage({ searchParams }: { searchParams: Pro
                             <input id={`r-${m.place_b}`} name="rationale" maxLength={300}
                                    defaultValue={m.ai_rationale ?? ""} placeholder={reasonText(place.journey_id, m.reason_key)}
                                    className="w-64 rounded-md border border-field px-2 py-1 text-sm" />
-                            <button type="submit" className="text-xs font-semibold text-royal">Save</button>
+                            <button type="submit" className="text-xs font-semibold text-navy">Save</button>
                           </form>
                           {m.rationale_edited && <span className="text-xs text-navy-soft">Edited</span>}
                         </td>
@@ -165,7 +165,7 @@ export default async function ExplorerPage({ searchParams }: { searchParams: Pro
                             {(["approved", "hidden", "suggested"] as const).map((s) => (
                               <button key={s} name="status" value={s} type="submit" aria-pressed={m.status === s}
                                       disabled={!["suggested", "approved", "hidden"].includes(m.status)}
-                                      className="rounded-md px-2 py-1 text-xs font-semibold capitalize ring-1 ring-line aria-pressed:bg-royal aria-pressed:text-white disabled:opacity-50">
+                                      className="rounded-md px-2 py-1 text-xs font-semibold capitalize ring-1 ring-line aria-pressed:bg-navy aria-pressed:text-white disabled:opacity-50">
                                 {s === "suggested" ? "reset" : s === "approved" ? "approve" : "hide"}
                               </button>
                             ))}

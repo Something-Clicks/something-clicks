@@ -19,7 +19,7 @@ export function NetworkNav({ active }: { active: string }) {
           key={l.href}
           href={l.href}
           aria-current={active === l.href ? "page" : undefined}
-          className="rounded-lg px-3 py-1.5 text-sm font-semibold text-royal ring-1 ring-line hover:bg-ice aria-[current=page]:bg-royal aria-[current=page]:text-white"
+          className="rounded-lg px-3 py-1.5 text-sm font-semibold text-navy ring-1 ring-line hover:bg-ice aria-[current=page]:bg-navy aria-[current=page]:text-white"
         >
           {l.label}
         </Link>

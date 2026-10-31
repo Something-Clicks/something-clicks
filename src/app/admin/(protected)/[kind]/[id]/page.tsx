@@ -22,7 +22,7 @@ export default async function AdminDetailPage({
 
   return (
     <>
-      <Link href={`/admin/${kind}`} className="inline-flex items-center gap-1 text-sm font-semibold text-royal hover:underline">
+      <Link href={`/admin/${kind}`} className="inline-flex items-center gap-1 text-sm font-semibold text-navy hover:underline">
         <ArrowLeft aria-hidden="true" className="h-4 w-4" /> {meta.title}
       </Link>
       <div className="mt-3 flex flex-wrap items-center gap-3">
@@ -47,9 +47,9 @@ export default async function AdminDetailPage({
                       <dt className="text-sm font-medium text-navy-soft">{f.label}</dt>
                       <dd className="mt-0.5 whitespace-pre-wrap break-words">
                         {f.key === "email" ? (
-                          <a href={`mailto:${value}`} className="text-royal underline">{value}</a>
+                          <a href={`mailto:${value}`} className="text-navy underline">{value}</a>
                         ) : f.key === "website" && /^https?:\/\//.test(value) ? (
-                          <a href={value} target="_blank" rel="noopener noreferrer nofollow" className="text-royal underline">{value}</a>
+                          <a href={value} target="_blank" rel="noopener noreferrer nofollow" className="text-navy underline">{value}</a>
                         ) : (
                           value
                         )}
@@ -103,7 +103,7 @@ export default async function AdminDetailPage({
                 className="mt-1 block w-full rounded-lg border border-field px-3 py-2 text-sm"
               />
             </div>
-            <button type="submit" className="w-full rounded-lg bg-royal px-4 py-2.5 font-semibold text-white hover:bg-navy">
+            <button type="submit" className="w-full rounded-lg bg-navy px-4 py-2.5 font-semibold text-white hover:bg-navy/90">
               Save
             </button>
           </form>

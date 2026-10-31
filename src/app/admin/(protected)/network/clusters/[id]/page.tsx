@@ -53,7 +53,7 @@ export default async function ClusterPage({
             </p>
             <input type="hidden" name="cluster_id" value={id} />
             <button type="submit" className="mt-3 w-full rounded-lg bg-navy px-4 py-2 font-semibold text-white">Recompute matches</button>
-            <Link href={`/admin/network/explorer?cluster=${id}`} className="mt-3 block text-center font-semibold text-royal hover:underline">
+            <Link href={`/admin/network/explorer?cluster=${id}`} className="mt-3 block text-center font-semibold text-navy hover:underline">
               Open match explorer
             </Link>
           </form>

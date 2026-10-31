@@ -68,7 +68,7 @@ async function Results({ what, where }: Search & { what: string; where: string }
         <ul className="mt-4 flex flex-wrap gap-2">
           {location.options.map((o) => (
             <li key={o.id}>
-              <Link href={`/matches?${new URLSearchParams({ what, where: o.label })}`} className="inline-block rounded-full bg-white px-4 py-2.5 font-semibold text-royal ring-1 ring-line hover:ring-royal">
+              <Link href={`/matches?${new URLSearchParams({ what, where: o.label })}`} className="inline-block rounded-full bg-white px-4 py-2.5 font-semibold text-navy ring-1 ring-line hover:ring-royal">
                 {o.label}
               </Link>
             </li>
@@ -123,7 +123,7 @@ function UnknownBusiness({ what, where }: { what: string; where: string }) {
       <ul className="mt-4 flex flex-wrap gap-2">
         {j?.categories.filter((c) => !c.broad).map((c) => (
           <li key={c.id}>
-            <Link href={`/matches?${new URLSearchParams({ what: c.label, where })}`} className="inline-block rounded-full bg-white px-4 py-2.5 text-sm font-semibold text-royal ring-1 ring-line hover:ring-royal">
+            <Link href={`/matches?${new URLSearchParams({ what: c.label, where })}`} className="inline-block rounded-full bg-white px-4 py-2.5 text-sm font-semibold text-navy ring-1 ring-line hover:ring-royal">
               {c.label}
             </Link>
           </li>

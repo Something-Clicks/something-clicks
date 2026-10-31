@@ -55,9 +55,9 @@ export default async function RequestsPage({ searchParams }: { searchParams: Pro
           <Row key={i.id} i={i}>
             <dl className="mt-4 grid gap-2 sm:grid-cols-2">
               {i.contact_name && <Detail icon={User} label="Contact">{i.contact_name}</Detail>}
-              {i.contact_email && <Detail icon={Mail} label="Email"><a href={`mailto:${i.contact_email}`} className="text-royal underline">{i.contact_email}</a></Detail>}
-              {i.contact_phone && <Detail icon={Phone} label="Phone"><a href={`tel:${i.contact_phone}`} className="text-royal underline">{formatPhone(i.contact_phone)}</a></Detail>}
-              {i.website && <Detail icon={Globe} label="Website"><a href={i.website} rel="noopener noreferrer" target="_blank" className="break-all text-royal underline">{i.website}</a></Detail>}
+              {i.contact_email && <Detail icon={Mail} label="Email"><a href={`mailto:${i.contact_email}`} className="text-navy underline">{i.contact_email}</a></Detail>}
+              {i.contact_phone && <Detail icon={Phone} label="Phone"><a href={`tel:${i.contact_phone}`} className="text-navy underline">{formatPhone(i.contact_phone)}</a></Detail>}
+              {i.website && <Detail icon={Globe} label="Website"><a href={i.website} rel="noopener noreferrer" target="_blank" className="break-all text-navy underline">{i.website}</a></Detail>}
             </dl>
           </Row>
         ))}

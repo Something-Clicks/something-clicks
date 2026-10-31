@@ -21,7 +21,7 @@ const badge: Record<PlaceState, string> = {
   listed: "bg-cloud text-navy-soft ring-1 ring-line",
   claimed: "bg-ice text-navy ring-1 ring-royal/40",
   verified: "bg-ice text-navy ring-1 ring-royal",
-  member: "bg-royal text-white",
+  member: "bg-navy text-white",
 };
 
 /**

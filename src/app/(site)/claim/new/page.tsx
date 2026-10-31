@@ -25,7 +25,7 @@ export default async function AddBusinessPage({ searchParams }: { searchParams: 
   return (
     <section className="bg-cloud">
       <div className="container-page max-w-2xl py-12 sm:py-20">
-        <Link href="/claim" className="text-sm font-semibold text-royal hover:underline">Back to search</Link>
+        <Link href="/claim" className="text-sm font-semibold text-navy hover:underline">Back to search</Link>
         <h1 className="mt-4 text-4xl">Add your business.</h1>
         <p className="mt-3 text-lg text-navy-soft">Home-based and new businesses welcome.</p>
         <form action={addBusiness} className="mt-8 space-y-5 rounded-2xl bg-white p-6 ring-1 ring-line sm:p-8">

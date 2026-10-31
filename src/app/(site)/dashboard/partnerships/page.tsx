@@ -41,7 +41,7 @@ export default async function PartnershipsPage({ searchParams }: { searchParams:
       {rows.length === 0 ? (
         <div className="mt-6 rounded-2xl bg-white p-8 ring-1 ring-line">
           <p className="text-lg">Partnerships start with a connection.</p>
-          <Link href={`/dashboard?place=${ctx.place.id}`} className="mt-4 inline-flex rounded-xl bg-royal px-5 py-3 font-semibold text-white hover:bg-navy">
+          <Link href={`/dashboard?place=${ctx.place.id}`} className="mt-4 inline-flex rounded-xl bg-navy px-5 py-3 font-semibold text-white hover:bg-navy/90">
             See your matches
           </Link>
         </div>
@@ -60,7 +60,7 @@ function Progress({ live }: { live: boolean }) {
     <ol className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4" aria-label="Progress">
       {steps.map((s, i) => (
         <li key={s} className="flex items-center gap-2 text-sm">
-          <span className={`grid h-6 w-6 shrink-0 place-items-center rounded-full ${i < reached ? "bg-royal text-white" : "bg-white ring-2 ring-line"}`}>
+          <span className={`grid h-6 w-6 shrink-0 place-items-center rounded-full ${i < reached ? "bg-navy text-white" : "bg-white ring-2 ring-line"}`}>
             {i < reached && <Check aria-hidden="true" className="h-3.5 w-3.5" />}
           </span>
           <span className={i < reached ? "font-semibold" : "text-navy-soft"}>{s}</span>
@@ -92,7 +92,7 @@ function Partnership({ r, placeId }: { r: PartnershipRow; placeId: number }) {
             <p className="mt-1 text-sm text-navy-soft">
               {r.code && <>Code <strong className="text-navy">{r.code}</strong></>}
               {r.code && r.link && " · "}
-              {r.link && <a href={r.link} target="_blank" rel="noopener noreferrer" className="break-all text-royal underline">{r.link}</a>}
+              {r.link && <a href={r.link} target="_blank" rel="noopener noreferrer" className="break-all text-navy underline">{r.link}</a>}
             </p>
           )}
         </div>
@@ -122,7 +122,7 @@ function Partnership({ r, placeId }: { r: PartnershipRow; placeId: number }) {
           </p>
           <form action={endPartnershipAction}>
             {hidden}
-            <button type="submit" className="text-sm font-semibold text-navy-soft underline hover:text-royal">End partnership</button>
+            <button type="submit" className="text-sm font-semibold text-navy-soft underline hover:underline">End partnership</button>
           </form>
         </div>
       )}
@@ -157,7 +157,7 @@ function ProposeForm({ hidden, again }: { hidden: React.ReactNode; again: boolea
   );
   return again ? (
     <details className="mt-4">
-      <summary className="cursor-pointer text-sm font-semibold text-royal">Change your proposal</summary>
+      <summary className="cursor-pointer text-sm font-semibold text-navy">Change your proposal</summary>
       {body}
     </details>
   ) : body;

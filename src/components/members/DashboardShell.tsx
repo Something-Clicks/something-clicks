@@ -43,11 +43,11 @@ export function DashboardShell({
                   <select id="place-switch" name="place" defaultValue={place.id} className="rounded-lg border border-field bg-white px-3 py-2 text-sm">
                     {places.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
                   </select>
-                  <button type="submit" className="rounded-lg px-3 py-2 text-sm font-semibold text-royal ring-1 ring-line">Switch</button>
+                  <button type="submit" className="rounded-lg px-3 py-2 text-sm font-semibold text-navy ring-1 ring-line">Switch</button>
                 </form>
               )}
               <form action={signOutMember}>
-                <button type="submit" className="text-sm font-semibold text-navy-soft hover:text-royal">Sign out</button>
+                <button type="submit" className="text-sm font-semibold text-navy-soft hover:underline">Sign out</button>
               </form>
             </div>
           </div>
@@ -62,7 +62,7 @@ export function DashboardShell({
                 >
                   {t.label}
                   {t.href === "/dashboard/requests" && incoming > 0 && (
-                    <span className="rounded-full bg-royal px-2 py-0.5 text-xs text-white">
+                    <span className="rounded-full bg-navy px-2 py-0.5 text-xs text-white">
                       <span className="sr-only">(</span>{incoming}<span className="sr-only"> new)</span>
                     </span>
                   )}

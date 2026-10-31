@@ -143,7 +143,7 @@ Then **Vercel → Deployments → ⋯ on the latest Production deployment → Re
 ## 9. Final check (15 min)
 
 1. **/admin/setup** says **Ready to launch**. Only the "Later" items are grey.
-2. **Homepage:** **somethingclicks.com** shows "Good businesses know other good businesses." with the "See who fits." example and a live count ("240,000+").
+2. **Homepage:** **somethingclicks.com** shows the search, "Know who to know." under it, and "What do you do?" tiles with live counts for Dallas–Fort Worth.
 3. **Search:** enter "Florist" and "Plano, TX" → **Find my matches**. You should see category cards with counts and no business names.
 4. **City page:** **somethingclicks.com/weddings/dallas-fort-worth** shows DFW counts by category.
 5. **Sign-in:** in a private window, open **/sign-in**, enter a personal email, and click the emailed link. You land on "Claim your business".
