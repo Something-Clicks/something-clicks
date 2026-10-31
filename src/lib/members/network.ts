@@ -345,3 +345,33 @@ export async function saveProfile(
   await sql()`update places set state = ${p.network_opt_in ? "member" : "verified"} where id = ${placeId} and state in ('verified', 'member')`;
   return true;
 }
+
+/** Who to tell about a partnership change: the other business on the introduction, and this one's name. */
+export async function partnershipCounterpart(placeId: number, ref: { introId: number } | { partnershipId: number }) {
+  const introId =
+    "introId" in ref
+      ? ref.introId
+      : (await sql()<{ id: number }[]>`select introduction_id::int as id from partnerships where id = ${ref.partnershipId}`)[0]?.id;
+  if (!introId) return null;
+  const [row] = await sql()<{ my_name: string; other_name: string; other_email: string }[]>`
+    select me.name as my_name, o.name as other_name, coalesce(nullif(pr.contact_email, ''), m.email) as other_email
+    from introductions i
+    join places me on me.id = ${placeId}
+    join places o on o.id = case when i.from_place = ${placeId} then i.to_place else i.from_place end
+    join profiles pr on pr.place_id = o.id
+    join members m on m.id = pr.member_id
+    where i.id = ${introId} and ${placeId} in (i.from_place, i.to_place)`;
+  return row ?? null;
+}
+
+/** The dashboard's activity row: what's waiting, who's connected, what's live, and visits sent. */
+export async function activitySummary(placeId: number) {
+  const [row] = await sql()<{ waiting: number; connected: number; live: number; visits: number }[]>`
+    select
+      (select count(*)::int from introductions where to_place = ${placeId} and status = 'requested') as waiting,
+      (select count(*)::int from introductions where ${placeId} in (from_place, to_place) and status = 'connected') as connected,
+      (select count(*)::int from partnerships pa join introductions i on i.id = pa.introduction_id
+        where pa.stage = 'live' and ${placeId} in (i.from_place, i.to_place)) as live,
+      (select coalesce(sum(clicks), 0)::int from partnership_links where place_id = ${placeId}) as visits`;
+  return row;
+}

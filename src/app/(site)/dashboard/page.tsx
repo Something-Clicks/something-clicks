@@ -9,7 +9,7 @@ import { SubmitButton } from "@/components/members/SubmitButton";
 import type { PartnershipType } from "@/content/journeys";
 import type { PlaceState } from "@/content/network";
 import { loadDashboard } from "@/lib/members/dashboard";
-import { myMatches, type MyMatch } from "@/lib/members/network";
+import { activitySummary, myMatches, type MyMatch } from "@/lib/members/network";
 import { requestIntroAction } from "./actions";
 import { readiness } from "@/lib/readiness";
 
@@ -29,7 +29,14 @@ export default async function DashboardMatchesPage({ searchParams }: { searchPar
   const ctx = await loadDashboard("/dashboard", sp.place);
   if (ctx.kind === "none") return <NoBusiness email={ctx.member.email} pending={ctx.pending} />;
   const { place } = ctx;
-  const matches = await myMatches(place.id);
+  const [matches, activity] = await Promise.all([myMatches(place.id), activitySummary(place.id)]);
+  const q = `?place=${place.id}`;
+  const stats = [
+    { n: activity.waiting, label: "Requests waiting for you", href: `/dashboard/requests${q}` },
+    { n: activity.connected, label: "Connected", href: `/dashboard/requests${q}` },
+    { n: activity.live, label: "Live partnerships", href: `/dashboard/partnerships${q}` },
+    { n: activity.visits, label: "Visits from your links", href: `/dashboard/partnerships${q}` },
+  ];
   const canRequest = place.state === "member";
 
   return (
@@ -37,6 +44,18 @@ export default async function DashboardMatchesPage({ searchParams }: { searchPar
       <div className="space-y-4">
         {sp.error && <Notice>{sp.error}</Notice>}
         {sp.done && done[sp.done] && <Notice tone="success">{done[sp.done]}</Notice>}
+        {stats.some((s) => s.n > 0) && (
+          <ul className="grid grid-cols-2 gap-3 lg:grid-cols-4" aria-label="Your activity">
+            {stats.map((s) => (
+              <li key={s.label}>
+                <Link href={s.href} className="flex h-full flex-col rounded-2xl bg-white p-4 ring-1 ring-line hover:ring-navy">
+                  <span className="text-2xl font-bold tabular-nums">{s.n.toLocaleString("en-US")}</span>
+                  <span className="text-sm text-navy-soft">{s.label}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
         {!canRequest && (
           <div className="flex flex-col items-start gap-3 rounded-2xl bg-white p-5 ring-1 ring-line sm:flex-row sm:items-center sm:justify-between">
             <p><strong>Join the network</strong> to request introductions and let your matches find you.</p>
@@ -62,7 +81,7 @@ export default async function DashboardMatchesPage({ searchParams }: { searchPar
         </div>
       ) : (
         <>
-          <h2 className="mt-8 text-2xl">{matches.length} businesses that fit yours</h2>
+          <h2 className="mt-8 text-2xl">{matches.length} {matches.length === 1 ? "business fits" : "businesses fit"} yours</h2>
           <ul className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
             {matches.map((m) => (
               <li key={m.place_b}>
@@ -125,7 +144,7 @@ function MatchAction({ m, placeId, canRequest }: { m: MyMatch; placeId: number; 
         <input id={`note-${m.place_b}`} name="note" maxLength={200} placeholder="We share a lot of couples in Fort Worth."
                className="mt-2 block w-full rounded-lg border border-field px-3 py-2" />
       </details>
-      <SubmitButton pendingLabel="Requesting…" className="w-full">Request an introduction</SubmitButton>
+      <SubmitButton pendingLabel="Requesting…" className="w-full">Request introduction</SubmitButton>
     </form>
   );
 }

@@ -9,7 +9,7 @@ export function CtaBand({ title = site.brandLine }: { title?: string }) {
       <div className="container-page py-20 text-center sm:py-24">
         <h2 className="text-4xl sm:text-5xl">{title}</h2>
         <Link href="/#find" className="mt-10 inline-flex items-center gap-2 rounded-xl bg-white px-6 py-4 text-lg font-semibold text-navy hover:bg-ice">
-          Find my matches <ArrowRight aria-hidden="true" className="h-5 w-5" />
+          Find your partners <ArrowRight aria-hidden="true" className="h-5 w-5" />
         </Link>
         <p className="mt-4 text-sm text-mist">Free to claim your business and see your matches.</p>
       </div>

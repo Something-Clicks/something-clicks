@@ -7,7 +7,7 @@ const columns = [
   {
     title: "Something Clicks",
     links: [
-      { href: "/#find", label: "Find my matches" },
+      { href: "/#find", label: "Find your partners" },
       { href: "/claim", label: "Claim your business" },
       { href: "/sign-in", label: "Sign in" },
       { href: "/referral-partners", label: "Referral partners" },
