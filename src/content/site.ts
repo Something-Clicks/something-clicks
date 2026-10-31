@@ -29,8 +29,7 @@ export const site = {
   founder: { name: "Matt Hill", role: "Founder and business manager" },
 
   // No email address is published on the site (scrapers); visitors use the contact form.
-  // [PLACEHOLDER] Replace with the committed response window.
-  responseWindow: placeholder("within [X] business days"),
+  responseWindow: "within 2 business days",
   // [PLACEHOLDER] Matt to write the founder note (2–4 short paragraphs).
   founderNote: placeholder(
     "Founder note from Matt Hill goes here: why Something Clicks exists, and what he has seen in local business partnerships.",
