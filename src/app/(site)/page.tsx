@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Check } from "lucide-react";
-import { CategoryMatchCard } from "@/components/network/CategoryMatchCard";
+import { ArrowRight } from "lucide-react";
 import { CategoryIcon } from "@/components/network/CategoryIcon";
 import { FindForm } from "@/components/network/FindForm";
 import { activeJourneys, categoryById } from "@/content/journeys";
@@ -9,7 +8,8 @@ import { formatAtLeast } from "@/content/network";
 import { site } from "@/content/site";
 import { dbConfigured } from "@/lib/db";
 import { pageMeta } from "@/lib/metadata";
-import { mappedCount, resolveLocation, searchMatches, SEARCH_RADIUS_MILES } from "@/lib/network/search";
+import { metroTotals } from "@/lib/network/metros";
+import { mappedCount, resolveLocation, searchMatches } from "@/lib/network/search";
 
 export const metadata = pageMeta({
   title: "Home",
@@ -21,47 +21,63 @@ export const metadata = pageMeta({
 // Live numbers on this page come from the database; refresh hourly.
 export const revalidate = 3600;
 
-const EXAMPLE = { what: "photographers", where: "Dallas, TX" };
+const EXAMPLE = { what: "Photographer", where: "Dallas, TX" };
 
 const steps = [
-  { title: "Tell us about your business.", body: "Find it, claim it, confirm a few details." },
-  { title: "See your matches.", body: "Local businesses that fit yours, and why." },
-  { title: "Make a connection.", body: "One click to request an introduction." },
-  { title: "Grow together.", body: "Set up referrals, a shared offer, or a promotion." },
+  { title: "Claim your business", body: "Free. Takes a minute." },
+  { title: "See your matches", body: "And why each one fits." },
+  { title: "Get introduced", body: "One tap. Both sides agree." },
+  { title: "Grow together", body: "Referrals, shared offers, promotions." },
 ];
 
-const progress = ["Matched", "Introduced", "Connected", "Partnership live"];
-
 export default async function HomePage() {
-  const [example, mapped] = dbConfigured()
-    ? await Promise.all([exampleResults(), mappedCount("weddings").catch(() => 0)])
-    : [null, 0];
+  const [example, mapped, totals] = dbConfigured()
+    ? await Promise.all([
+        exampleResults(),
+        mappedCount("weddings").catch(() => 0),
+        metroTotals().catch(() => ({}) as Record<string, number>),
+      ])
+    : [null, 0, {} as Record<string, number>];
   const journey = activeJourneys()[0];
+  const exampleHref = `/matches?${new URLSearchParams(EXAMPLE)}`;
 
   return (
     <>
-      <section className="bg-navy text-white on-dark">
-        <div className="container-page py-20 sm:py-28">
-          <h1 className="max-w-3xl text-5xl leading-[1.05] sm:text-7xl">Good businesses know other good businesses.</h1>
-          <p className="mt-6 max-w-xl text-xl text-mist">See which local businesses fit yours, and why.</p>
-          <div className="mt-10 max-w-4xl">
-            <FindForm />
+      <section className="bg-white">
+        <div className="container-page flex flex-col items-center pb-12 pt-12 text-center sm:pb-16 sm:pt-20">
+          <h1 className="max-w-3xl text-4xl font-bold leading-[1.05] sm:text-6xl">Who fits your business?</h1>
+          <p className="mt-4 text-lg text-navy-soft sm:text-xl">
+            {mapped > 0 ? `${formatAtLeast(mapped)} ${journey?.noun ?? "businesses"}, mapped.` : site.tagline}
+          </p>
+          <div className="mt-8 w-full max-w-4xl">
+            <FindForm chips />
           </div>
-          <p className="mt-4 text-sm text-mist">Free to claim your business and see your matches.</p>
         </div>
       </section>
 
       {example && example.results.length > 0 && (
-        <section className="bg-cloud py-20 sm:py-28" aria-labelledby="fits-heading">
+        <section className="bg-cloud pt-12 sm:pt-16" aria-labelledby="fits-heading">
           <div className="container-page">
-            <h2 id="fits-heading" className="text-4xl sm:text-5xl">See who fits.</h2>
-            <p className="mt-3 text-lg text-navy-soft">
-              A real search: {example.category} in {example.place}.
-            </p>
-            <ul className="mt-10 grid gap-6 md:grid-cols-3">
+            <div className="flex items-baseline justify-between gap-4">
+              <h2 id="fits-heading" className="text-2xl sm:text-3xl">Fits a photographer near Dallas</h2>
+              <Link href={exampleHref} className="shrink-0 font-semibold text-royal hover:underline">
+                See all
+              </Link>
+            </div>
+            <ul className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-6">
               {example.results.map((r) => (
                 <li key={r.category.id}>
-                  <CategoryMatchCard r={r} radiusMiles={SEARCH_RADIUS_MILES} claimHref={`/matches?${new URLSearchParams(EXAMPLE)}`} />
+                  <Link
+                    href={exampleHref}
+                    className="flex h-full flex-col gap-3 rounded-3xl bg-white p-4 ring-1 ring-line hover:ring-royal sm:p-5"
+                  >
+                    <span className="grid h-11 w-11 place-items-center rounded-2xl bg-ice text-royal">
+                      <CategoryIcon id={r.category.id} />
+                    </span>
+                    <span className="text-3xl font-bold leading-none tracking-tight tabular-nums">{r.count.toLocaleString("en-US")}</span>
+                    <span className="font-semibold leading-snug">{r.category.plural}</span>
+                    <span className="hidden text-sm text-navy-soft sm:block">{r.reason}</span>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -69,77 +85,59 @@ export default async function HomePage() {
         </section>
       )}
 
-      <section id="how-it-works" className="scroll-mt-16 bg-white py-20 sm:py-28" aria-labelledby="how-heading">
+      <section id="cities" className="bg-cloud py-12 sm:py-16" aria-labelledby="cities-heading">
         <div className="container-page">
-          <h2 id="how-heading" className="text-4xl sm:text-5xl">Make the connection.</h2>
-          <ol className="mt-12 grid gap-10 md:grid-cols-4">
-            {steps.map((s, i) => (
-              <li key={s.title}>
-                <span className="grid h-10 w-10 place-items-center rounded-full bg-royal font-semibold text-white">{i + 1}</span>
-                <h3 className="mt-5 text-xl">{s.title}</h3>
-                <p className="mt-2 text-navy-soft">{s.body}</p>
-              </li>
-            ))}
-          </ol>
-          <div className="mt-14 rounded-2xl bg-cloud p-6 sm:p-8">
-            <p className="text-sm font-semibold text-navy-soft">Every partnership shows its progress</p>
-            <ol className="mt-4 grid gap-3 sm:grid-cols-4" aria-label="Partnership progress">
-              {progress.map((p, i) => (
-                <li key={p} className="flex items-center gap-3">
-                  <span className={`grid h-8 w-8 shrink-0 place-items-center rounded-full ${i < 3 ? "bg-royal text-white" : "bg-white text-navy ring-2 ring-royal"}`}>
-                    {i < 3 ? <Check aria-hidden="true" className="h-4 w-4" /> : <span aria-hidden="true" className="h-2 w-2 rounded-full bg-cyan" />}
+          <h2 id="cities-heading" className="text-2xl sm:text-3xl">Matches are live in</h2>
+          <ul className="mt-6 grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-5">
+            {metros.map((m) => (
+              <li key={m.slug}>
+                <Link
+                  href={`/weddings/${m.slug}`}
+                  className="flex h-full items-center justify-between gap-3 rounded-3xl bg-white p-4 ring-1 ring-line hover:ring-royal sm:flex-col sm:items-start sm:p-5"
+                >
+                  <span>
+                    <span className="block text-sm text-navy-soft">{m.state}</span>
+                    <span className="block text-lg font-semibold">{m.name}</span>
                   </span>
-                  <span className="font-medium">{p}</span>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-ice py-20 sm:py-28" aria-labelledby="together-heading">
-        <div className="container-page grid items-center gap-12 lg:grid-cols-2">
-          <div>
-            <h2 id="together-heading" className="text-4xl sm:text-5xl">Better together.</h2>
-            <p className="mt-4 text-xl text-navy-soft">
-              Your next customer is already working with a business you should know.
-            </p>
-            {mapped > 0 && (
-              <p className="mt-8 text-lg">
-                <span className="block text-5xl font-semibold tracking-tight text-royal tabular-nums">{formatAtLeast(mapped)}</span>
-                {journey?.noun ?? "businesses"} mapped across the U.S.
-              </p>
-            )}
-            <p className="mt-8 text-navy-soft">
-              Matches are live in{" "}
-              {metros.map((m, i) => (
-                <span key={m.slug}>
-                  <Link href={`/weddings/${m.slug}`} className="font-semibold text-royal hover:underline">{m.name}</Link>
-                  {i < metros.length - 2 ? ", " : i === metros.length - 2 ? " and " : "."}
-                </span>
-              ))}
-            </p>
-          </div>
-          <ul className="grid grid-cols-3 gap-3 sm:grid-cols-4" aria-label={`${journey?.name ?? ""} categories`}>
-            {journey?.categories.filter((c) => !c.broad).slice(0, 12).map((c) => (
-              <li key={c.id} className="flex flex-col items-center gap-2 rounded-2xl bg-white p-4 text-center text-sm ring-1 ring-line">
-                <CategoryIcon id={c.id} className="h-6 w-6 text-royal" />
-                <span>{c.label}</span>
+                  {totals[m.cluster] ? (
+                    <span className="text-sm text-navy-soft">{formatAtLeast(totals[m.cluster])} businesses</span>
+                  ) : null}
+                </Link>
               </li>
             ))}
           </ul>
         </div>
       </section>
 
-      <section className="bg-navy text-white on-dark">
-        <div className="container-page py-20 text-center sm:py-28">
-          <h2 className="text-4xl sm:text-6xl">Make the complicated click.</h2>
-          <Link href="/#find" className="mt-10 inline-flex items-center gap-2 rounded-xl bg-white px-6 py-4 text-lg font-semibold text-navy hover:bg-ice">
-            Find my matches <ArrowRight aria-hidden="true" className="h-5 w-5" />
+      <section id="how-it-works" className="scroll-mt-16 bg-white py-12 sm:py-16" aria-labelledby="how-heading">
+        <div className="container-page">
+          <h2 id="how-heading" className="text-2xl sm:text-3xl">How it works</h2>
+          <ol className="mt-6 grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
+            {steps.map((s, i) => (
+              <li key={s.title} className="flex items-start gap-4 rounded-3xl bg-cloud p-5">
+                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-royal text-sm font-semibold text-white">{i + 1}</span>
+                <span>
+                  <span className="block font-semibold">{s.title}</span>
+                  <span className="block text-sm text-navy-soft">{s.body}</span>
+                </span>
+              </li>
+            ))}
+          </ol>
+          <Link
+            href="/claim"
+            className="mt-8 hidden items-center gap-2 rounded-full bg-navy px-6 py-3.5 font-semibold text-white hover:bg-[#0e1b2c] sm:inline-flex"
+          >
+            Claim your business, free <ArrowRight aria-hidden="true" className="h-5 w-5" />
           </Link>
-          <p className="mt-4 text-sm text-mist">Free to claim your business and see your matches.</p>
         </div>
       </section>
+
+      {/* Mobile: the next action stays within thumb reach. */}
+      <div className="sticky bottom-0 z-30 border-t border-line bg-white/95 p-3 backdrop-blur sm:hidden">
+        <Link href="/claim" className="flex h-12 items-center justify-center rounded-2xl bg-royal font-semibold text-white">
+          Claim your business · free
+        </Link>
+      </div>
 
       <script
         type="application/ld+json"
@@ -160,13 +158,9 @@ export default async function HomePage() {
 async function exampleResults() {
   try {
     const location = await resolveLocation(EXAMPLE.where);
-    const category = categoryById(EXAMPLE.what);
+    const category = categoryById("photographers");
     if (location.status !== "found" || !category) return null;
-    return {
-      category: category.plural,
-      place: location.place.label,
-      results: await searchMatches(category.id, location.place, 3),
-    };
+    return { results: await searchMatches(category.id, location.place, 6) };
   } catch {
     return null;
   }

@@ -1,4 +1,6 @@
+import { Search } from "lucide-react";
 import { activeJourneys } from "@/content/journeys";
+import { CategoryChips } from "./CategoryChips";
 
 const suggestions = Array.from(
   new Set(activeJourneys().flatMap((j) => j.categories.flatMap((c) => [c.label, ...c.synonyms.slice(0, 3)]))),
@@ -8,28 +10,33 @@ const suggestions = Array.from(
 export function FindForm({
   what = "",
   where = "",
-  tone = "dark",
   id = "find",
+  chips = false,
+  compact = false,
 }: {
   what?: string;
   where?: string;
-  tone?: "dark" | "light";
   id?: string;
+  /** Category chips under the form that fill in "What you do". */
+  chips?: boolean;
+  compact?: boolean;
 }) {
+  const field = "min-w-0 flex-1 px-5 py-2.5 sm:px-7";
+  const input =
+    "mt-0.5 block w-full border-0 bg-transparent p-0 text-navy placeholder:text-navy-soft/70 focus:ring-0 focus-visible:outline-none";
   return (
-    <form
-      id={id}
-      action="/matches"
-      method="get"
-      role="search"
-      aria-label="Find your business matches"
-      className="scroll-mt-24 rounded-2xl bg-white/5 p-2 ring-1 ring-white/15 data-[tone=light]:bg-white data-[tone=light]:ring-line"
-      data-tone={tone}
-    >
-      <div className="grid gap-2 md:grid-cols-[1fr_1fr_auto]">
-        <div className="rounded-xl bg-white px-4 py-3">
-          <label htmlFor={`${id}-what`} className="block text-xs font-semibold text-navy-soft">
-            What does your business do?
+    <div className="w-full">
+      <form
+        id={id}
+        action="/matches"
+        method="get"
+        role="search"
+        aria-label="Find your business matches"
+        className={`scroll-mt-24 flex flex-col text-left gap-1 rounded-3xl bg-white p-2 shadow-[0_6px_30px_rgba(21,38,61,0.12)] ring-1 ring-line has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-royal sm:flex-row sm:items-center sm:rounded-full ${compact ? "" : "sm:p-2.5"}`}
+      >
+        <div className={`${field} border-line sm:border-r`}>
+          <label htmlFor={`${id}-what`} className="block text-xs font-semibold text-navy">
+            What you do
           </label>
           <input
             id={`${id}-what`}
@@ -40,15 +47,15 @@ export function FindForm({
             autoComplete="off"
             maxLength={80}
             placeholder="Wedding photographer"
-            className="mt-0.5 block w-full border-0 bg-transparent p-0 text-lg text-navy placeholder:text-navy-soft/60 focus:ring-0 focus-visible:outline-none"
+            className={`${input} ${compact ? "text-base" : "text-lg"}`}
           />
           <datalist id={`${id}-what-list`}>
             {suggestions.map((s) => <option key={s} value={s} />)}
           </datalist>
         </div>
-        <div className="rounded-xl bg-white px-4 py-3">
-          <label htmlFor={`${id}-where`} className="block text-xs font-semibold text-navy-soft">
-            Where do you serve customers?
+        <div className={`${field} border-t border-line sm:border-t-0`}>
+          <label htmlFor={`${id}-where`} className="block text-xs font-semibold text-navy">
+            Where
           </label>
           <input
             id={`${id}-where`}
@@ -58,16 +65,18 @@ export function FindForm({
             autoComplete="address-level2"
             maxLength={80}
             placeholder="City, state or ZIP"
-            className="mt-0.5 block w-full border-0 bg-transparent p-0 text-lg text-navy placeholder:text-navy-soft/60 focus:ring-0 focus-visible:outline-none"
+            className={`${input} ${compact ? "text-base" : "text-lg"}`}
           />
         </div>
         <button
           type="submit"
-          className="rounded-xl bg-royal px-6 py-4 text-base font-semibold text-white hover:bg-[#1f45e0]"
+          className={`inline-flex shrink-0 items-center justify-center gap-2 rounded-2xl bg-royal font-semibold text-white hover:bg-[#1f45e0] sm:rounded-full ${compact ? "h-12 px-6" : "h-14 px-7 text-lg"}`}
         >
-          Find my matches
+          <Search aria-hidden="true" className="h-5 w-5" strokeWidth={2.4} />
+          Find matches
         </button>
-      </div>
-    </form>
+      </form>
+      {chips && <CategoryChips inputId={`${id}-what`} selected={what} />}
+    </div>
   );
 }

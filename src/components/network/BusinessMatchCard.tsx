@@ -30,9 +30,9 @@ const badge: Record<PlaceState, string> = {
  */
 export function BusinessMatchCard({ m, action }: { m: BusinessMatch; action: React.ReactNode }) {
   return (
-    <article className="flex h-full flex-col rounded-2xl bg-white p-6 ring-1 ring-line">
+    <article className="flex h-full flex-col rounded-3xl bg-white p-5 ring-1 ring-line sm:p-6">
       <div className="flex items-start gap-4">
-        <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-ice text-royal">
+        <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-ice text-royal">
           <CategoryIcon id={m.categoryId} />
         </span>
         <div className="min-w-0">
@@ -48,7 +48,7 @@ export function BusinessMatchCard({ m, action }: { m: BusinessMatch; action: Rea
         </span>
       </div>
       <p className="mt-4 text-lg font-medium">{m.rationale || reasonText(m.journeyId, m.reasonKey)}</p>
-      <p className="mt-2 text-sm text-navy-soft">Idea: {partnershipLabels[m.partnershipType]}</p>
+      <p className="mt-3"><span className="inline-block rounded-full bg-cloud px-3 py-1 text-sm font-semibold ring-1 ring-line">{partnershipLabels[m.partnershipType]}</span></p>
       <div className="mt-auto pt-6">{action}</div>
     </article>
   );

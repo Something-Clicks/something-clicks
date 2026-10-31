@@ -75,7 +75,7 @@ export function Header() {
           </Link>
           {/* Wrapper controls visibility: ButtonLink's own inline-flex would override `hidden`. */}
           <span className="hidden sm:block">
-            <ButtonLink href="/#find" className="!px-4 !py-2 text-sm">
+            <ButtonLink href="/#find" className="!rounded-full !px-4 !py-2 text-sm">
               Find my matches
             </ButtonLink>
           </span>

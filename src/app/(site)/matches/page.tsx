@@ -21,16 +21,14 @@ export default async function MatchesPage({ searchParams }: { searchParams: Prom
   const { what = "", where = "" } = await searchParams;
   return (
     <>
-      <section className="bg-navy text-white on-dark">
-        <div className="container-page py-10 sm:py-12">
-          <h1 className="text-3xl sm:text-4xl">Find your business matches</h1>
-          <div className="mt-6">
-            <FindForm what={what} where={where} />
-          </div>
+      <section className="border-b border-line bg-white">
+        <div className="container-page py-5 sm:py-6">
+          <h1 className="sr-only">Find your business matches</h1>
+          <FindForm what={what} where={where} compact />
         </div>
       </section>
       <section className="bg-cloud">
-        <div className="container-page py-12 sm:py-16">
+        <div className="container-page py-8 sm:py-12">
           {what.trim() && where.trim() ? <Results what={what} where={where} /> : <Hint />}
         </div>
       </section>
@@ -70,7 +68,7 @@ async function Results({ what, where }: Search & { what: string; where: string }
         <ul className="mt-4 flex flex-wrap gap-2">
           {location.options.map((o) => (
             <li key={o.id}>
-              <Link href={`/matches?${new URLSearchParams({ what, where: o.label })}`} className="inline-block rounded-full bg-white px-4 py-2 font-semibold text-royal ring-1 ring-line hover:bg-ice">
+              <Link href={`/matches?${new URLSearchParams({ what, where: o.label })}`} className="inline-block rounded-full bg-white px-4 py-2.5 font-semibold text-royal ring-1 ring-line hover:ring-royal">
                 {o.label}
               </Link>
             </li>
@@ -93,25 +91,22 @@ async function Results({ what, where }: Search & { what: string; where: string }
   }
   return (
     <>
-      <h2 className="max-w-3xl text-3xl">
-        Businesses near {place.label} that fit a {category.label.toLowerCase()}.
+      <h2 className="max-w-3xl text-2xl sm:text-3xl">
+        Fits a {category.label.toLowerCase()} near {place.label}
       </h2>
-      <p className="mt-2 text-navy-soft">
-        Counts are local {activeJourneys()[0]?.noun ?? "businesses"} within {SEARCH_RADIUS_MILES} miles.
+      <p className="mt-1 text-navy-soft">
+        {capitalize(activeJourneys()[0]?.noun ?? "businesses")} within {SEARCH_RADIUS_MILES} miles · names appear once you claim your business
       </p>
-      <ul className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <ul className="mt-6 grid gap-4 sm:gap-5 md:grid-cols-2 lg:grid-cols-3">
         {results.map((r) => (
           <li key={r.category.id}>
             <CategoryMatchCard r={r} radiusMiles={SEARCH_RADIUS_MILES} claimHref={claimHref} />
           </li>
         ))}
       </ul>
-      <div className="mt-10 flex flex-col items-start gap-4 rounded-2xl bg-white p-6 ring-1 ring-line sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <p className="text-lg font-semibold">See who they are.</p>
-          <p className="text-navy-soft">Free to claim your business and see your matches.</p>
-        </div>
-        <Link href={claimHref} className="rounded-xl bg-royal px-6 py-3 font-semibold text-white hover:bg-[#1f45e0]">
+      <div className="sticky bottom-3 z-30 mt-8 flex items-center justify-between gap-4 rounded-3xl bg-navy p-3 pl-5 text-white shadow-[0_8px_30px_rgba(21,38,61,0.25)] on-dark sm:static sm:p-4 sm:pl-6 sm:shadow-none">
+        <p className="font-semibold">See who they are<span className="hidden font-normal text-mist sm:inline"> · free to claim</span></p>
+        <Link href={claimHref} className="shrink-0 rounded-2xl bg-white px-5 py-3 font-semibold text-navy hover:bg-ice">
           Claim your business
         </Link>
       </div>
@@ -128,7 +123,7 @@ function UnknownBusiness({ what, where }: { what: string; where: string }) {
       <ul className="mt-4 flex flex-wrap gap-2">
         {j?.categories.filter((c) => !c.broad).map((c) => (
           <li key={c.id}>
-            <Link href={`/matches?${new URLSearchParams({ what: c.label, where })}`} className="inline-block rounded-full bg-white px-4 py-2 text-sm font-semibold text-royal ring-1 ring-line hover:bg-ice">
+            <Link href={`/matches?${new URLSearchParams({ what: c.label, where })}`} className="inline-block rounded-full bg-white px-4 py-2.5 text-sm font-semibold text-royal ring-1 ring-line hover:ring-royal">
               {c.label}
             </Link>
           </li>
@@ -137,3 +132,5 @@ function UnknownBusiness({ what, where }: { what: string; where: string }) {
     </div>
   );
 }
+
+const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
