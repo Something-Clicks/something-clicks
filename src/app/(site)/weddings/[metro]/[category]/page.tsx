@@ -135,7 +135,7 @@ export default async function CityCategoryPage({ params }: Params) {
 
       <section className="bg-white py-10 sm:py-14" aria-labelledby="search-heading">
         <div className="container-page">
-          <h2 id="search-heading" className="text-xl font-bold sm:text-2xl">See your matches</h2>
+          <h2 id="search-heading" className="text-xl font-bold sm:text-2xl">Find your partners</h2>
           <div className="mt-5 max-w-4xl">
             <FindForm what={cat.label} where={m.where} compact />
           </div>

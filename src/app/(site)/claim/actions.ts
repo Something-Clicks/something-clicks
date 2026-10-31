@@ -8,6 +8,7 @@ import { claimsOpen } from "@/lib/readiness";
 import { allow, validEmail } from "@/lib/members/limits";
 import { validLink } from "@/lib/members/network";
 import { resolveLocation } from "@/lib/network/search";
+import { cleanTerm, liveVocabulary, logUnmatched, mappedCategory } from "@/lib/network/vocabulary";
 
 const text = (f: FormData, k: string, max: number) => String(f.get(k) ?? "").replace(/[\u0000-\u001f]/g, " ").trim().slice(0, max);
 
@@ -51,6 +52,7 @@ export async function addBusiness(formData: FormData) {
   const fields = {
     name: text(formData, "name", 120),
     category_id: text(formData, "category", 60),
+    other: text(formData, "other", 80),
     website: text(formData, "website", 300),
     where: text(formData, "where", 80),
     service_area: text(formData, "service_area", 200),
@@ -64,7 +66,24 @@ export async function addBusiness(formData: FormData) {
     return redirect(`/claim/new?${new URLSearchParams({ ...keep, error })}`);
   };
   if (fields.name.length < 2) return back("name");
-  if (!categoryById(fields.category_id)) return back("category");
+  // "Something else": keep what they do so the business can get a category once one exists.
+  let categoryId = fields.category_id;
+  let unmatchedTerm: string | undefined;
+  if (categoryId === "other") {
+    const term = cleanTerm(fields.other);
+    if (!term) return back("other");
+    const vocab = await liveVocabulary();
+    const mapped = await mappedCategory(term);
+    if (mapped) categoryId = mapped;
+    else if (vocab.some((v) => v.id === term)) categoryId = term;
+    else {
+      categoryId = "";
+      unmatchedTerm = term;
+      await logUnmatched(term);
+    }
+  } else if (!categoryById(categoryId) && !(await liveVocabulary()).some((v) => v.id === categoryId)) {
+    return back("category");
+  }
   const website = fields.website && !/^https?:\/\//i.test(fields.website) ? `https://${fields.website}` : fields.website;
   if (!validLink(website)) return back("website");
   if (!validEmail(fields.email)) return back("email");
@@ -75,7 +94,8 @@ export async function addBusiness(formData: FormData) {
   const [locality, region = ""] = place.label.startsWith("ZIP ") ? [place.label, ""] : place.label.split(", ");
   const business: NewBusiness = {
     name: fields.name,
-    category_id: fields.category_id,
+    category_id: categoryId,
+    ...(unmatchedTerm ? { unmatched_term: unmatchedTerm } : {}),
     website,
     service_area: fields.service_area,
     locality,

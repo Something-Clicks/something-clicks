@@ -1,5 +1,4 @@
 import { after } from "next/server";
-import { categoryById } from "@/content/journeys";
 import type { PlaceState } from "@/content/network";
 import { sql } from "@/lib/db";
 import type { Place as Location } from "@/lib/network/search";
@@ -72,7 +71,9 @@ export async function getClaimable(id: number): Promise<ClaimablePlace | null> {
 
 export type NewBusiness = {
   name: string;
+  /** Empty when the owner chose "Something else": then unmatched_term says what they do. */
   category_id: string;
+  unmatched_term?: string;
   website: string;
   service_area: string;
   locality: string;
@@ -136,11 +137,12 @@ export async function approveClaim(claimId: number): Promise<{ ok: true; placeId
     let placeId = c.place_id;
     if (!placeId) {
       const b = c.new_business!;
-      const category = categoryById(b.category_id);
+      // "Something else" businesses wait without a category (keeping what they typed) until an admin maps the term.
       const [p] = await tx<{ id: number }[]>`
-        insert into places (source, name, category_id, classified_by, website, locality, region, geog, state, serves_journey)
-        values ('member', ${b.name}, ${b.category_id}, 'owner', ${b.website}, ${b.locality}, ${b.region},
-                st_setsrid(st_makepoint(${b.lng}, ${b.lat}), 4326)::geography, 'verified', ${category ? true : null})
+        insert into places (source, name, category_id, classified_by, website, locality, region, geog, state, serves_journey, unmatched_term)
+        values ('member', ${b.name}, ${b.category_id || null}, 'owner', ${b.website}, ${b.locality}, ${b.region},
+                st_setsrid(st_makepoint(${b.lng}, ${b.lat}), 4326)::geography, 'verified', ${b.category_id ? true : null},
+                ${b.category_id ? null : (b.unmatched_term ?? null)})
         returning id::int`;
       placeId = p.id;
       await tx`update place_claims set place_id = ${placeId} where id = ${claimId}`;

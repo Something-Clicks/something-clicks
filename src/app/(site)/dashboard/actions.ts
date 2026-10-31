@@ -10,6 +10,7 @@ import { validEmail } from "@/lib/members/limits";
 import {
   acceptPartnership,
   endPartnership,
+  partnershipCounterpart,
   proposePartnership,
   requestIntroduction,
   respondIntroduction,
@@ -87,14 +88,40 @@ export async function proposeAction(formData: FormData) {
   const link = text(formData, "link", 500);
   if (!TYPES.includes(type) || !offer) back("/dashboard/partnerships", placeId, { error: "Choose a type and describe the offer." });
   if (!validLink(link)) back("/dashboard/partnerships", placeId, { error: "Links start with https://" });
-  const ok = await proposePartnership(member, placeId, num(formData, "intro_id"), { type, offer, code: text(formData, "code", 40), link });
+  const introId = num(formData, "intro_id");
+  const ok = await proposePartnership(member, placeId, introId, { type, offer, code: text(formData, "code", 40), link });
+  if (ok) {
+    const c = await partnershipCounterpart(placeId, { introId });
+    if (c) {
+      await notify(
+        c.other_email,
+        `${c.my_name} proposed a partnership`,
+        `${c.my_name} proposed a partnership.`,
+        [`${partnershipLabels[type]}: ${offer}`, "Agree on your dashboard and it goes live, with a tracking link for each of you."],
+        "/dashboard/partnerships",
+      );
+    }
+  }
   back("/dashboard/partnerships", placeId, ok ? { done: "proposed" } : { error: "You can set up a partnership after you're connected." });
 }
 
 export async function acceptPartnershipAction(formData: FormData) {
   const member = await requireMember();
   const placeId = num(formData, "place_id");
-  const ok = await acceptPartnership(member, placeId, num(formData, "partnership_id"));
+  const partnershipId = num(formData, "partnership_id");
+  const ok = await acceptPartnership(member, placeId, partnershipId);
+  if (ok) {
+    const c = await partnershipCounterpart(placeId, { partnershipId });
+    if (c) {
+      await notify(
+        c.other_email,
+        `Your partnership with ${c.my_name} is live`,
+        "Your partnership is live.",
+        [`${c.my_name} agreed. Your tracking link is on your dashboard; every visit it sends is counted.`],
+        "/dashboard/partnerships",
+      );
+    }
+  }
   back("/dashboard/partnerships", placeId, ok ? { done: "live" } : { error: "That proposal is no longer open." });
 }
 

@@ -23,7 +23,8 @@ def run_import(conn: psycopg.Connection, slug: str, *, dry_run: bool, work_dir: 
         bbox = (cluster["min_lng"], cluster["min_lat"], cluster["max_lng"], cluster["max_lat"])
         boxes = US_BOXES if cluster["scope"] == "national" else [bbox]
         data = J.load()
-        tax = J.taxonomy_map(data, cluster["journey_id"], include_broad=cluster["include_broad"])
+        tax = L.merge_taxonomy(J.taxonomy_map(data, cluster["journey_id"], include_broad=cluster["include_broad"]),
+                               L.custom_taxonomy(conn, cluster["journey_id"], cluster["include_broad"]))
         rules = [(c, p.pattern) for c, p in J.name_rules(data, cluster["journey_id"], include_broad=cluster["include_broad"])]
         prefilter = Prefilter(frozenset(tax), "|".join(f"(?:{p})" for _, p in rules) or None)
 
