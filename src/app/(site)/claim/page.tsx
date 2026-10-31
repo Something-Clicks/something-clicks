@@ -35,7 +35,7 @@ export default async function ClaimSearchPage({ searchParams }: { searchParams: 
                 <input id="where" name="where" maxLength={80} defaultValue={where} autoComplete="address-level2"
                        placeholder="Dallas, TX" className="mt-0.5 block w-full border-0 bg-transparent p-0 text-lg text-navy placeholder:text-navy-soft/60 focus-visible:outline-none" />
               </div>
-              <button type="submit" className="inline-flex items-center justify-center gap-2 rounded-xl bg-royal px-6 py-4 text-lg font-semibold text-white hover:bg-[#1f45e0]">
+              <button type="submit" className="inline-flex items-center justify-center gap-2 rounded-xl bg-navy px-6 py-4 text-lg font-semibold text-white hover:bg-navy/90">
                 <Search aria-hidden="true" className="h-5 w-5" /> Find it
               </button>
             </div>
@@ -80,7 +80,7 @@ async function Results({ q, where }: { q: string; where: string }) {
                 {r.owned ? (
                   <span className="shrink-0 rounded-full bg-cloud px-3 py-1 text-sm font-semibold text-navy-soft">{stateLabels[r.state]}</span>
                 ) : (
-                  <span className="inline-flex shrink-0 items-center gap-1 font-semibold text-royal">
+                  <span className="inline-flex shrink-0 items-center gap-1 font-semibold text-navy">
                     Claim <ArrowRight aria-hidden="true" className="h-4 w-4" />
                   </span>
                 )}
@@ -101,7 +101,7 @@ function AddYours() {
         <p className="text-lg font-semibold">Can&rsquo;t find your business?</p>
         <p className="text-navy-soft">Home-based or new? Add it in a minute.</p>
       </div>
-      <Link href="/claim/new" className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 font-semibold text-royal ring-1 ring-inset ring-royal hover:bg-ice">
+      <Link href="/claim/new" className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 font-semibold text-navy ring-1 ring-inset ring-navy hover:bg-ice">
         <Plus aria-hidden="true" className="h-5 w-5" /> Add your business
       </Link>
     </div>

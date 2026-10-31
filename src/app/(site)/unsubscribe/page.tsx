@@ -38,7 +38,7 @@ export default async function UnsubscribePage({ searchParams }: { searchParams: 
           <>
             <h1 className="text-4xl">That link didn&rsquo;t work.</h1>
             <p className="mt-4 text-lg text-navy-soft">
-              Use the link in the email again, or <Link href="/contact" className="font-semibold text-royal underline">contact us</Link> and
+              Use the link in the email again, or <Link href="/contact" className="font-semibold text-navy underline">contact us</Link> and
               we&rsquo;ll take you off our list.
             </p>
           </>

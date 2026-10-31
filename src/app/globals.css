@@ -1,15 +1,16 @@
 @import "tailwindcss";
 
 /*
- * Brand tokens (official values). Change colors here only.
- * Contrast rules (spec §3.2):
- *  - cyan is decoration only on light backgrounds (≤3:1); text/icons/focus OK on navy
- *  - never pair royal and navy for text or UI (2.7:1)
+ * Brand tokens: exactly two brand colors, navy and blue, plus white.
+ * Change colors here only. Contrast (WCAG 2.2):
+ *  - white on navy 18.3:1; navy on white/ice/cloud 16:1 or more
+ *  - blue on white 4.4:1, so blue is for icons, large text and accents only
+ *  - small text, links, and buttons (white label on navy) are navy
+ *  - blue on navy 4.1:1: fine for focus rings and icons, not for text
  */
 @theme {
-  --color-navy: #15263d;
-  --color-royal: #2853fb;
-  --color-cyan: #209afd;
+  --color-navy: #011335;
+  --color-royal: #0070fe;
   --color-ice: #eaf0ff;
   --color-cloud: #f4f7fb;
   --color-white: #ffffff;
@@ -46,16 +47,13 @@
   ::selection {
     @apply bg-ice text-navy;
   }
-  /* Visible focus: royal on light surfaces, cyan on dark (.on-dark) */
+  /* Visible focus: blue on light surfaces and on navy (4.1:1, above the 3:1 focus minimum) */
   :focus-visible {
     outline: 3px solid var(--color-royal);
     outline-offset: 3px;
     border-radius: 4px;
   }
-  .on-dark :focus-visible {
-    outline-color: var(--color-cyan);
-  }
-  /* cyan on royal is 1.9:1, so royal surfaces use a white ring (5.6:1) */
+  /* blue on blue is invisible, so blue surfaces use a white ring (4.4:1) */
   .on-royal :focus-visible {
     outline-color: var(--color-white);
   }

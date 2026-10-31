@@ -10,7 +10,7 @@ export function pageMeta({
   description: string;
   path: string;
 }): Metadata {
-  const fullTitle = path === "/" ? `${site.name} | ${site.tagline}` : `${title} | ${site.name}`;
+  const fullTitle = path === "/" ? `${site.name} | Wedding vendor referral network` : `${title} | ${site.name}`;
   return {
     title: { absolute: fullTitle },
     description,
@@ -22,8 +22,8 @@ export function pageMeta({
       description,
       url: path,
       locale: "en_US",
-      images: [{ url: "/og-default.png", width: 1200, height: 630, alt: site.name }],
+      images: [{ url: "/brand/og-image.png", width: 1200, height: 630, alt: site.name }],
     },
-    twitter: { card: "summary_large_image", title: fullTitle, description, images: ["/og-default.png"] },
+    twitter: { card: "summary_large_image", title: fullTitle, description, images: ["/brand/og-image.png"] },
   };
 }

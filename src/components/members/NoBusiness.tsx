@@ -27,13 +27,13 @@ export function NoBusiness({ email, pending }: { email: string; pending: Pending
           <>
             <h1 className="text-4xl">Claim your business.</h1>
             <p className="mt-3 text-lg text-navy-soft">You&rsquo;re signed in as {email}. Find your business to see your matches.</p>
-            <Link href="/claim" className="mt-8 inline-flex rounded-xl bg-royal px-6 py-3 font-semibold text-white hover:bg-[#1f45e0]">
+            <Link href="/claim" className="mt-8 inline-flex rounded-xl bg-navy px-6 py-3 font-semibold text-white hover:bg-navy/90">
               Find my business
             </Link>
           </>
         )}
         <form action={signOutMember} className="mt-10">
-          <button type="submit" className="text-sm font-semibold text-navy-soft hover:text-royal">Sign out</button>
+          <button type="submit" className="text-sm font-semibold text-navy-soft hover:underline">Sign out</button>
         </form>
       </div>
     </section>

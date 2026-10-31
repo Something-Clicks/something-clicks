@@ -13,7 +13,7 @@ export default async function NetworkOverview() {
       <NetworkNav active="/admin/network" />
       <div className="flex flex-wrap items-end justify-between gap-4">
         <h1 className="text-3xl">Clusters</h1>
-        <Link href="/admin/network/clusters/new" className="rounded-lg bg-royal px-4 py-2 text-sm font-semibold text-white">
+        <Link href="/admin/network/clusters/new" className="rounded-lg bg-navy px-4 py-2 text-sm font-semibold text-white">
           New cluster
         </Link>
       </div>
@@ -33,7 +33,7 @@ export default async function NetworkOverview() {
             {clusters.map((c) => (
               <tr key={c.id} className="border-t border-line">
                 <td className="px-4 py-3">
-                  <Link href={`/admin/network/clusters/${c.id}`} className="font-semibold text-royal hover:underline">{c.name}</Link>
+                  <Link href={`/admin/network/clusters/${c.id}`} className="font-semibold text-navy hover:underline">{c.name}</Link>
                   <div className="text-xs text-navy-soft">
                     {c.slug} · {c.scope === "national" ? "national import" : "metro"} · {c.include_broad ? "imports all categories" : "wedding-specific"}
                     {c.scope === "metro" && (c.match_unconfirmed_broad ? " · matches unconfirmed broad" : " · matches confirmed only")}
@@ -63,7 +63,7 @@ export default async function NetworkOverview() {
           </li>
         ))}
       </ul>
-      <Link href="/admin/network/imports" className="mt-3 inline-block text-sm font-semibold text-royal hover:underline">All imports</Link>
+      <Link href="/admin/network/imports" className="mt-3 inline-block text-sm font-semibold text-navy hover:underline">All imports</Link>
     </>
   );
 }

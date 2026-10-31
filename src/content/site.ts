@@ -19,9 +19,11 @@ export const site = {
     process.env.SITE_URL ??
     (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "https://somethingclicks.com")
   ).replace(/\/$/, ""),
-  tagline: "Good businesses know other good businesses.",
   description:
-    "See which local businesses fit yours, and why. Request an introduction and grow together. Free to claim your business and see your matches.",
+    "Something Clicks connects wedding planners, photographers, florists, venues, caterers and other wedding professionals through referral partnerships in Dallas–Fort Worth, Atlanta, Houston, Phoenix and Nashville.",
+  /** Footer and llms.txt: what Something Clicks is, in one paragraph. */
+  about:
+    "Something Clicks is a wedding vendor referral network that connects wedding professionals with complementary businesses to build partnerships and exchange referrals. Now in Dallas–Fort Worth, Atlanta, Houston, Phoenix and Nashville.",
   mission: "We help independent businesses grow through the businesses their customers already trust.",
   brandLine: "Make the complicated click.",
   founder: { name: "Matt Hill", role: "Founder and business manager" },
@@ -65,11 +67,3 @@ export const consentCopy = {
   disclosed:
     "Partner promotions are disclosed relationships: each business tells its own customers that it is sharing a partner's offer.",
 } as const;
-
-export const nav = [
-  { href: "/#how-it-works", label: "How it works" },
-  { href: "/claim", label: "Claim your business" },
-  { href: "/referral-partners", label: "Referral partners" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
-] as const;

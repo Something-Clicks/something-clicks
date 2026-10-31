@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { LogoPlaceholder } from "@/components/LogoPlaceholder";
+import { Logo } from "@/components/Logo";
 import { SubmitButton } from "@/components/members/SubmitButton";
 import { verifySignIn } from "@/app/(site)/sign-in/actions";
 
@@ -15,7 +15,7 @@ export default async function VerifyPage({ searchParams }: { searchParams: Promi
   return (
     <main className="grid min-h-screen place-items-center bg-cloud px-4">
       <div className="w-full max-w-md rounded-2xl bg-white p-8 text-center ring-1 ring-line">
-        <div className="flex justify-center"><LogoPlaceholder /></div>
+        <div className="flex justify-center"><Logo /></div>
         <h1 className="mt-6 text-3xl">Welcome back.</h1>
         <form action={verifySignIn} className="mt-6">
           <input type="hidden" name="token" value={token} />

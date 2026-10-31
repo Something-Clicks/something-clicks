@@ -44,7 +44,7 @@ export default function ReferralPartnersPage() {
           <ol className="mt-12 grid gap-10 md:grid-cols-3">
             {steps.map((s, i) => (
               <li key={s.title}>
-                <span className="grid h-10 w-10 place-items-center rounded-full bg-royal font-semibold text-white">{i + 1}</span>
+                <span className="grid h-10 w-10 place-items-center rounded-full bg-navy font-semibold text-white">{i + 1}</span>
                 <h3 className="mt-5 text-xl">{s.title}</h3>
                 <p className="mt-2 text-lg text-navy-soft">{s.body}</p>
               </li>

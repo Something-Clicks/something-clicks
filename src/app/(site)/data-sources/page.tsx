@@ -57,14 +57,14 @@ export default async function DataSourcesPage() {
             <h2 className="text-3xl">Public business listings</h2>
             <p className="mt-4">
               Business listings include data from the{" "}
-              <a href="https://overturemaps.org" rel="noopener noreferrer" className="text-royal underline">Overture Maps Foundation, overturemaps.org</a>
+              <a href="https://overturemaps.org" rel="noopener noreferrer" className="text-navy underline">Overture Maps Foundation, overturemaps.org</a>
               {release ? <>, release of {releaseDate(release)} ({release})</> : ""}.
             </p>
             <p className="mt-4 text-navy-soft">Overture&rsquo;s places data combines these sources, under these licenses:</p>
             <ul className="mt-4 space-y-4">
               {SOURCES.map((s) => (
                 <li key={s.license.name} className="rounded-2xl p-5 ring-1 ring-line">
-                  <a href={s.license.url} rel="noopener noreferrer" className="font-semibold text-royal underline">{s.license.name}</a>
+                  <a href={s.license.url} rel="noopener noreferrer" className="font-semibold text-navy underline">{s.license.name}</a>
                   <ul className="mt-2 grid gap-x-6 gap-y-1 text-base sm:grid-cols-2">
                     {s.credits.map((c) => <li key={c}>{c}</li>)}
                   </ul>
@@ -95,7 +95,7 @@ export default async function DataSourcesPage() {
           <div className="rounded-2xl bg-cloud p-6">
             <h2 className="text-2xl">Want a business removed?</h2>
             <p className="mt-2">We&rsquo;ll take it out and keep it out of future updates.</p>
-            <Link href="/remove-my-business" className="mt-5 inline-flex rounded-xl bg-royal px-5 py-3 font-semibold text-white hover:bg-[#1f45e0]">
+            <Link href="/remove-my-business" className="mt-5 inline-flex rounded-xl bg-navy px-5 py-3 font-semibold text-white hover:bg-navy/90">
               Remove my business
             </Link>
           </div>

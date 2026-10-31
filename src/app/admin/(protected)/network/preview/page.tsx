@@ -21,7 +21,7 @@ export default async function MatchPreviewPage({ searchParams }: { searchParams:
       <NetworkNav active="/admin/network/explorer" />
       <p className="text-sm text-navy-soft">
         Preview: what {place.name} would see after claiming.{" "}
-        <Link href={`/admin/network/explorer?place=${id}`} className="font-semibold text-royal hover:underline">Back to explorer</Link>
+        <Link href={`/admin/network/explorer?place=${id}`} className="font-semibold text-navy hover:underline">Back to explorer</Link>
       </p>
       <h1 className="mt-2 text-3xl">Your matches</h1>
       <p className="mt-1 text-navy-soft">{visible.length} businesses near {place.locality || "you"} that fit a {place.category_label.toLowerCase()}.</p>
@@ -43,7 +43,7 @@ export default async function MatchPreviewPage({ searchParams }: { searchParams:
                 partnershipType: m.partnership_type as PartnershipType,
               }}
               action={
-                <button type="button" disabled className="w-full rounded-xl bg-royal px-4 py-3 font-semibold text-white opacity-90">
+                <button type="button" disabled className="w-full rounded-xl bg-navy px-4 py-3 font-semibold text-white opacity-90">
                   {m.state === "member" ? "Request an introduction" : "Invite them"}
                 </button>
               }

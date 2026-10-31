@@ -57,7 +57,7 @@ export default async function SetupPage({ searchParams }: { searchParams: Promis
                     <span className="text-navy-soft">{email && emailNote[email] ? emailNote[email] : "Sends a test to ADMIN_EMAIL through Resend."}</span>
                   </span>
                   <form action={sendTestEmail}>
-                    <button type="submit" className="rounded-lg px-3 py-1.5 text-sm font-semibold text-royal ring-1 ring-line hover:bg-ice">Send test email</button>
+                    <button type="submit" className="rounded-lg px-3 py-1.5 text-sm font-semibold text-navy ring-1 ring-line hover:bg-ice">Send test email</button>
                   </form>
                 </li>
               )}

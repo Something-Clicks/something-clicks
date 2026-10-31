@@ -101,3 +101,8 @@ export function resolveCategories(query: string, limit = 5): Category[] {
     .slice(0, limit)
     .map((s) => s.c);
 }
+
+/** URL slug for a category: "wedding_planners" -> "wedding-planners". */
+export const categorySlug = (id: string) => id.replace(/_/g, "-");
+
+export const categoryBySlug = (slug: string) => categoryById(slug.replace(/-/g, "_"));

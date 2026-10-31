@@ -40,7 +40,7 @@ export default async function DashboardMatchesPage({ searchParams }: { searchPar
         {!canRequest && (
           <div className="flex flex-col items-start gap-3 rounded-2xl bg-white p-5 ring-1 ring-line sm:flex-row sm:items-center sm:justify-between">
             <p><strong>Join the network</strong> to request introductions and let your matches find you.</p>
-            <Link href={`/dashboard/profile?place=${place.id}`} className="shrink-0 rounded-xl bg-royal px-5 py-2.5 font-semibold text-white hover:bg-[#1f45e0]">
+            <Link href={`/dashboard/profile?place=${place.id}`} className="shrink-0 rounded-xl bg-navy px-5 py-2.5 font-semibold text-white hover:bg-navy/90">
               Join the network
             </Link>
           </div>
@@ -91,14 +91,14 @@ function MatchAction({ m, placeId, canRequest }: { m: MyMatch; placeId: number; 
   const chip = "flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 font-semibold";
   if (m.intro_status === "connected") {
     return (
-      <Link href={`/dashboard/requests?place=${placeId}`} className={`${chip} bg-ice text-royal hover:bg-[#dbe5ff]`}>
+      <Link href={`/dashboard/requests?place=${placeId}`} className={`${chip} bg-ice text-navy hover:ring-1 hover:ring-navy`}>
         <Check aria-hidden="true" className="h-5 w-5" /> Connected
       </Link>
     );
   }
   if (m.intro_status === "requested" && !m.intro_from_me) {
     return (
-      <Link href={`/dashboard/requests?place=${placeId}`} className={`${chip} bg-royal text-white hover:bg-[#1f45e0]`}>
+      <Link href={`/dashboard/requests?place=${placeId}`} className={`${chip} bg-navy text-white hover:bg-navy/90`}>
         They asked to connect
       </Link>
     );
@@ -116,7 +116,7 @@ function MatchAction({ m, placeId, canRequest }: { m: MyMatch; placeId: number; 
       <input type="hidden" name="place_id" value={placeId} />
       <input type="hidden" name="to_place" value={m.place_b} />
       <details className="text-sm">
-        <summary className="cursor-pointer font-semibold text-royal">Add a note</summary>
+        <summary className="cursor-pointer font-semibold text-navy">Add a note</summary>
         <label htmlFor={`note-${m.place_b}`} className="sr-only">Note to {m.name}</label>
         <input id={`note-${m.place_b}`} name="note" maxLength={200} placeholder="We share a lot of couples in Fort Worth."
                className="mt-2 block w-full rounded-lg border border-field px-3 py-2" />

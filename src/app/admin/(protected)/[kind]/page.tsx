@@ -37,7 +37,7 @@ export default async function AdminListPage({
         </div>
         <a
           href={`/admin/export?${exportQuery}`}
-          className="inline-flex items-center gap-2 rounded-lg bg-royal px-4 py-2 text-sm font-semibold text-white hover:bg-[#1f45e0]"
+          className="inline-flex items-center gap-2 rounded-lg bg-navy px-4 py-2 text-sm font-semibold text-white hover:bg-navy/90"
         >
           <Download aria-hidden="true" className="h-4 w-4" /> Export CSV
         </a>
@@ -89,7 +89,7 @@ export default async function AdminListPage({
         </div>
         <div className="flex items-end gap-2 lg:col-span-6">
           <button type="submit" className="rounded-lg bg-navy px-4 py-2 text-sm font-semibold text-white">Apply filters</button>
-          <Link href={`/admin/${kind}`} className="rounded-lg px-4 py-2 text-sm font-semibold text-royal hover:underline">Clear</Link>
+          <Link href={`/admin/${kind}`} className="rounded-lg px-4 py-2 text-sm font-semibold text-navy hover:underline">Clear</Link>
         </div>
       </form>
 
@@ -116,7 +116,7 @@ export default async function AdminListPage({
               <tr key={r.id} className="border-t border-line hover:bg-cloud">
                 <td className="whitespace-nowrap px-4 py-3 tabular-nums text-navy-soft">{formatDate(r.created_at)}</td>
                 <td className="px-4 py-3 font-medium">
-                  <Link href={`/admin/${kind}/${r.id}`} className="text-royal hover:underline">
+                  <Link href={`/admin/${kind}/${r.id}`} className="text-navy hover:underline">
                     {String(r[meta.nameKey] ?? "(no name)")}
                   </Link>
                 </td>

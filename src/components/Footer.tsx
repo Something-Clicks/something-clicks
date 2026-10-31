@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { metros } from "@/content/metros";
 import { site } from "@/content/site";
-import { LogoPlaceholder } from "./LogoPlaceholder";
+import { Logo } from "./Logo";
 
 const columns = [
   {
@@ -11,6 +11,7 @@ const columns = [
       { href: "/claim", label: "Claim your business" },
       { href: "/sign-in", label: "Sign in" },
       { href: "/referral-partners", label: "Referral partners" },
+      { href: "/faq", label: "FAQ" },
       { href: "/about", label: "About" },
       { href: "/contact", label: "Contact" },
     ],
@@ -22,7 +23,6 @@ const columns = [
   {
     title: "Your data",
     links: [
-      { href: "/data-sources", label: "Data sources" },
       { href: "/remove-my-business", label: "Remove my business" },
       { href: "/privacy", label: "Privacy Policy" },
       { href: "/terms", label: "Terms" },
@@ -35,8 +35,8 @@ export function Footer() {
     <footer className="bg-navy text-white on-dark">
       <div className="container-page grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
         <div>
-          <LogoPlaceholder tone="dark" />
-          <p className="mt-4 max-w-sm text-lg text-white">{site.brandLine}</p>
+          <Logo tone="dark" />
+          <p className="mt-4 max-w-sm text-sm leading-relaxed text-mist">{site.about}</p>
         </div>
         {columns.map((c) => (
           <nav key={c.title} aria-label={c.title === "Something Clicks" ? "Footer" : c.title}>
@@ -52,9 +52,10 @@ export function Footer() {
         ))}
       </div>
       <div className="border-t border-white/10">
-        <p className="container-page py-5 text-xs text-mist">
-          © {new Date().getFullYear()} {site.legalName}. Business listings include data from the{" "}
-          <Link href="/data-sources" className="underline hover:text-white">Overture Maps Foundation</Link>.
+        <p className="container-page flex flex-wrap gap-x-3 py-5 text-xs text-mist">
+          <span>© {new Date().getFullYear()} {site.legalName}</span>
+          {/* Full Overture Maps attribution lives on /data-sources. */}
+          <Link href="/data-sources" className="hover:text-white hover:underline">Data sources</Link>
         </p>
       </div>
     </footer>

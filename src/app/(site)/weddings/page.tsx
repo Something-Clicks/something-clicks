@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { metros } from "@/content/metros";
 import { formatAtLeast } from "@/content/network";
 import { dbConfigured } from "@/lib/db";
+import { breadcrumbJsonLd, JsonLd } from "@/lib/jsonld";
 import { pageMeta } from "@/lib/metadata";
 import { metroTotals } from "@/lib/network/metros";
 
@@ -34,7 +35,7 @@ export default async function WeddingsIndexPage() {
                 {totals[m.cluster] ? (
                   <span className="mt-2 text-lg text-navy-soft">{formatAtLeast(totals[m.cluster])} wedding businesses</span>
                 ) : null}
-                <span className="mt-6 inline-flex items-center gap-1 font-semibold text-royal">
+                <span className="mt-6 inline-flex items-center gap-1 font-semibold text-navy">
                   See who&rsquo;s there <ArrowRight aria-hidden="true" className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                 </span>
               </Link>
@@ -42,6 +43,7 @@ export default async function WeddingsIndexPage() {
           ))}
         </ul>
       </section>
+      <JsonLd data={breadcrumbJsonLd([{ name: "Home", path: "/" }, { name: "Cities", path: "/weddings" }])} />
     </>
   );
 }

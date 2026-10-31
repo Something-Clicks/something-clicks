@@ -1,5 +1,5 @@
 const styles: Record<string, string> = {
-  new: "bg-royal text-white",
+  new: "bg-navy text-white",
   reviewing: "bg-ice text-navy ring-1 ring-royal",
   contacted: "bg-ice text-navy ring-1 ring-royal",
   accepted: "bg-success text-white",

@@ -33,7 +33,7 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
           <SubmitButton pendingLabel="Sending…" className="w-full">Email me a link</SubmitButton>
         </form>
         <p className="mt-6 text-navy-soft">
-          New here? <Link href="/claim" className="font-semibold text-royal hover:underline">Claim your business</Link>
+          New here? <Link href="/claim" className="font-semibold text-navy hover:underline">Claim your business</Link>
         </p>
       </div>
     </section>

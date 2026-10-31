@@ -122,9 +122,9 @@ function footer(c: Common, reason: string) {
 }
 
 function layout(paragraphs: string[], button: { label: string; url: string }, foot: { html: string }, signature?: string) {
-  return `<!doctype html><html><body style="font-family:Inter,Arial,sans-serif;color:#15263D;line-height:1.55;max-width:560px">
+  return `<!doctype html><html><body style="font-family:Inter,Arial,sans-serif;color:#011335;line-height:1.55;max-width:560px">
 ${paragraphs.map((p) => `<p style="margin:0 0 14px">${escapeHtml(p)}</p>`).join("\n")}
-<p style="margin:22px 0"><a href="${escapeHtml(button.url)}" style="display:inline-block;background:#2853FB;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:600">${escapeHtml(button.label)}</a></p>
+<p style="margin:22px 0"><a href="${escapeHtml(button.url)}" style="display:inline-block;background:#0070FE;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:600">${escapeHtml(button.label)}</a></p>
 ${signature ? `<p style="margin:0 0 14px">${escapeHtml(signature)}</p>\n` : ""}${foot.html}
 </body></html>`;
 }

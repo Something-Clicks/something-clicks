@@ -43,30 +43,32 @@ export function DashboardShell({
                   <select id="place-switch" name="place" defaultValue={place.id} className="rounded-lg border border-field bg-white px-3 py-2 text-sm">
                     {places.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
                   </select>
-                  <button type="submit" className="rounded-lg px-3 py-2 text-sm font-semibold text-royal ring-1 ring-line">Switch</button>
+                  <button type="submit" className="rounded-lg px-3 py-2 text-sm font-semibold text-navy ring-1 ring-line">Switch</button>
                 </form>
               )}
               <form action={signOutMember}>
-                <button type="submit" className="text-sm font-semibold text-navy-soft hover:text-royal">Sign out</button>
+                <button type="submit" className="text-sm font-semibold text-navy-soft hover:underline">Sign out</button>
               </form>
             </div>
           </div>
-          <nav aria-label="Dashboard" className="-mx-2.5 -mb-px mt-6 flex overflow-x-auto sm:mx-0 sm:gap-1">
-            {tabs.map((t) => (
-              <Link
-                key={t.href}
-                href={t.href + q}
-                aria-current={active === t.href ? "page" : undefined}
-                className="inline-flex items-center gap-2 whitespace-nowrap border-b-2 border-transparent px-2.5 py-3 text-[15px] font-semibold sm:px-4 sm:text-base text-navy-soft hover:text-royal aria-[current=page]:border-royal aria-[current=page]:text-royal"
-              >
-                {t.label}
-                {t.href === "/dashboard/requests" && incoming > 0 && (
-                  <span className="rounded-full bg-royal px-2 py-0.5 text-xs text-white">
-                    <span className="sr-only">(</span>{incoming}<span className="sr-only"> new)</span>
-                  </span>
-                )}
-              </Link>
-            ))}
+          <nav aria-label="Dashboard" className="-mx-4 mt-6 overflow-x-auto px-4 pb-4 sm:mx-0 sm:px-0">
+            <div className="inline-flex gap-1 rounded-full bg-cloud p-1 ring-1 ring-line">
+              {tabs.map((t) => (
+                <Link
+                  key={t.href}
+                  href={t.href + q}
+                  aria-current={active === t.href ? "page" : undefined}
+                  className="inline-flex h-10 items-center gap-2 whitespace-nowrap rounded-full px-4 text-[15px] font-semibold text-navy hover:bg-white aria-[current=page]:bg-navy aria-[current=page]:text-white"
+                >
+                  {t.label}
+                  {t.href === "/dashboard/requests" && incoming > 0 && (
+                    <span className="rounded-full bg-navy px-2 py-0.5 text-xs text-white">
+                      <span className="sr-only">(</span>{incoming}<span className="sr-only"> new)</span>
+                    </span>
+                  )}
+                </Link>
+              ))}
+            </div>
           </nav>
         </div>
       </section>

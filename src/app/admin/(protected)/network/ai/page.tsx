@@ -92,7 +92,7 @@ export default async function AiPage({ searchParams }: { searchParams: Promise<S
           <nav aria-label="Filter reviews" className="flex gap-2 text-sm">
             {(["all", "suggestions", "unsure"] as const).map((f) => (
               <Link key={f} href={`?filter=${f}`} aria-current={filter === f ? "page" : undefined}
-                    className="rounded-lg px-3 py-1.5 font-semibold text-royal ring-1 ring-line aria-[current=page]:bg-royal aria-[current=page]:text-white">
+                    className="rounded-lg px-3 py-1.5 font-semibold text-navy ring-1 ring-line aria-[current=page]:bg-navy aria-[current=page]:text-white">
                 {f === "all" ? "All" : f === "suggestions" ? "Category suggestions" : "Not applied"}
               </Link>
             ))}
@@ -108,7 +108,7 @@ export default async function AiPage({ searchParams }: { searchParams: Promise<S
               {reviews.map((r) => (
                 <tr key={r.place_id} className="border-t border-line align-top">
                   <td className="px-3 py-3">
-                    <Link href={`/admin/network/explorer?place=${r.place_id}`} className="font-semibold text-royal hover:underline">{r.name}</Link>
+                    <Link href={`/admin/network/explorer?place=${r.place_id}`} className="font-semibold text-navy hover:underline">{r.name}</Link>
                     <div className="text-xs text-navy-soft">{r.category_label} · {r.locality}{r.mocked ? " · mock" : ""}</div>
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
@@ -122,7 +122,7 @@ export default async function AiPage({ searchParams }: { searchParams: Promise<S
                       r.category_accepted ? <span className="text-success">Moved to {categoryById(r.suggested_category)?.label}</span> : (
                         <form action={acceptCategoryAction}>
                           <input type="hidden" name="place_id" value={r.place_id} />
-                          <button type="submit" className="rounded-md px-2 py-1 text-xs font-semibold text-royal ring-1 ring-line">
+                          <button type="submit" className="rounded-md px-2 py-1 text-xs font-semibold text-navy ring-1 ring-line">
                             Move to {categoryById(r.suggested_category)?.label}
                           </button>
                         </form>
@@ -136,7 +136,7 @@ export default async function AiPage({ searchParams }: { searchParams: Promise<S
                         const current = r.serves_journey === true ? "yes" : r.serves_journey === false ? "no" : "unknown";
                         return (
                           <button key={v} name="value" value={v} type="submit" aria-pressed={current === v}
-                                  className="rounded-md px-2 py-1 text-xs font-semibold ring-1 ring-line aria-pressed:bg-royal aria-pressed:text-white">{v}</button>
+                                  className="rounded-md px-2 py-1 text-xs font-semibold ring-1 ring-line aria-pressed:bg-navy aria-pressed:text-white">{v}</button>
                         );
                       })}
                     </form>
@@ -183,7 +183,7 @@ function Job(p: { title: string; body: string; queue: number; estimate: number; 
         <input type="hidden" name="job" value={p.job} />
         {p.sizes.map((s) => (
           <button key={s} name="size" value={s} type="submit" disabled={p.disabled}
-                  className="rounded-lg bg-royal px-4 py-2 text-sm font-semibold text-white disabled:opacity-50">
+                  className="rounded-lg bg-navy px-4 py-2 text-sm font-semibold text-white disabled:opacity-50">
             Run {s}
           </button>
         ))}

@@ -33,7 +33,7 @@ export default async function ClaimPage({ params, searchParams }: { params: Prom
   return (
     <section className="bg-cloud">
       <div className="container-page max-w-2xl py-12 sm:py-20">
-        <Link href="/claim" className="text-sm font-semibold text-royal hover:underline">Back to search</Link>
+        <Link href="/claim" className="text-sm font-semibold text-navy hover:underline">Back to search</Link>
         <h1 className="mt-4 text-4xl">Is this your business?</h1>
 
         <div className="mt-8 rounded-2xl bg-white p-6 ring-1 ring-line">
@@ -63,7 +63,7 @@ export default async function ClaimPage({ params, searchParams }: { params: Prom
         {place.owned ? (
           <div className="mt-6">
             <Notice tone="info">
-              This business has already been claimed. If that&rsquo;s a mistake, <Link href="/contact" className="font-semibold text-royal underline">let us know</Link>.
+              This business has already been claimed. If that&rsquo;s a mistake, <Link href="/contact" className="font-semibold text-navy underline">let us know</Link>.
             </Notice>
           </div>
         ) : (
