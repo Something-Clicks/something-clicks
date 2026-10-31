@@ -150,7 +150,8 @@ export type PlaceSummary = {
 export async function searchPlaces(clusterId: number, q: string, category: string): Promise<PlaceSummary[]> {
   const term = q.trim().slice(0, 100);
   return sql()<PlaceSummary[]>`
-    select p.id::int, p.name, p.category_id, c.label as category_label, c.broad, p.state::text, p.locality, p.classified_by,
+    select p.id::int, p.name, p.category_id, c.label as category_label,
+           needs_confirmation(p.category_id, p.taxonomy_primary, p.name) as broad, p.state::text, p.locality, p.classified_by,
            (select count(*) from matches m where m.place_a = p.id)::int as matches
     from places p join categories c on c.id = p.category_id
     where st_intersects(p.geog, (select cluster_box(k) from clusters k where k.id = ${clusterId})) and not p.stale
@@ -194,7 +195,8 @@ export type PlaceDetail = {
 
 export async function getPlace(id: number): Promise<PlaceDetail | null> {
   const [row] = await sql()<PlaceDetail[]>`
-    select p.id::int, p.gers_id, p.source, p.name, p.category_id, c.label as category_label, c.broad, c.journey_id,
+    select p.id::int, p.gers_id, p.source, p.name, p.category_id, c.label as category_label,
+           needs_confirmation(p.category_id, p.taxonomy_primary, p.name) as broad, c.journey_id,
            p.state::text, p.serves_journey, p.website, p.phone, (p.email <> '') as has_email, p.street, p.locality,
            p.region, p.postcode, p.confidence, p.classified_by, p.taxonomy_primary, p.source_datasets, p.release
     from places p join categories c on c.id = p.category_id where p.id = ${id}`;
@@ -223,7 +225,8 @@ export type MatchRow = {
 
 export async function placeMatches(placeId: number): Promise<MatchRow[]> {
   return sql()<MatchRow[]>`
-    select m.place_b::int, b.name, b.category_id, c.label as category_label, c.broad, b.state::text, b.locality,
+    select m.place_b::int, b.name, b.category_id, c.label as category_label,
+           needs_confirmation(b.category_id, b.taxonomy_primary, b.name) as broad, b.state::text, b.locality,
            m.score, m.c, m.d, m.s, m.distance_m, m.partnership_type, m.reason_key, m.ai_rationale,
            m.rationale_edited, m.status
     from matches m join places b on b.id = m.place_b join categories c on c.id = b.category_id

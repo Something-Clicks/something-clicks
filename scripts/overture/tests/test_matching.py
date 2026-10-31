@@ -123,3 +123,48 @@ def test_broad_businesses_match_once_confirmed_or_when_metro_allows(db):
     m = matches(conn, "florist")
     assert set(m) == {"salon-yes", "salon-unknown"}
     assert m["salon-unknown"]["c"] == pytest.approx(0.6 * 0.6)  # unconfirmed: x0.6
+
+
+def add_listing(conn, cluster, gers, category, name, taxonomy, lat_km=0.0, serves=None):
+    with conn.cursor() as cur:
+        cur.execute(
+            """insert into places (gers_id, release, name, category_id, taxonomy_primary, locality, geog, cluster_ids, serves_journey)
+               values (%s, 'r1', %s, %s, %s, 'Sandy', st_setsrid(st_makepoint(-140.0, %s), 4326)::geography, array[%s]::bigint[], %s)""",
+            (gers, name, category, taxonomy, 10.0 + lat_km * KM, cluster, serves),
+        )
+
+
+def test_generic_sources_and_chains_match_only_once_confirmed(db):
+    """Wedding-specific categories fed by generic map-data sources, or chain names, wait for confirmation."""
+    conn, cl = db
+    add_listing(conn, cl, "photo", "photographers", "Lens & Lace Photography", "event_photography_service")
+    add_listing(conn, cl, "planner-wedding", "wedding_planners", "Bliss Weddings", "wedding_planning", lat_km=1)
+    add_listing(conn, cl, "planner-party", "wedding_planners", "Bounce House Parties", "party_and_event_planning", lat_km=1)
+    add_listing(conn, cl, "caterer-restaurant", "caterers", "Taqueria Sol", "mexican_restaurant", lat_km=1)  # %restaurant
+    add_listing(conn, cl, "caterer-chain", "caterers", "Ben & Jerry's", "caterer", lat_km=1)
+    add_listing(conn, cl, "caterer-ok", "caterers", "Smith Catering", "caterer", lat_km=1)
+    add_listing(conn, cl, "planner-party-yes", "wedding_planners", "Big Day Events", "party_and_event_planning", lat_km=1, serves=True)
+    compute(conn, cl)
+    assert set(matches(conn, "photo")) == {"planner-wedding", "caterer-ok", "planner-party-yes"}
+
+    with conn.cursor() as cur:  # still counted: nothing is deleted or hidden, only held back from matching
+        cur.execute("select count(*) from places where gers_id in ('planner-party', 'caterer-restaurant', 'caterer-chain') and not suppressed")
+        assert cur.fetchone()[0] == 3
+        cur.execute("""select gers_id, needs_confirmation(category_id, taxonomy_primary, name) from places
+                       where gers_id in ('planner-wedding', 'planner-party', 'caterer-restaurant', 'caterer-chain', 'caterer-ok') order by gers_id""")
+        assert dict(cur.fetchall()) == {"caterer-chain": True, "caterer-ok": False, "caterer-restaurant": True,
+                                        "planner-party": True, "planner-wedding": False}
+
+    with conn.cursor() as cur:  # confirmation (AI review, owner or admin) is what lets one match
+        cur.execute("update places set serves_journey = true where gers_id = 'caterer-restaurant'")
+    compute(conn, cl)
+    assert "caterer-restaurant" in matches(conn, "photo")
+
+
+def test_seed_writes_the_review_lists(db):
+    conn, _ = db
+    with conn.cursor() as cur:
+        cur.execute("select unconfirmed_taxonomy from categories where id = 'wedding_planners'")
+        assert "party_and_event_planning" in cur.fetchone()[0]
+        cur.execute("select unconfirmed_name_pattern from journeys where id = 'weddings'")
+        assert "party city" in cur.fetchone()[0]

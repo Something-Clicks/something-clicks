@@ -63,7 +63,7 @@ export default async function ExplorerPage({ searchParams }: { searchParams: Pro
                       className="block px-4 py-3 text-sm hover:bg-cloud aria-[current=true]:bg-ice">
                   <span className="font-semibold">{r.name}</span>
                   <span className="block text-xs text-navy-soft">
-                    {r.category_label}{r.broad ? " (broad)" : ""} · {r.locality || "—"} · {r.matches} matches
+                    {r.category_label}{r.broad ? " (needs confirmation)" : ""} · {r.locality || "—"} · {r.matches} matches
                     {r.classified_by === "name_rule" ? " · by name" : ""}
                   </span>
                 </Link>
@@ -85,7 +85,7 @@ export default async function ExplorerPage({ searchParams }: { searchParams: Pro
                   </Link>
                 </div>
                 <p className="mt-1 text-sm text-navy-soft">
-                  {place.category_label}{place.broad ? " (broad category)" : ""} · {stateLabels[place.state as PlaceState]} ·{" "}
+                  {place.category_label}{place.broad ? " (needs confirmation)" : ""} · {stateLabels[place.state as PlaceState]} ·{" "}
                   {[place.street, place.locality, place.region].filter(Boolean).join(", ")}
                 </p>
                 <dl className="mt-3 grid gap-x-6 gap-y-1 text-sm sm:grid-cols-2">
@@ -112,7 +112,7 @@ export default async function ExplorerPage({ searchParams }: { searchParams: Pro
                     );
                   })}
                   <span className="text-xs text-navy-soft">
-                    &ldquo;No&rdquo; removes a miscategorized business from matching; broad-category businesses score higher once
+                    &ldquo;No&rdquo; removes a miscategorized business from matching. Businesses marked &ldquo;needs confirmation&rdquo; (broad categories, generic map-data sources, chains) match only once
                     &ldquo;yes&rdquo;. Recompute the cluster after changes.
                   </span>
                 </form>
@@ -135,7 +135,7 @@ export default async function ExplorerPage({ searchParams }: { searchParams: Pro
                         <td className="px-3 py-3">
                           <Link href={`/admin/network/explorer${qs({ place: m.place_b })}`} className="font-semibold text-royal hover:underline">{m.name}</Link>
                           <div className="text-xs text-navy-soft">
-                            {m.category_label}{m.broad ? " (broad)" : ""} · {stateLabels[m.state as PlaceState]}
+                            {m.category_label}{m.broad ? " (needs confirmation)" : ""} · {stateLabels[m.state as PlaceState]}
                           </div>
                         </td>
                         <td className="whitespace-nowrap px-3 py-3 tabular-nums">{formatMiles(m.distance_m)}</td>
