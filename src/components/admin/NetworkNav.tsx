@@ -7,6 +7,8 @@ const links = [
   { href: "/admin/network/outcomes", label: "Outcomes" },
   { href: "/admin/network/ai", label: "AI review" },
   { href: "/admin/network/claims", label: "Claims" },
+  { href: "/admin/network/searches", label: "Unmatched searches" },
+  { href: "/admin/network/planner-partners", label: "Planner Partners" },
   { href: "/admin/network/campaigns", label: "Campaigns" },
   { href: "/admin/network/memberships", label: "Memberships" },
   { href: "/admin/network/removals", label: "Removals" },

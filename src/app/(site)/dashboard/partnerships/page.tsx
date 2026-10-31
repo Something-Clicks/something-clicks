@@ -42,7 +42,7 @@ export default async function PartnershipsPage({ searchParams }: { searchParams:
         <div className="mt-6 rounded-2xl bg-white p-8 ring-1 ring-line">
           <p className="text-lg">Partnerships start with a connection.</p>
           <Link href={`/dashboard?place=${ctx.place.id}`} className="mt-4 inline-flex rounded-xl bg-navy px-5 py-3 font-semibold text-white hover:bg-navy/90">
-            See your matches
+            Explore matches
           </Link>
         </div>
       ) : (
@@ -152,7 +152,7 @@ function ProposeForm({ hidden, again }: { hidden: React.ReactNode; again: boolea
         <Field label="Code" name="code" optional maxLength={40} placeholder="BLOOM10" />
         <Field label="Link" name="link" optional type="url" maxLength={500} placeholder="https://" />
       </div>
-      <SubmitButton pendingLabel="Sending…">{again ? "Send a new proposal" : "Propose"}</SubmitButton>
+      <SubmitButton pendingLabel="Sending…">{again ? "Send a new proposal" : "Set up partnership"}</SubmitButton>
     </form>
   );
   return again ? (

@@ -36,6 +36,7 @@ const later: [string, string][] = [
   ["STRIPE_PRICE_CAMPAIGN", "The price id of the one-time Managed campaign (price_…)."],
   ["STRIPE_PRICE_MEMBERSHIP", "The price id of the monthly Membership (price_…)."],
   ["NEXT_PUBLIC_PROMOTEKIT_SITE_ID", "PromoteKit → Settings → your public site id for the tracking script (not the API key)."],
+  ["CRON_SECRET", "Any long random string. Lets the daily Planner Partner reminders run (Vercel sends it to the cron job)."],
   ["CLAIMS_OPEN", "Claiming is closed until this is set to true. Open it once listing quality is reviewed."],
   ["ANTHROPIC_API_KEY", "Phase 3 AI review and match reasons. Off until set; capped at $10 a month."],
   ["MAILING_ADDRESS", "Needed before any invitation can be sent (CAN-SPAM)."],

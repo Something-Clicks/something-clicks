@@ -50,3 +50,28 @@ export function acceptableRationale(s: string): boolean {
   const t = s.trim();
   return t.length >= 15 && t.length <= 160 && !BANNED.test(t) && t.split(/\s+/).length <= 24;
 }
+
+/** The reason keys a pairing can use; their wording is in journeys.json. */
+export const REASON_KEYS = ["hub_planner", "hub_venue", "hub_vendor", "day_of", "moment_before", "moment_after", "same_couple"] as const;
+
+export function categoryDraftSystem(): string {
+  const reasons = activeJourneys()[0]?.reasons ?? {};
+  return [
+    "You help add a new business category to a network of wedding businesses that refer couples to each other.",
+    "You get a term people typed for their business (it matched no category), the journey stages, and the existing categories.",
+    "",
+    "Draft the new category:",
+    "- id: lowercase plural with underscores, like wedding_officiants. label: singular, like Wedding officiant. plural: lowercase, like wedding officiants.",
+    "- stage: the stage id when couples usually book it.",
+    "- synonyms: 3 to 8 lowercase words or phrases a business owner would type for it.",
+    "- taxonomy: Overture Maps places category values (taxonomy.primary, lowercase with underscores) that this kind of business is listed under. Include only values you are confident exist; an empty list is fine.",
+    "- pairs: the existing categories it fits with. For each: reason_to is why the existing category fits the new one (from the new business's point of view); reason_from is why the new one fits the existing category. partnership_type is the best way for them to work together. strength from 0.6 (same couples) to 1 (planners and venues for vendors).",
+    "",
+    "Reason keys and their wording:",
+    ...REASON_KEYS.map((k) => `- ${k}: ${reasons[k] ?? ""}`),
+    "Use hub_planner or hub_venue only when the existing category is planners or venues; hub_vendor only for the reverse direction from a planner or venue.",
+    "",
+    "Partnership types: referral (send each other couples), joint_offer (a shared package), distribution (promote each other).",
+    "If the term isn't a wedding business at all, still answer, and say so in notes. notes is at most 30 words.",
+  ].join("\n");
+}

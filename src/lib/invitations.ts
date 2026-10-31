@@ -171,3 +171,29 @@ export function memberInvite(v: MemberInvite): Rendered {
     headers: foot.headers,
   };
 }
+
+export type PlannerInvite = Common & {
+  plannerBusiness: string;
+  plannerCity: string;
+  note?: string;
+  claimPath: string;
+};
+
+/** Sent after an admin approves a business a Planner Partner recommended. */
+export function plannerInvite(v: PlannerInvite): Rendered {
+  const url = `${v.siteUrl}${v.claimPath}`;
+  const subject = `${v.plannerBusiness} recommended ${v.business} on Something Clicks`;
+  const paragraphs = [
+    `Hi ${v.business},`,
+    `${v.plannerBusiness}, a wedding planner in ${v.plannerCity}, recommended ${v.business} to Something Clicks, where local wedding businesses find referral partners.`,
+    ...(v.note ? [`Their note: "${v.note}"`] : []),
+    "Claim your business to see which local businesses fit yours, and why. Claiming your business and seeing your matches is free.",
+  ];
+  const foot = footer(v, `${SENDER_NAME} sent this because ${v.plannerBusiness} recommended your business. This is the only email we'll send unless you claim your business.`);
+  return {
+    subject,
+    text: [...paragraphs, `Claim your business: ${url}`, foot.text].join("\n\n"),
+    html: layout(paragraphs, { label: "Claim your business", url }, foot),
+    headers: foot.headers,
+  };
+}
