@@ -8,6 +8,7 @@ const links = [
   { href: "/admin/network/ai", label: "AI review" },
   { href: "/admin/network/claims", label: "Claims" },
   { href: "/admin/network/searches", label: "Unmatched searches" },
+  { href: "/admin/network/planner-partners", label: "Planner Partners" },
   { href: "/admin/network/removals", label: "Removals" },
   { href: "/admin/network/invitations", label: "Invitations" },
 ];

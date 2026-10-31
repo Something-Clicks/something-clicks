@@ -4,7 +4,7 @@
  * message per address is kept so the sign-in page can show the link.
  */
 
-export type Message = { to: string; subject: string; text: string; html: string; replyTo?: string };
+export type Message = { to: string; subject: string; text: string; html: string; replyTo?: string; from?: string; headers?: Record<string, string> };
 
 const globalForMail = globalThis as unknown as { __scOutbox?: Map<string, Message> };
 
@@ -15,7 +15,7 @@ export function devOutbox(): Map<string, Message> | null {
 
 export async function sendEmail(msg: Message, fetchImpl: typeof fetch = fetch): Promise<void> {
   const apiKey = process.env.RESEND_API_KEY;
-  const from = process.env.AUTH_EMAIL_FROM || process.env.NOTIFY_EMAIL_FROM;
+  const from = msg.from || process.env.AUTH_EMAIL_FROM || process.env.NOTIFY_EMAIL_FROM;
   if (!apiKey || !from) {
     devOutbox()?.set(msg.to.toLowerCase(), msg);
     console.warn(`[mail] Not configured; not sending "${msg.subject}" to ${msg.to}.`);
@@ -31,6 +31,7 @@ export async function sendEmail(msg: Message, fetchImpl: typeof fetch = fetch): 
       text: msg.text,
       html: msg.html,
       ...(msg.replyTo ? { reply_to: msg.replyTo } : {}),
+      ...(msg.headers ? { headers: msg.headers } : {}),
     }),
     signal: AbortSignal.timeout(8000),
   });

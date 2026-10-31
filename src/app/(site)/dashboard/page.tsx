@@ -11,6 +11,7 @@ import type { PlaceState } from "@/content/network";
 import { loadDashboard } from "@/lib/members/dashboard";
 import { activitySummary, myMatches, type MyMatch } from "@/lib/members/network";
 import { requestIntroAction } from "./actions";
+import { activePartnerIds } from "@/lib/planner/partners";
 import { readiness } from "@/lib/readiness";
 
 export const metadata: Metadata = { title: "Your matches", robots: { index: false } };
@@ -30,6 +31,8 @@ export default async function DashboardMatchesPage({ searchParams }: { searchPar
   if (ctx.kind === "none") return <NoBusiness email={ctx.member.email} pending={ctx.pending} />;
   const { place } = ctx;
   const [matches, activity] = await Promise.all([myMatches(place.id), activitySummary(place.id)]);
+  // Labels only, looked up after matches are fetched and ordered: never part of matching or ranking.
+  const partners = await activePartnerIds(matches.map((m) => m.place_b));
   const q = `?place=${place.id}`;
   const stats = [
     { n: activity.waiting, label: "Requests waiting for you", href: `/dashboard/requests${q}` },
@@ -100,6 +103,7 @@ export default async function DashboardMatchesPage({ searchParams }: { searchPar
                     partnershipType: m.partnership_type as PartnershipType,
                   }}
                   action={<MatchAction m={m} placeId={place.id} canRequest={canRequest} />}
+                  plannerPartner={partners.has(m.place_b)}
                 />
               </li>
             ))}
