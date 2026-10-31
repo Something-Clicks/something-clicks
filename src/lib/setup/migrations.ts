@@ -13,6 +13,6 @@ export const MIGRATIONS = [
   { version: "20261102000000", name: "ai_review_and_outcomes" },
   { version: "20261103000000", name: "unconfirmed_sources" },
   { version: "20261104000000", name: "vocabulary" },
-  { version: "20261105000000", name: "payments" },
   { version: "20261106000000", name: "planner_partners" },
+  { version: "20261107000000", name: "payments" },
 ] as const;
