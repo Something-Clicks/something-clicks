@@ -45,7 +45,7 @@ export async function reviewCandidates(limit: number, clusterId?: number): Promi
     where not p.suppressed and not p.stale and p.state = 'listed' and p.serves_journey is null
       and p.classified_by not in ('owner', 'admin', 'ai')
       and not exists (select 1 from ai_reviews r where r.place_id = p.id)
-      and (c.broad or p.classified_by = 'name_rule' or p.confidence < 0.75)
+      and (needs_confirmation(p.category_id, p.taxonomy_primary, p.name) or p.classified_by = 'name_rule' or p.confidence < 0.75)
       and exists (select 1 from clusters cl where cl.scope = 'metro' and cl.status = 'active' and st_intersects(p.geog, cluster_box(cl))
                   ${clusterId ? db`and cl.id = ${clusterId}` : db``})
     order by c.broad desc, p.id
@@ -60,7 +60,7 @@ export async function queueSizes() {
         where not p.suppressed and not p.stale and p.state = 'listed' and p.serves_journey is null
           and p.classified_by not in ('owner', 'admin', 'ai')
           and not exists (select 1 from ai_reviews r where r.place_id = p.id)
-          and (c.broad or p.classified_by = 'name_rule' or p.confidence < 0.75)
+          and (needs_confirmation(p.category_id, p.taxonomy_primary, p.name) or p.classified_by = 'name_rule' or p.confidence < 0.75)
           and exists (select 1 from clusters cl where cl.scope = 'metro' and cl.status = 'active' and st_intersects(p.geog, cluster_box(cl)))) as review,
       (select count(*)::int from (
          select m.place_a, m.ai_rationale, m.place_b, row_number() over (partition by m.place_a order by m.score desc) as rn

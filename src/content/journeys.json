@@ -6,6 +6,8 @@
       "name": "Weddings",
       "active": true,
       "noun": "wedding businesses",
+      "$unconfirmed": "Listings from a category's unconfirmedTaxonomy (% is a wildcard) or whose name matches unconfirmedNamePattern stay counted, but are matched only once AI review, the owner or an admin confirms they serve weddings, like broad categories.",
+      "unconfirmedNamePattern": "^(ben & jerry'?s|baskin[- ]robbins|dairy queen|starbucks|dunkin'?|party city|walmart|hobby lobby|kroger|costco|sam'?s club|dollar tree|dollar general|walgreens|cvs|great clips|supercuts|sport clips|ulta beauty|sephora)( |-|#|,|\\(|$)|^michaels( arts( (&|and) crafts)?| stores?)?( ?#|,| -|$)",
       "stages": [
         { "id": "weddings.planning", "label": "Planning" },
         { "id": "weddings.booking", "label": "Booking vendors" },
@@ -16,6 +18,7 @@
           "id": "wedding_planners", "stage": "weddings.planning", "hub": "planner",
           "label": "Wedding planner", "plural": "wedding and event planners",
           "taxonomy": ["wedding_planning", "party_and_event_planning"],
+          "unconfirmedTaxonomy": ["party_and_event_planning", "event_or_party_service", "party_supply_store", "flowers_and_gifts_store"],
           "synonyms": ["planner", "wedding planner", "event planner", "wedding coordinator", "event coordinator", "day-of coordinator"],
           "nameRule": "\\b(wedding|event)s? (planner|planning|coordinator|coordination|design)\\b"
         },
@@ -23,6 +26,7 @@
           "id": "wedding_venues", "stage": "weddings.planning", "hub": "venue",
           "label": "Wedding venue", "plural": "event and wedding venues",
           "taxonomy": ["event_venue"],
+          "unconfirmedTaxonomy": ["music_venue", "dance_studio", "arts_and_entertainment", "amusement_park"],
           "synonyms": ["venue", "wedding venue", "reception center", "reception hall", "event center", "ballroom", "event space"],
           "nameRule": "\\b(reception (center|hall)|event (center|venue|hall)|ballroom|wedding venue)\\b"
         },
@@ -30,6 +34,7 @@
           "id": "bridal_shops", "stage": "weddings.planning",
           "label": "Bridal and formal wear", "plural": "bridal and formal wear shops",
           "taxonomy": ["bridal_shop", "formal_wear_store"],
+          "unconfirmedTaxonomy": ["mens_clothing_store", "clothing_store", "beauty_salon"],
           "synonyms": ["bridal shop", "bridal boutique", "wedding dresses", "tuxedo", "tux rental", "formal wear"],
           "nameRule": "\\b(bridal|tux|tuxedos?)\\b"
         },
@@ -49,6 +54,7 @@
           "id": "photographers", "stage": "weddings.booking",
           "label": "Photographer", "plural": "photographers",
           "taxonomy": ["photography_service", "event_photography_service", "session_photography_service"],
+          "unconfirmedTaxonomy": ["professional_service", "camera_and_photography_store", "art_gallery"],
           "synonyms": ["photographer", "photography", "wedding photographer", "wedding photography"],
           "nameRule": "\\bphotograph(y|er|ers)\\b"
         },
@@ -56,6 +62,7 @@
           "id": "videographers", "stage": "weddings.booking",
           "label": "Videographer", "plural": "videographers",
           "taxonomy": ["videographer"],
+          "unconfirmedTaxonomy": ["court_reporter", "legal_service", "b2b_radio_and_television_commercials"],
           "synonyms": ["videographer", "videography", "wedding video", "wedding films"],
           "nameRule": "\\bvideograph(y|er|ers)\\b"
         },
@@ -63,6 +70,7 @@
           "id": "florists", "stage": "weddings.booking",
           "label": "Florist", "plural": "florists",
           "taxonomy": ["florist", "wholesale_florist"],
+          "unconfirmedTaxonomy": ["nursery_and_gardening_store", "warehouse_club_store"],
           "synonyms": ["florist", "flowers", "wedding flowers", "floral design"],
           "nameRule": "\\b(florist|florists|floral)\\b"
         },
@@ -76,6 +84,7 @@
           "id": "caterers", "stage": "weddings.booking",
           "label": "Caterer", "plural": "caterers",
           "taxonomy": ["caterer"],
+          "unconfirmedTaxonomy": ["%restaurant", "delicatessen", "cafe"],
           "synonyms": ["caterer", "catering", "wedding catering"],
           "nameRule": "\\bcater(ing|er|ers)\\b"
         },
@@ -83,6 +92,7 @@
           "id": "djs_music", "stage": "weddings.booking",
           "label": "DJ or musician", "plural": "DJs and musicians",
           "taxonomy": ["dj_service", "band_orchestra_symphony", "event_technology_service"],
+          "unconfirmedTaxonomy": ["event_technology_service", "arts_and_entertainment", "b2b_audio_visual_production", "automotive_repair"],
           "synonyms": ["dj", "wedding dj", "band", "musician", "live music", "sound and lighting"],
           "nameRule": "\\b(dj|djs|disc jockey)\\b"
         },
@@ -90,6 +100,7 @@
           "id": "event_rentals", "stage": "weddings.booking",
           "label": "Event rental company", "plural": "event rental companies",
           "taxonomy": ["party_equipment_rental", "audiovisual_equipment_rental", "photo_booth_rental", "clothing_rental"],
+          "unconfirmedTaxonomy": ["party_supply_store", "professional_service", "clothing_rental"],
           "synonyms": ["rentals", "party rentals", "event rentals", "tent rental", "photo booth", "linen rental", "chair rental"],
           "nameRule": "\\b(party rentals?|event rentals?|photo booths?|tent rentals?|linen rentals?)\\b"
         },
@@ -97,6 +108,7 @@
           "id": "cake_makers", "stage": "weddings.booking",
           "label": "Cake maker", "plural": "cake makers",
           "taxonomy": ["patisserie_cake_shop", "cupcake_shop"],
+          "unconfirmedTaxonomy": ["%restaurant", "food_delivery_service"],
           "synonyms": ["cake", "wedding cake", "baker", "cake maker", "cupcakes", "desserts"],
           "nameRule": "\\bcakes?\\b"
         },
@@ -110,6 +122,7 @@
           "id": "limos", "stage": "weddings.booking",
           "label": "Limo service", "plural": "limo and party bus services",
           "taxonomy": ["limo_service", "party_bus_rental"],
+          "unconfirmedTaxonomy": ["airport_shuttle", "taxi_service", "travel_service", "travel_and_transportation"],
           "synonyms": ["limo", "limousine", "party bus", "wedding transportation"],
           "nameRule": "\\blimo(usine|usines|s)?\\b"
         },
@@ -117,6 +130,7 @@
           "id": "hair_makeup", "stage": "weddings.week",
           "label": "Hair and makeup artist", "plural": "hair and makeup artists",
           "taxonomy": ["makeup_artist", "hair_stylist", "skin_care_and_makeup", "esthetician"],
+          "unconfirmedTaxonomy": ["skin_care_and_makeup", "esthetician", "beauty_salon", "hair_salon", "spa", "tattoo_and_piercing"],
           "synonyms": ["makeup", "makeup artist", "hair stylist", "bridal hair", "bridal makeup", "hair and makeup"],
           "nameRule": "\\b(makeup|make-up|mua|bridal hair)\\b"
         },

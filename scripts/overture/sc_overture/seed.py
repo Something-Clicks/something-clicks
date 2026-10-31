@@ -13,9 +13,10 @@ def seed(conn: psycopg.Connection, data: dict | None = None) -> dict[str, int]:
     with conn.cursor() as cur:
         for j in data["journeys"]:
             cur.execute(
-                """insert into journeys (id, name, active) values (%s, %s, %s)
-                   on conflict (id) do update set name = excluded.name, active = excluded.active""",
-                (j["id"], j["name"], j["active"]),
+                """insert into journeys (id, name, active, unconfirmed_name_pattern) values (%s, %s, %s, %s)
+                   on conflict (id) do update set name = excluded.name, active = excluded.active,
+                     unconfirmed_name_pattern = excluded.unconfirmed_name_pattern""",
+                (j["id"], j["name"], j["active"], j.get("unconfirmedNamePattern", "")),
             )
             counts["journeys"] += 1
             for pos, s in enumerate(j["stages"]):
@@ -26,12 +27,13 @@ def seed(conn: psycopg.Connection, data: dict | None = None) -> dict[str, int]:
                 )
             for c in j["categories"]:
                 cur.execute(
-                    """insert into categories (id, journey_id, stage_id, label, plural, broad, taxonomy, synonyms)
-                       values (%s, %s, %s, %s, %s, %s, %s, %s)
+                    """insert into categories (id, journey_id, stage_id, label, plural, broad, taxonomy, synonyms, unconfirmed_taxonomy)
+                       values (%s, %s, %s, %s, %s, %s, %s, %s, %s)
                        on conflict (id) do update set stage_id = excluded.stage_id, label = excluded.label,
                          plural = excluded.plural, broad = excluded.broad, taxonomy = excluded.taxonomy,
-                         synonyms = excluded.synonyms""",
-                    (c["id"], j["id"], c["stage"], c["label"], c["plural"], bool(c.get("broad")), c["taxonomy"], c["synonyms"]),
+                         synonyms = excluded.synonyms, unconfirmed_taxonomy = excluded.unconfirmed_taxonomy""",
+                    (c["id"], j["id"], c["stage"], c["label"], c["plural"], bool(c.get("broad")), c["taxonomy"], c["synonyms"],
+                     c.get("unconfirmedTaxonomy", [])),
                 )
                 counts["categories"] += 1
             # Complements are derived data: replace them wholesale for this journey.

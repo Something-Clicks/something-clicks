@@ -130,6 +130,8 @@ Each load is a run of **Actions → Overture import → Run workflow**, on branc
 | 11 | `import` | `bna-weddings` | ~5 min | |
 | 12 | `matches` | `bna-weddings` | ~1 min | |
 
+**Before the first `matches` run,** apply the `unconfirmed_sources` migration (job **migrate**, cluster **default**, mode **dry-run**, then **load**). It holds back listings from generic map-data sources (general party planners, skin care, AV companies, restaurants) and national chains: they stay counted, but match only once AI review, the owner or an admin confirms they serve weddings. Data jobs refuse to run until it's applied.
+
 `matches` only accepts the five metro clusters; `default` means `dfw-weddings`. Picking `us-weddings` for matches, or a cluster for `migrate` or `national`, stops in the first step ("Check inputs") with a message saying what to choose, before anything touches the database.
 
 Locally, the whole set came to about 335 MB. If a dry run projects more than 400 MB, stop there and tell me. The load refuses on its own anyway.
