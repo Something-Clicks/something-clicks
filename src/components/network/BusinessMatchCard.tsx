@@ -28,7 +28,8 @@ const badge: Record<PlaceState, string> = {
  * Signed-in view of one match. Shows the business name and its real state:
  * an imported business is always "Not on Something Clicks yet", never implied to be a member.
  */
-export function BusinessMatchCard({ m, action }: { m: BusinessMatch; action: React.ReactNode }) {
+/** `plannerPartner` is a label only, shown to signed-in members; it never affects order or ranking. */
+export function BusinessMatchCard({ m, action, plannerPartner = false }: { m: BusinessMatch; action: React.ReactNode; plannerPartner?: boolean }) {
   return (
     <article className="flex h-full flex-col rounded-3xl bg-white p-5 ring-1 ring-line sm:p-6">
       <div className="flex items-start gap-4">
@@ -42,6 +43,7 @@ export function BusinessMatchCard({ m, action }: { m: BusinessMatch; action: Rea
       </div>
       <div className="mt-4 flex flex-wrap items-center gap-2 text-sm">
         <span className={`rounded-full px-2.5 py-0.5 font-semibold ${badge[m.state]}`}>{stateLabels[m.state]}</span>
+        {plannerPartner && <span className="rounded-full bg-ice px-2.5 py-0.5 font-semibold text-navy ring-1 ring-royal/40">Planner Partner</span>}
         <span className="inline-flex items-center gap-1 text-navy-soft">
           <MapPin aria-hidden="true" className="h-4 w-4" />
           {m.locality ? `${m.locality} · ` : ""}{formatMiles(m.distanceM)}
