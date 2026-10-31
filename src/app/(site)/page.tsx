@@ -46,7 +46,7 @@ export default async function HomePage() {
           <div className="mx-auto mb-6 w-full max-w-4xl sm:mb-8">
             <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Get referrals from wedding businesses near you.</h1>
             <p className="mt-2 text-sm text-navy-soft sm:text-base">
-              Photographers, planners, florists, venues and caterers who serve the same couples, matched to you for free.
+              Find photographers, planners, florists and venues who could send business your way.
             </p>
           </div>
           {hasCounts ? (
