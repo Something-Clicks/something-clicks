@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { metros } from "@/content/metros";
 import { site } from "@/content/site";
-import { LogoPlaceholder } from "./LogoPlaceholder";
+import { Logo } from "./Logo";
 
 const columns = [
   {
@@ -35,7 +35,7 @@ export function Footer() {
     <footer className="bg-navy text-white on-dark">
       <div className="container-page grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
         <div>
-          <LogoPlaceholder tone="dark" />
+          <Logo tone="dark" />
           <p className="mt-4 max-w-sm text-lg text-white">{site.brandLine}</p>
         </div>
         {columns.map((c) => (

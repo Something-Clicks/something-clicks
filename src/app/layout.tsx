@@ -16,11 +16,13 @@ export const metadata: Metadata = {
   title: { default: site.name, template: `%s | ${site.name}` },
   description: site.description,
   applicationName: site.name,
-  // [PLACEHOLDER] favicon: replace public/icon.svg with the real logo mark.
-  icons: { icon: "/icon.svg" },
+  icons: {
+    icon: [{ url: "/brand/icon-blue-square.svg", type: "image/svg+xml" }],
+    apple: [{ url: "/brand/apple-touch-icon.png", sizes: "180x180" }],
+  },
 };
 
-export const viewport: Viewport = { themeColor: "#15263D" };
+export const viewport: Viewport = { themeColor: "#011335" };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

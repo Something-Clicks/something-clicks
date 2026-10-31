@@ -4,7 +4,7 @@ import type { ComponentProps, ReactNode } from "react";
 type Variant = "primary" | "secondary" | "onDark";
 
 const variants: Record<Variant, string> = {
-  primary: "bg-royal text-white hover:bg-[#1f45e0] shadow-sm",
+  primary: "bg-royal text-white hover:bg-navy shadow-sm",
   secondary: "bg-white text-royal ring-1 ring-inset ring-royal hover:bg-ice",
   onDark: "bg-white text-navy hover:bg-ice",
 };
@@ -104,7 +104,7 @@ export function PageHero({
   );
 }
 
-/** Decorative background: two arcs converging on a cyan point (no meaning conveyed). */
+/** Decorative background: two arcs converging on a blue point (no meaning conveyed). */
 export function HeroLines() {
   return (
     <svg
@@ -113,11 +113,11 @@ export function HeroLines() {
       viewBox="0 0 720 520"
       fill="none"
     >
-      <path d="M40 470 C 260 470, 330 260, 470 260" stroke="#2853FB" strokeWidth="2" />
-      <path d="M40 50 C 260 50, 330 260, 470 260" stroke="#209AFD" strokeWidth="2" />
+      <path d="M40 470 C 260 470, 330 260, 470 260" stroke="#0070FE" strokeWidth="2" />
+      <path d="M40 50 C 260 50, 330 260, 470 260" stroke="#FFFFFF" strokeOpacity="0.5" strokeWidth="2" />
       <path d="M470 260 H 720" stroke="#C7D2E6" strokeWidth="2" strokeDasharray="4 8" />
-      <circle cx="470" cy="260" r="9" fill="#209AFD" />
-      <circle cx="470" cy="260" r="22" stroke="#209AFD" strokeOpacity="0.4" strokeWidth="2" />
+      <circle cx="470" cy="260" r="9" fill="#0070FE" />
+      <circle cx="470" cy="260" r="22" stroke="#0070FE" strokeOpacity="0.4" strokeWidth="2" />
     </svg>
   );
 }

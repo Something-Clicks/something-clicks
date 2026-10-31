@@ -27,7 +27,7 @@ export function NoBusiness({ email, pending }: { email: string; pending: Pending
           <>
             <h1 className="text-4xl">Claim your business.</h1>
             <p className="mt-3 text-lg text-navy-soft">You&rsquo;re signed in as {email}. Find your business to see your matches.</p>
-            <Link href="/claim" className="mt-8 inline-flex rounded-xl bg-royal px-6 py-3 font-semibold text-white hover:bg-[#1f45e0]">
+            <Link href="/claim" className="mt-8 inline-flex rounded-xl bg-royal px-6 py-3 font-semibold text-white hover:bg-navy">
               Find my business
             </Link>
           </>

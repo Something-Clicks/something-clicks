@@ -14,7 +14,7 @@ export default function SiteError({ error, retry }: { error: unknown; retry: () 
         <h1 className="text-4xl">We&rsquo;ll be right back.</h1>
         <p className="mt-3 text-lg text-navy-soft">This part of Something Clicks isn&rsquo;t ready yet, or something went wrong on our side.</p>
         <p className="mt-8 flex flex-wrap justify-center gap-3">
-          <button type="button" onClick={() => retry()} className="rounded-xl bg-royal px-5 py-3 font-semibold text-white hover:bg-[#1f45e0]">
+          <button type="button" onClick={() => retry()} className="rounded-xl bg-royal px-5 py-3 font-semibold text-white hover:bg-navy">
             Try again
           </button>
           <Link href="/" className="rounded-xl bg-white px-5 py-3 font-semibold text-royal ring-1 ring-inset ring-royal hover:bg-ice">

@@ -37,7 +37,7 @@ export default async function AdminListPage({
         </div>
         <a
           href={`/admin/export?${exportQuery}`}
-          className="inline-flex items-center gap-2 rounded-lg bg-royal px-4 py-2 text-sm font-semibold text-white hover:bg-[#1f45e0]"
+          className="inline-flex items-center gap-2 rounded-lg bg-royal px-4 py-2 text-sm font-semibold text-white hover:bg-navy"
         >
           <Download aria-hidden="true" className="h-4 w-4" /> Export CSV
         </a>

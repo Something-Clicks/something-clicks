@@ -43,10 +43,10 @@ export const escapeHtml = (s: string) =>
 /** One short message with a single button: the shape of every transactional email we send. */
 export function simpleEmail(o: { heading: string; lines: string[]; button?: { label: string; url: string }; footer?: string }) {
   const text = [o.heading, "", ...o.lines, ...(o.button ? ["", `${o.button.label}: ${o.button.url}`] : []), ...(o.footer ? ["", o.footer] : [])].join("\n");
-  const html = `<!doctype html><html><body style="font-family:Inter,Arial,sans-serif;color:#15263D;line-height:1.5;max-width:560px">
+  const html = `<!doctype html><html><body style="font-family:Inter,Arial,sans-serif;color:#011335;line-height:1.5;max-width:560px">
 <h2 style="margin:0 0 16px">${escapeHtml(o.heading)}</h2>
 ${o.lines.map((l) => `<p style="margin:0 0 12px">${escapeHtml(l)}</p>`).join("\n")}
-${o.button ? `<p style="margin:24px 0"><a href="${escapeHtml(o.button.url)}" style="display:inline-block;background:#2853FB;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:600">${escapeHtml(o.button.label)}</a></p>` : ""}
+${o.button ? `<p style="margin:24px 0"><a href="${escapeHtml(o.button.url)}" style="display:inline-block;background:#0070FE;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:600">${escapeHtml(o.button.label)}</a></p>` : ""}
 ${o.footer ? `<p style="color:#3D4B61;font-size:13px">${escapeHtml(o.footer)}</p>` : ""}
 </body></html>`;
   return { text, html };

@@ -41,7 +41,7 @@ export default async function PartnershipsPage({ searchParams }: { searchParams:
       {rows.length === 0 ? (
         <div className="mt-6 rounded-2xl bg-white p-8 ring-1 ring-line">
           <p className="text-lg">Partnerships start with a connection.</p>
-          <Link href={`/dashboard?place=${ctx.place.id}`} className="mt-4 inline-flex rounded-xl bg-royal px-5 py-3 font-semibold text-white hover:bg-[#1f45e0]">
+          <Link href={`/dashboard?place=${ctx.place.id}`} className="mt-4 inline-flex rounded-xl bg-royal px-5 py-3 font-semibold text-white hover:bg-navy">
             See your matches
           </Link>
         </div>

@@ -35,7 +35,7 @@ export default async function ClaimSearchPage({ searchParams }: { searchParams: 
                 <input id="where" name="where" maxLength={80} defaultValue={where} autoComplete="address-level2"
                        placeholder="Dallas, TX" className="mt-0.5 block w-full border-0 bg-transparent p-0 text-lg text-navy placeholder:text-navy-soft/60 focus-visible:outline-none" />
               </div>
-              <button type="submit" className="inline-flex items-center justify-center gap-2 rounded-xl bg-royal px-6 py-4 text-lg font-semibold text-white hover:bg-[#1f45e0]">
+              <button type="submit" className="inline-flex items-center justify-center gap-2 rounded-xl bg-royal px-6 py-4 text-lg font-semibold text-white hover:bg-navy">
                 <Search aria-hidden="true" className="h-5 w-5" /> Find it
               </button>
             </div>

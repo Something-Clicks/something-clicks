@@ -95,7 +95,7 @@ export default async function DataSourcesPage() {
           <div className="rounded-2xl bg-cloud p-6">
             <h2 className="text-2xl">Want a business removed?</h2>
             <p className="mt-2">We&rsquo;ll take it out and keep it out of future updates.</p>
-            <Link href="/remove-my-business" className="mt-5 inline-flex rounded-xl bg-royal px-5 py-3 font-semibold text-white hover:bg-[#1f45e0]">
+            <Link href="/remove-my-business" className="mt-5 inline-flex rounded-xl bg-royal px-5 py-3 font-semibold text-white hover:bg-navy">
               Remove my business
             </Link>
           </div>

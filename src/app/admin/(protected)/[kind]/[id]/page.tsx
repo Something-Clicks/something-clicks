@@ -103,7 +103,7 @@ export default async function AdminDetailPage({
                 className="mt-1 block w-full rounded-lg border border-field px-3 py-2 text-sm"
               />
             </div>
-            <button type="submit" className="w-full rounded-lg bg-royal px-4 py-2.5 font-semibold text-white hover:bg-[#1f45e0]">
+            <button type="submit" className="w-full rounded-lg bg-royal px-4 py-2.5 font-semibold text-white hover:bg-navy">
               Save
             </button>
           </form>

@@ -40,7 +40,7 @@ export default async function DashboardMatchesPage({ searchParams }: { searchPar
         {!canRequest && (
           <div className="flex flex-col items-start gap-3 rounded-2xl bg-white p-5 ring-1 ring-line sm:flex-row sm:items-center sm:justify-between">
             <p><strong>Join the network</strong> to request introductions and let your matches find you.</p>
-            <Link href={`/dashboard/profile?place=${place.id}`} className="shrink-0 rounded-xl bg-royal px-5 py-2.5 font-semibold text-white hover:bg-[#1f45e0]">
+            <Link href={`/dashboard/profile?place=${place.id}`} className="shrink-0 rounded-xl bg-royal px-5 py-2.5 font-semibold text-white hover:bg-navy">
               Join the network
             </Link>
           </div>
@@ -91,14 +91,14 @@ function MatchAction({ m, placeId, canRequest }: { m: MyMatch; placeId: number; 
   const chip = "flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 font-semibold";
   if (m.intro_status === "connected") {
     return (
-      <Link href={`/dashboard/requests?place=${placeId}`} className={`${chip} bg-ice text-royal hover:bg-[#dbe5ff]`}>
+      <Link href={`/dashboard/requests?place=${placeId}`} className={`${chip} bg-ice text-royal hover:ring-1 hover:ring-royal`}>
         <Check aria-hidden="true" className="h-5 w-5" /> Connected
       </Link>
     );
   }
   if (m.intro_status === "requested" && !m.intro_from_me) {
     return (
-      <Link href={`/dashboard/requests?place=${placeId}`} className={`${chip} bg-royal text-white hover:bg-[#1f45e0]`}>
+      <Link href={`/dashboard/requests?place=${placeId}`} className={`${chip} bg-royal text-white hover:bg-navy`}>
         They asked to connect
       </Link>
     );

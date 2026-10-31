@@ -69,7 +69,7 @@ export function buildEmail({ kind, id, record }: Notification, siteUrl: string):
     `Review in admin: ${adminUrl}`,
   ].join("\n");
 
-  const html = `<!doctype html><html><body style="font-family:Inter,Arial,sans-serif;color:#15263D;line-height:1.5">
+  const html = `<!doctype html><html><body style="font-family:Inter,Arial,sans-serif;color:#011335;line-height:1.5">
 <h2 style="margin:0 0 16px">${escapeHtml(titles[kind])}</h2>
 <table cellpadding="6" style="border-collapse:collapse">${rows
     .map(
@@ -78,7 +78,7 @@ export function buildEmail({ kind, id, record }: Notification, siteUrl: string):
     )
     .join("")}</table>
 ${source ? `<p style="color:#3D4B61;font-size:13px">Source: ${escapeHtml(source)}</p>` : ""}
-<p><a href="${escapeHtml(adminUrl)}" style="display:inline-block;background:#2853FB;color:#fff;padding:10px 16px;border-radius:8px;text-decoration:none">Review in admin</a></p>
+<p><a href="${escapeHtml(adminUrl)}" style="display:inline-block;background:#0070FE;color:#fff;padding:10px 16px;border-radius:8px;text-decoration:none">Review in admin</a></p>
 </body></html>`;
 
   const email = display(record.email);

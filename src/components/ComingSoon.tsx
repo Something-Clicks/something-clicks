@@ -19,7 +19,7 @@ export function ComingSoon({
       <h2 className="mt-6 text-4xl">{title}</h2>
       <p className="mt-3 text-lg text-navy-soft">{body}</p>
       <p className="mt-8 flex flex-wrap justify-center gap-3">
-        <Link href="/" className="rounded-xl bg-royal px-5 py-3 font-semibold text-white hover:bg-[#1f45e0]">Back to the homepage</Link>
+        <Link href="/" className="rounded-xl bg-royal px-5 py-3 font-semibold text-white hover:bg-navy">Back to the homepage</Link>
         <Link href="/contact" className="rounded-xl bg-white px-5 py-3 font-semibold text-royal ring-1 ring-inset ring-royal hover:bg-ice">Contact us</Link>
       </p>
     </div>

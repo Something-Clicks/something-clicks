@@ -145,7 +145,7 @@ export default async function MetroPage({ params }: Params) {
             {progress.map((p, n) => (
               <li key={p} className="flex items-center gap-3">
                 <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-royal text-white">
-                  {n < 3 ? <Check aria-hidden="true" className="h-4 w-4" /> : <span aria-hidden="true" className="h-2 w-2 rounded-full bg-cyan" />}
+                  {n < 3 ? <Check aria-hidden="true" className="h-4 w-4" /> : <span aria-hidden="true" className="h-2 w-2 rounded-full bg-royal" />}
                 </span>
                 <span className="font-medium">{p}</span>
               </li>
