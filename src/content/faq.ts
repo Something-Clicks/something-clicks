@@ -1,3 +1,4 @@
+import { summary } from "./explainer";
 import { metros } from "./metros";
 
 const cityList = (() => {
@@ -9,7 +10,7 @@ const cityList = (() => {
 export const faq = [
   {
     q: "What is Something Clicks?",
-    a: "Something Clicks helps wedding businesses find referral partners. It shows which local businesses serve the same couples you do, explains why each one fits, and lets you request introductions and set up referrals or joint promotions together.",
+    a: `${summary} Anyone can search to see how many complementary businesses are nearby, and joining free shows who they are. Request an introduction (the other business must agree before contact details are shared), then refer customers to each other, create shared offers or promote each other's services. Tracking links show how partnerships perform.`,
   },
   {
     q: "How do wedding vendors find referral partners?",
@@ -17,7 +18,7 @@ export const faq = [
   },
   {
     q: "Is it free?",
-    a: "Yes. Claiming your business and seeing your matches is free.",
+    a: "Yes. Claiming your business, seeing your matches, requesting introductions and using tracking links are free. Optional paid plans: a $149/month membership and a $299 managed campaign.",
   },
   {
     q: "Who can see my business?",

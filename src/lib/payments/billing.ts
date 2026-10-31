@@ -2,6 +2,7 @@ import { site } from "@/content/site";
 import { sql } from "@/lib/db";
 import type { OwnedPlace } from "@/lib/members/network";
 import type { MemberSession } from "@/lib/members/session";
+import { partnerFor } from "@/lib/planner/partners";
 import { LIVE_MEMBERSHIP, plans, priceId, stripe, type PlanKind } from "./plans";
 
 /** Only the verified owner of a claimed business can buy. Claimed-but-unverified businesses can't yet. */
@@ -49,8 +50,13 @@ export async function startCheckout(kind: PlanKind, place: OwnedPlace, member: M
   if (!canBuy(place)) return { ok: false, error: "Your business needs to be verified before you can buy a plan." };
   const price = priceId(kind);
   if (!price) return { ok: false, error: "Payments aren't set up yet." };
-  if (kind === "membership" && membershipLive((await billingFor(place.id)).membership)) {
-    return { ok: false, error: "You're already a member. Manage your membership from Billing." };
+  if (kind === "membership") {
+    // Planner Partners have complimentary membership (recorded in our database, never charged).
+    const partner = await partnerFor(place.id);
+    if (partner?.active) return { ok: false, error: `You're already a member as a Planner Partner, until ${partner.ends_on}.` };
+    if (membershipLive((await billingFor(place.id)).membership)) {
+      return { ok: false, error: "You're already a member. Manage your membership from Billing." };
+    }
   }
   const metadata = { place_id: String(place.id), member_id: String(member.id), kind, ...(referral ? { referral } : {}) };
   const back = `${site.url}/dashboard/plans?place=${place.id}`;
