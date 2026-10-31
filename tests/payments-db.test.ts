@@ -90,13 +90,17 @@ d("Stripe payments", async () => {
       mode: "payment",
       customer: "cus_test",
       line_items: [{ price: "price_campaign", quantity: 1 }],
-      client_reference_id: "ref_abc",
-      metadata: { place_id: String(placeId), kind: "campaign", referral: "ref_abc" },
+      metadata: { place_id: String(placeId), kind: "campaign", promotekit_referral: "ref_abc" },
+      payment_intent_data: { metadata: { promotekit_referral: "ref_abc" } },
     });
-    await startCheckout("membership", owned(placeId, "verified"), member(), null);
+    expect(s).not.toHaveProperty("client_reference_id");
+    await startCheckout("membership", owned(placeId, "verified"), member(), "ref_sub");
     const sub = calls.sessions[1] as Record<string, unknown>;
-    expect(sub).toMatchObject({ mode: "subscription", subscription_data: { metadata: { kind: "membership" } } });
-    expect(sub).not.toHaveProperty("client_reference_id");
+    expect(sub).toMatchObject({
+      mode: "subscription",
+      metadata: { kind: "membership", promotekit_referral: "ref_sub" },
+      subscription_data: { metadata: { kind: "membership", promotekit_referral: "ref_sub" } },
+    });
     expect(calls.customers).toHaveLength(1); // one Stripe customer per business
   });
 
@@ -108,7 +112,7 @@ d("Stripe payments", async () => {
   it("records a campaign once and queues it", async () => {
     const session = {
       id: "cs_test_1", object: "checkout.session", mode: "payment", payment_status: "paid", amount_total: 29900, currency: "usd",
-      payment_intent: "pi_campaign_1", client_reference_id: "ref_abc", metadata: { place_id: String(placeId), member_id: String(memberId), kind: "campaign" },
+      payment_intent: "pi_campaign_1", metadata: { place_id: String(placeId), member_id: String(memberId), kind: "campaign", promotekit_referral: "ref_abc" },
     };
     expect((await send("checkout.session.completed", session, "evt_cs_1")).body).toMatchObject({ result: "campaign recorded" });
     expect((await send("checkout.session.completed", session, "evt_cs_1")).body).toMatchObject({ result: "duplicate" });
@@ -119,7 +123,7 @@ d("Stripe payments", async () => {
   });
 
   it("tracks a membership: invoice, status, cancellation", async () => {
-    const meta = { place_id: String(placeId), member_id: String(memberId), kind: "membership" };
+    const meta = { place_id: String(placeId), member_id: String(memberId), kind: "membership", promotekit_referral: "ref_sub" };
     const sub = (status: string, cancel = false) => ({
       id: "sub_1", object: "subscription", status, cancel_at_period_end: cancel, metadata: meta,
       items: { data: [{ current_period_end: 1893456000 }] },
@@ -133,8 +137,8 @@ d("Stripe payments", async () => {
     await send("customer.subscription.deleted", sub("canceled"));
     [m] = await db`select status from memberships where place_id = ${placeId}`;
     expect(m.status).toBe("canceled");
-    const [inv] = await db`select payment_intent_id, amount_cents from purchases where invoice_id = 'in_1'`;
-    expect(inv).toEqual({ payment_intent_id: "pi_membership_1", amount_cents: 14900 });
+    const [inv] = await db`select payment_intent_id, amount_cents, referral from purchases where invoice_id = 'in_1'`;
+    expect(inv).toEqual({ payment_intent_id: "pi_membership_1", amount_cents: 14900, referral: "ref_sub" });
   });
 
   it("handles full and partial refunds", async () => {
