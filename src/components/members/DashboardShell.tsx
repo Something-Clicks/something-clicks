@@ -3,15 +3,18 @@ import type { ReactNode } from "react";
 import { stateLabels } from "@/content/network";
 import type { OwnedPlace } from "@/lib/members/network";
 import { signOutMember } from "@/app/(site)/sign-in/actions";
+import { billingFor, membershipLive } from "@/lib/payments/billing";
+import { paymentsConfigured } from "@/lib/payments/plans";
 
 const tabs = [
   { href: "/dashboard", label: "Matches" },
   { href: "/dashboard/requests", label: "Requests" },
   { href: "/dashboard/partnerships", label: "Partnerships" },
   { href: "/dashboard/profile", label: "Profile" },
+  { href: "/dashboard/plans", label: "Plans" },
 ];
 
-export function DashboardShell({
+export async function DashboardShell({
   active,
   place,
   places,
@@ -25,6 +28,8 @@ export function DashboardShell({
   children: ReactNode;
 }) {
   const q = places.length > 1 ? `?place=${place.id}` : "";
+  // A live membership shows beside the business's status. Never used for matching or ranking.
+  const member = paymentsConfigured() ? membershipLive((await billingFor(place.id).catch(() => null))?.membership ?? null) : false;
   return (
     <>
       <section className="border-b border-line bg-white">
@@ -34,6 +39,7 @@ export function DashboardShell({
               <h1 className="truncate text-3xl sm:text-4xl">{place.name}</h1>
               <p className="mt-1 text-navy-soft">
                 {place.category_label} · <span className="font-semibold text-navy">{stateLabels[place.state]}</span>
+                {member && <> · <span className="rounded-full bg-ice px-2 py-0.5 text-sm font-semibold text-navy">Member</span></>}
               </p>
             </div>
             <div className="flex items-center gap-3">

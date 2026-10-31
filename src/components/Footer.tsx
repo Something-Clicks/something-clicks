@@ -11,6 +11,7 @@ const columns = [
       { href: "/claim", label: "Claim your business" },
       { href: "/sign-in", label: "Sign in" },
       { href: "/referral-partners", label: "Referral partners" },
+      { href: "/pricing", label: "Pricing" },
       { href: "/faq", label: "FAQ" },
       { href: "/about", label: "About" },
       { href: "/contact", label: "Contact" },

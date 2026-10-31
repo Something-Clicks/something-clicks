@@ -13,6 +13,7 @@ const pages: { path: string; priority: number }[] = [
   { path: "/weddings", priority: 0.8 },
   ...metros.map((m) => ({ path: `/weddings/${m.slug}`, priority: 0.8 })),
   { path: "/faq", priority: 0.7 },
+  { path: "/pricing", priority: 0.6 },
   { path: "/referral-partners", priority: 0.6 },
   { path: "/about", priority: 0.6 },
   { path: "/contact", priority: 0.5 },
