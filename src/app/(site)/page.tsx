@@ -20,7 +20,7 @@ export const metadata = pageMeta({
 // Live numbers on this page come from the database; refresh hourly.
 export const revalidate = 3600;
 
-const steps = ["Claim your business", "See who fits", "Get introduced", "Grow together"];
+const steps = ["Claim your business", "See who fits", "Get introduced", "Send each other referrals and grow together."];
 
 const ORDER = [
   "wedding_planners", "wedding_venues", "photographers", "videographers", "florists", "hair_makeup", "caterers",
@@ -43,7 +43,12 @@ export default async function HomePage() {
     <>
       <div className="bg-white">
         <div className="container-page pb-12 pt-6 sm:pb-16 sm:pt-10">
-          <h1 className="sr-only">Find wedding businesses that fit yours</h1>
+          <div className="mx-auto mb-6 w-full max-w-4xl sm:mb-8">
+            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Get referrals from wedding businesses near you.</h1>
+            <p className="mt-2 text-sm text-navy-soft sm:text-base">
+              Photographers, planners, florists, venues and caterers who serve the same couples, matched to you for free.
+            </p>
+          </div>
           {hasCounts ? (
             <HomeDiscover
               metros={metros.map(({ slug, name, short, where, cluster }) => ({ slug, name, short, where, cluster }))}
