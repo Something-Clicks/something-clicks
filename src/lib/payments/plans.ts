@@ -1,5 +1,5 @@
 import Stripe from "stripe";
-import { placeholder, type Placeholder } from "@/content/site";
+import type { Placeholder } from "@/content/site";
 
 /**
  * Paid plans. Prices live in Stripe; ids come from the environment so test
@@ -14,8 +14,8 @@ export const plans: Record<PlanKind, { name: string; price: string; cadence: str
     cadence: "one time",
     mode: "payment",
     env: "STRIPE_PRICE_CAMPAIGN",
-    // [PLACEHOLDER] Matt to describe what a managed campaign includes.
-    blurb: placeholder("What a managed campaign includes goes here."),
+    blurb:
+      "We pair you with a complementary business, plan a joint offer, schedule the promotion, set up tracking links, coordinate both sides, and send you a results report.",
   },
   membership: {
     name: "Membership",
@@ -23,8 +23,8 @@ export const plans: Record<PlanKind, { name: string; price: string; cadence: str
     cadence: "per month",
     mode: "subscription",
     env: "STRIPE_PRICE_MEMBERSHIP",
-    // [PLACEHOLDER] Matt to describe what membership includes.
-    blurb: placeholder("What membership includes goes here. Cancel any time."),
+    blurb:
+      "Ongoing partner matching and coordination from our team, a collaboration calendar, ready-to-use cross-promotion templates, and a monthly performance report.",
   },
 };
 
