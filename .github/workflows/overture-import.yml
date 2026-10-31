@@ -11,9 +11,11 @@ on:
         options: [migrate, import, national, matches]
         default: import
       cluster:
-        description: "Cluster slug (us-weddings, dfw-weddings…); not used by migrate or national"
-        required: false
-        default: us-weddings
+        description: "default = us-weddings for import, dfw-weddings for matches. Matches need a metro (not us-weddings). Leave as default for migrate and national."
+        required: true
+        type: choice
+        options: [default, us-weddings, dfw-weddings, atl-weddings, hou-weddings, phx-weddings, bna-weddings]
+        default: default
       mode:
         description: "dry-run reports what would change; load writes (not used by matches)"
         required: true
@@ -41,6 +43,19 @@ jobs:
           python-version: "3.12"
           cache: pip
           cache-dependency-path: scripts/overture/requirements.txt
+      # Before installing anything or touching the database: is this job/cluster pair valid?
+      - name: Check inputs
+        id: inputs
+        env:
+          JOB: ${{ inputs.job }}
+          CLUSTER: ${{ inputs.cluster }}
+        run: |
+          if ! cluster=$(python -m sc_overture check-inputs --job "$JOB" --cluster "$CLUSTER" 2> error.txt); then
+            cat error.txt | tee -a "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+          echo "cluster=$cluster" >> "$GITHUB_OUTPUT"
+          echo "Job $JOB${cluster:+, cluster $cluster}" >> "$GITHUB_STEP_SUMMARY"
       - run: pip install -r requirements.txt
       - run: python -m pytest -q
       - name: Run
@@ -48,7 +63,7 @@ jobs:
         env:
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
           JOB: ${{ inputs.job }}
-          CLUSTER: ${{ inputs.cluster }}
+          CLUSTER: ${{ steps.inputs.outputs.cluster }}
           MODE: ${{ inputs.mode }}
           RELEASE: ${{ inputs.release }}
         run: |

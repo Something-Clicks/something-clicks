@@ -99,7 +99,7 @@ Then **Deployments** → **⋯** on the latest Production deployment → **Redep
 
 ## 7. Database migrations (5 min)
 
-1. **GitHub → Actions → Overture import → Run workflow.** Branch **main**, job **migrate**, mode **dry-run** → **Run workflow**.
+1. **GitHub → Actions → Overture import → Run workflow.** Branch **main**, job **migrate**, cluster **default**, mode **dry-run** → **Run workflow**.
 2. Open the run when it finishes. The summary lists the files it would apply. Your database already has the first two, so expect:
    - `…matching`, `…metro_and_national`, `…skip_unchanged_matches`
    - `…members_claims_introductions`
@@ -107,18 +107,20 @@ Then **Deployments** → **⋯** on the latest Production deployment → **Redep
 3. Run it again with job **migrate**, mode **load**. Each file should say **applied**. The dry run in step 1 only lists files; it changes nothing.
 4. Refresh **/admin/setup**: **Database migrations** and **GitHub Actions** are green.
 
-**Don't start step 8 until step 3 says "applied".** Every data job checks first and stops with "The database is missing N migration(s)" if any are pending.
+5. **Seed check:** job **matches**, cluster **default** (that's `dfw-weddings`), mode **dry-run**. It loads no business data and takes seconds. The summary should start with `{"journeys": 1, "categories": 17, "complements": 266, "clusters": 6}`, then `dfw-weddings: 0 match suggestions` (zero is right: no data yet).
+
+**Don't start step 8 until steps 3 and 5 succeed.** Every data job checks first and stops with "The database is missing N migration(s)" if any are pending.
 
 ## 8. Data loads (about 90 min, mostly waiting)
 
-Each load is a run of **Actions → Overture import → Run workflow**, on branch **main**. Do a **dry-run** first and check the summary's **Projected total** is under 400 MB before running the same job in **load** mode. Run them one at a time, in this order:
+Each load is a run of **Actions → Overture import → Run workflow**, on branch **main**. Set **job** and **cluster** exactly as in the table; every cluster is a choice in the dropdown. For `import`, do a **dry-run** first and check the summary's **Projected total** is under 400 MB before running the same job in **load** mode. Run them one at a time, in this order:
 
 | # | job | cluster | Time per run | Notes |
 |---|---|---|---|---|
-| 1 | `national` | (any) | ~15 min | ZIP counts and the location lookup. Search works everywhere after this. |
+| 1 | `national` | `default` | ~15 min | ZIP counts and the location lookup. Search works everywhere after this. |
 | 2 | `import` | `us-weddings` | ~15 min | About 240,000 wedding businesses, US-wide |
 | 3 | `import` | `dfw-weddings` | ~5 min | Adds DFW's broad categories (salons, bakeries…) |
-| 4 | `matches` | `dfw-weddings` | ~1 min | No dry-run needed; mode is ignored |
+| 4 | `matches` | `dfw-weddings` | ~1 min | No dry-run needed; mode is ignored. Never `us-weddings` (national) |
 | 5 | `import` | `atl-weddings` | ~5 min | |
 | 6 | `matches` | `atl-weddings` | ~1 min | |
 | 7 | `import` | `hou-weddings` | ~5 min | |
@@ -127,6 +129,8 @@ Each load is a run of **Actions → Overture import → Run workflow**, on branc
 | 10 | `matches` | `phx-weddings` | ~1 min | |
 | 11 | `import` | `bna-weddings` | ~5 min | |
 | 12 | `matches` | `bna-weddings` | ~1 min | |
+
+`matches` only accepts the five metro clusters; `default` means `dfw-weddings`. Picking `us-weddings` for matches, or a cluster for `migrate` or `national`, stops in the first step ("Check inputs") with a message saying what to choose, before anything touches the database.
 
 Locally, the whole set came to about 335 MB. If a dry run projects more than 400 MB, stop there and tell me. The load refuses on its own anyway.
 
