@@ -69,7 +69,7 @@ export function FindForm({
           className={`inline-flex shrink-0 items-center justify-center gap-2 rounded-2xl bg-navy font-semibold text-white hover:bg-navy/90 sm:rounded-full ${compact ? "h-12 px-6" : "h-14 px-7 text-lg"}`}
         >
           <Search aria-hidden="true" className="h-5 w-5" strokeWidth={2.4} />
-          Find matches
+          Find your partners
         </button>
       </form>
     </div>

@@ -141,7 +141,7 @@ export function HomeDiscover({
               href={searchHref(pickedCat.search)}
               className="mt-5 inline-flex h-12 items-center gap-2 rounded-full bg-navy px-6 font-semibold text-white hover:bg-navy/90"
             >
-              See your matches <ArrowRight aria-hidden="true" className="h-5 w-5" />
+              Explore matches <ArrowRight aria-hidden="true" className="h-5 w-5" />
             </Link>
           </>
         )}
