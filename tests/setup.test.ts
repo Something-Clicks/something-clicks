@@ -26,7 +26,7 @@ describe("migration list", () => {
 
   it("counts dashboard-applied migrations by name", () => {
     const checks = migrationChecks([{ version: "20261030123445", name: "init" }, { version: "20261031000000", name: "" }]);
-    expect(checks.map((c) => c.status)).toEqual(["ok", "ok", "missing", "missing", "missing", "missing", "missing", "missing"]);
+    expect(checks.map((c) => c.status)).toEqual(["ok", "ok", ...Array(MIGRATIONS.length - 2).fill("missing")]);
     expect(checks[2].fix).toContain("job migrate");
   });
 });

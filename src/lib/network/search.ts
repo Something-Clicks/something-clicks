@@ -77,7 +77,7 @@ export type CategoryResult = {
  */
 export async function searchMatches(categoryId: string, place: Place, limit = 6): Promise<CategoryResult[]> {
   const rows = await sql()<
-    { category_b: string; n: number; nearest_m: number; reason_key: string; partnership_type: PartnershipType }[]
+    { category_b: string; label: string; plural: string; journey_id: string; n: number; nearest_m: number; reason_key: string; partnership_type: PartnershipType }[]
   >`
     with here as (select st_setsrid(st_makepoint(${place.lng}, ${place.lat}), 4326)::geography as g),
     near as (
@@ -86,7 +86,7 @@ export async function searchMatches(categoryId: string, place: Place, limit = 6)
       where z.kind = 'zcta' and st_dwithin(z.geog, here.g, ${RADIUS_M}, false)
       group by pc.category_id
     )
-    select cm.category_b, near.n, near.nearest_m, cm.reason_key, cm.partnership_type
+    select cm.category_b, c.label, c.plural, c.journey_id, near.n, near.nearest_m, cm.reason_key, cm.partnership_type
     from complements cm
     join categories c on c.id = cm.category_b
     join near on near.category_id = cm.category_b
@@ -97,8 +97,10 @@ export async function searchMatches(categoryId: string, place: Place, limit = 6)
     limit ${limit}`;
   const order: PartnershipType[] = ["referral", "joint_offer", "distribution"];
   return rows.flatMap((r) => {
-    const category = categoryById(r.category_b);
-    if (!category) return [];
+    // Categories created in admin aren't in journeys.json: describe them from the database row.
+    const category: Category = categoryById(r.category_b) ?? {
+      id: r.category_b, journeyId: r.journey_id, stage: "", label: r.label, plural: r.plural, broad: false, taxonomy: [], synonyms: [],
+    };
     return [
       {
         category,

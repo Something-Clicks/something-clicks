@@ -12,4 +12,5 @@ export const MIGRATIONS = [
   { version: "20261101000000", name: "members_claims_introductions" },
   { version: "20261102000000", name: "ai_review_and_outcomes" },
   { version: "20261103000000", name: "unconfirmed_sources" },
+  { version: "20261104000000", name: "vocabulary" },
 ] as const;
