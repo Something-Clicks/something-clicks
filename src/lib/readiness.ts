@@ -19,16 +19,21 @@ export type Readiness = {
   db: boolean;
   /** ADMIN_SESSION_SECRET is set: needed to sign sessions and read unsubscribe links. */
   secret: boolean;
+  /** CLAIMS_OPEN=true: claiming (which shows listing details to the claimant) is open. Off until explicitly turned on. */
+  claimsOpen: boolean;
 };
 
-const NONE: Readiness = { search: false, listings: false, members: false, metros: false, db: false, secret: false };
+const NONE: Readiness = { search: false, listings: false, members: false, metros: false, db: false, secret: false, claimsOpen: false };
 const TTL_MS = 60_000;
 const globalForReady = globalThis as unknown as { __scReady?: { at: number; value: Readiness } };
+
+/** Claiming stays closed unless CLAIMS_OPEN is exactly "true". */
+export const claimsOpen = () => process.env.CLAIMS_OPEN === "true";
 
 export const sessionSecretSet = () => (process.env.ADMIN_SESSION_SECRET ?? "").length >= 32 || process.env.NODE_ENV === "development";
 
 async function check(): Promise<Readiness> {
-  if (!process.env.SUPABASE_DB_URL) return { ...NONE, secret: sessionSecretSet() };
+  if (!process.env.SUPABASE_DB_URL) return { ...NONE, secret: sessionSecretSet(), claimsOpen: claimsOpen() };
   try {
     const [r] = await sql()<{ geo: boolean; counts: boolean; places: boolean; members: boolean; claims: boolean; box: boolean; matches: boolean }[]>`
       select exists (select 1 from geo_lookup) as geo,
@@ -41,6 +46,7 @@ async function check(): Promise<Readiness> {
     return {
       db: true,
       secret: sessionSecretSet(),
+      claimsOpen: claimsOpen(),
       search: r.geo && r.counts,
       listings: r.places,
       members: r.members && r.claims && sessionSecretSet(),
@@ -48,7 +54,7 @@ async function check(): Promise<Readiness> {
     };
   } catch (error) {
     console.error("[readiness] database not ready", error instanceof Error ? error.message : error);
-    return { ...NONE, secret: sessionSecretSet() };
+    return { ...NONE, secret: sessionSecretSet(), claimsOpen: claimsOpen() };
   }
 }
 

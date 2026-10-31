@@ -3,7 +3,8 @@
 import { redirect } from "next/navigation";
 import { categoryById } from "@/content/journeys";
 import { getMember, sendSignInLink } from "@/lib/members/auth";
-import { onSignIn, startClaim, type ClaimStart, type NewBusiness } from "@/lib/members/claims";
+import { getClaimableByRef, isListingRef, onSignIn, startClaim, type ClaimStart, type NewBusiness } from "@/lib/members/claims";
+import { claimsOpen } from "@/lib/readiness";
 import { allow, validEmail } from "@/lib/members/limits";
 import { validLink } from "@/lib/members/network";
 import { resolveLocation } from "@/lib/network/search";
@@ -33,16 +34,20 @@ async function finish(result: ClaimStart, email: string, back: (e: string) => ne
 }
 
 export async function claimPlace(formData: FormData) {
-  const placeId = Number(formData.get("place_id"));
+  const ref = text(formData, "place_ref", 40);
   const email = text(formData, "email", 254).toLowerCase();
-  const back = (error: string): never => redirect(`/claim/${placeId}?error=${error}`);
-  if (!Number.isInteger(placeId)) redirect("/claim");
+  const back = (error: string): never => redirect(`/claim/${ref}?error=${error}`);
+  if (!claimsOpen() || !isListingRef(ref)) redirect("/claim");
+  const listing = await getClaimableByRef(ref);
+  if (!listing) redirect("/claim");
+  const placeId = listing.id;
   if (!validEmail(email)) return back("email");
   if (!(await allow("claim", 3600, 5))) return back("limit");
   await finish(await startClaim({ placeId, email, note: text(formData, "note", 500) }), email, back);
 }
 
 export async function addBusiness(formData: FormData) {
+  if (!claimsOpen()) redirect("/claim");
   const fields = {
     name: text(formData, "name", 120),
     category_id: text(formData, "category", 60),

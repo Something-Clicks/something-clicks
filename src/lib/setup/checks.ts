@@ -31,6 +31,7 @@ const required: [string, string][] = [
 ];
 
 const later: [string, string][] = [
+  ["CLAIMS_OPEN", "Claiming is closed until this is set to true. Open it once listing quality is reviewed."],
   ["ANTHROPIC_API_KEY", "Phase 3 AI review and match reasons. Off until set; capped at $10 a month."],
   ["MAILING_ADDRESS", "Needed before any invitation can be sent (CAN-SPAM)."],
   ["INVITE_EMAIL_FROM", "Invitation sender on hello.somethingclicks.com, verified in Resend."],

@@ -36,6 +36,7 @@ describe("environment checks", () => {
     const checks = envChecks(full);
     expect(checks.filter((c) => c.status !== "later").every((c) => c.status === "ok")).toBe(true);
     expect(checks.find((c) => c.label === "ANTHROPIC_API_KEY")?.status).toBe("later");
+    expect(checks.find((c) => c.label === "CLAIMS_OPEN")?.status).toBe("later");
   });
 
   it("flags missing, short and wrong-port values with a fix", () => {
