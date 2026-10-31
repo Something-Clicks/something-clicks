@@ -154,6 +154,8 @@ That's launch. 🎉
 
 ## After launch, when you're ready
 
+- **Open claiming:** claiming stays closed (claim pages say "Claiming opens soon") until you add `CLAIMS_OPEN` = `true` in Vercel and Redeploy. Do it once you've reviewed listing quality. Claim links use each listing's random Overture ID, so listings can't be walked through by number.
+
 - **AI review and match reasons:** add `ANTHROPIC_API_KEY` in Vercel and Redeploy. Runs are capped at $10 a month and start only when you press **Run** in **/admin/network/ai**.
 - **Invitations:** set `MAILING_ADDRESS` and `INVITE_EMAIL_FROM` (verify `hello.somethingclicks.com` in Resend first). Batch sending is the next build; nothing sends until you approve a batch.
 - **Legal:** the Privacy and Terms pages are still marked as drafts for attorney review.

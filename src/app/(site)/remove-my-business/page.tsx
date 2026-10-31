@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Field, Notice } from "@/components/members/fields";
 import { SubmitButton } from "@/components/members/SubmitButton";
 import { readiness } from "@/lib/readiness";
-import { getClaimable } from "@/lib/members/claims";
+import { getClaimableByRef, isListingRef } from "@/lib/members/claims";
 import { pageMeta } from "@/lib/metadata";
 import { removeBusiness } from "./actions";
 
@@ -20,8 +20,8 @@ const errors: Record<string, string> = {
 
 export default async function RemovePage({ searchParams }: { searchParams: Promise<{ place?: string; error?: string }> }) {
   const sp = await searchParams;
-  const placeId = Number(sp.place);
-  const place = Number.isInteger(placeId) && placeId > 0 && (await readiness()).members ? await getClaimable(placeId).catch(() => null) : null;
+  const ref = sp.place ?? "";
+  const place = isListingRef(ref) && (await readiness()).members ? await getClaimableByRef(ref).catch(() => null) : null;
   return (
     <>
       <section className="bg-navy text-white on-dark">
@@ -36,7 +36,7 @@ export default async function RemovePage({ searchParams }: { searchParams: Promi
             {sp.error && errors[sp.error] && <Notice>{errors[sp.error]}</Notice>}
             {place && (
               <>
-                <input type="hidden" name="place_id" value={place.id} />
+                <input type="hidden" name="place_ref" value={ref} />
                 <p className="rounded-xl bg-cloud p-4">
                   <strong>{place.name}</strong>
                   <span className="block text-sm text-navy-soft">{[place.street, place.locality, place.region].filter(Boolean).join(", ")}</span>

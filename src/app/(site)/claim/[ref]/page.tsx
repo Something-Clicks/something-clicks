@@ -7,7 +7,7 @@ import { CategoryIcon } from "@/components/network/CategoryIcon";
 import { Field, Notice } from "@/components/members/fields";
 import { SubmitButton } from "@/components/members/SubmitButton";
 import { readiness } from "@/lib/readiness";
-import { getClaimable } from "@/lib/members/claims";
+import { getClaimableByRef, isListingRef } from "@/lib/members/claims";
 import { websiteDomain } from "@/lib/members/domains";
 import { claimPlace } from "../actions";
 
@@ -20,13 +20,13 @@ const errors: Record<string, string> = {
   owned: "Someone has already claimed this business.",
 };
 
-export default async function ClaimPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ error?: string }> }) {
-  const id = Number((await params).id);
+export default async function ClaimPage({ params, searchParams }: { params: Promise<{ ref: string }>; searchParams: Promise<{ error?: string }> }) {
+  const { ref } = await params;
   const { error } = await searchParams;
   const ready = await readiness();
-  if (!ready.members || !ready.listings) return null; // the layout shows "coming soon"
-  if (!Number.isInteger(id)) notFound();
-  const place = await getClaimable(id);
+  if (!ready.claimsOpen || !ready.members || !ready.listings) return null; // the layout shows "coming soon"
+  if (!isListingRef(ref)) notFound(); // sequential ids and anything else that isn't a listing UUID
+  const place = await getClaimableByRef(ref);
   if (!place) notFound();
   const domain = websiteDomain(place.website);
 
@@ -56,7 +56,7 @@ export default async function ClaimPage({ params, searchParams }: { params: Prom
           </ul>
           <p className="mt-5 text-xs text-navy-soft">
             From public business listings. <Link href="/data-sources" className="underline">Data sources</Link> ·{" "}
-            <Link href={`/remove-my-business?place=${place.id}`} className="underline">Remove this business</Link>
+            <Link href={`/remove-my-business?place=${ref}`} className="underline">Remove this business</Link>
           </p>
         </div>
 
@@ -69,7 +69,7 @@ export default async function ClaimPage({ params, searchParams }: { params: Prom
         ) : (
           <form action={claimPlace} className="mt-6 space-y-5 rounded-2xl bg-white p-6 ring-1 ring-line sm:p-8">
             {error && errors[error] && <Notice>{errors[error]}</Notice>}
-            <input type="hidden" name="place_id" value={place.id} />
+            <input type="hidden" name="place_ref" value={ref} />
             <Field
               label="Your work email"
               name="email"

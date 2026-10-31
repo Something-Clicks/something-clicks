@@ -8,6 +8,8 @@ import type { MemberSession } from "./session";
 
 export type ClaimablePlace = {
   id: number;
+  /** The public handle for claim and removal links: the Overture GERS id (a random UUID), never the sequential id. */
+  ref: string | null;
   name: string;
   category_id: string | null;
   category_label: string;
@@ -29,7 +31,7 @@ export async function searchClaimable(q: string, near: Location | null, limit = 
   if (name.length < 2) return [];
   const db = sql();
   return db<ClaimablePlace[]>`
-    select p.id::int, p.name, p.category_id, coalesce(c.label, '') as category_label, p.street, p.locality, p.region,
+    select p.id::int, p.gers_id as ref, p.name, p.category_id, coalesce(c.label, '') as category_label, p.street, p.locality, p.region,
            p.postcode, p.phone, p.website, p.state,
            exists (select 1 from place_claims pc where pc.place_id = p.id and pc.status = 'approved') as owned
     from places p left join categories c on c.id = p.category_id
@@ -42,9 +44,25 @@ export async function searchClaimable(q: string, near: Location | null, limit = 
     limit ${limit}`;
 }
 
+/** Claim and removal links carry a UUID; anything else (such as a sequential number) is not a listing. */
+export const isListingRef = (ref: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(ref);
+
+/** One listing by its public ref. Sequential database ids are never accepted here. */
+export async function getClaimableByRef(ref: string): Promise<ClaimablePlace | null> {
+  if (!isListingRef(ref)) return null;
+  const [row] = await sql()<ClaimablePlace[]>`
+    select p.id::int, p.gers_id as ref, p.name, p.category_id, coalesce(c.label, '') as category_label, p.street, p.locality, p.region,
+           p.postcode, p.phone, p.website, p.state,
+           exists (select 1 from place_claims pc where pc.place_id = p.id and pc.status = 'approved') as owned
+    from places p left join categories c on c.id = p.category_id
+    where p.gers_id = ${ref.toLowerCase()} and not p.suppressed`;
+  return row ?? null;
+}
+
+/** Internal lookup by database id (server-side only; never from a URL or form). */
 export async function getClaimable(id: number): Promise<ClaimablePlace | null> {
   const [row] = await sql()<ClaimablePlace[]>`
-    select p.id::int, p.name, p.category_id, coalesce(c.label, '') as category_label, p.street, p.locality, p.region,
+    select p.id::int, p.gers_id as ref, p.name, p.category_id, coalesce(c.label, '') as category_label, p.street, p.locality, p.region,
            p.postcode, p.phone, p.website, p.state,
            exists (select 1 from place_claims pc where pc.place_id = p.id and pc.status = 'approved') as owned
     from places p left join categories c on c.id = p.category_id

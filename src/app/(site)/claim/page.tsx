@@ -54,7 +54,7 @@ export default async function ClaimSearchPage({ searchParams }: { searchParams: 
 
 async function Results({ q, where }: { q: string; where: string }) {
   const ready = await readiness();
-  if (!ready.members || !ready.listings) return null; // the layout shows "coming soon"
+  if (!ready.claimsOpen || !ready.members || !ready.listings) return null; // the layout shows "coming soon"
   if (!(await allow("claim-search", 60, 30))) {
     return <p role="alert" className="text-lg">You&rsquo;ve searched a lot in the last minute. Please wait a moment and try again.</p>;
   }
@@ -70,7 +70,7 @@ async function Results({ q, where }: { q: string; where: string }) {
         <ul className="mt-6 divide-y divide-line overflow-hidden rounded-2xl bg-white ring-1 ring-line">
           {results.map((r) => (
             <li key={r.id}>
-              <Link href={`/claim/${r.id}`} className="flex items-center justify-between gap-4 px-5 py-4 hover:bg-ice">
+              <Link href={r.ref ? `/claim/${r.ref}` : "/contact"} className="flex items-center justify-between gap-4 px-5 py-4 hover:bg-ice">
                 <span className="min-w-0">
                   <span className="block truncate text-lg font-semibold">{r.name}</span>
                   <span className="block text-sm text-navy-soft">

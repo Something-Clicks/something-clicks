@@ -52,3 +52,24 @@ describe("member sessions", () => {
     expect(await verifyMemberSession(admin, SECRET)).toBeNull();
   });
 });
+
+describe("claim links", () => {
+  it("accept only listing UUIDs, never sequential ids", async () => {
+    const { isListingRef } = await import("@/lib/members/claims");
+    expect(isListingRef("3d3f1cab-62d2-48a4-9442-a81fcb0c9e56")).toBe(true);
+    expect(isListingRef("3D3F1CAB-62D2-48A4-9442-A81FCB0C9E56")).toBe(true);
+    for (const bad of ["1", "120633", "0", "-1", "1e5", "", "3d3f1cab62d248a49442a81fcb0c9e56", "../etc", "3d3f1cab-62d2-48a4-9442-a81fcb0c9e56x"]) {
+      expect(isListingRef(bad), bad).toBe(false);
+    }
+  });
+
+  it("claiming is closed unless CLAIMS_OPEN is exactly true", async () => {
+    const { claimsOpen } = await import("@/lib/readiness");
+    const before = process.env.CLAIMS_OPEN;
+    for (const [v, open] of [[undefined, false], ["", false], ["1", false], ["TRUE", false], ["yes", false], ["true", true]] as const) {
+      if (v === undefined) delete process.env.CLAIMS_OPEN; else process.env.CLAIMS_OPEN = v;
+      expect(claimsOpen(), String(v)).toBe(open);
+    }
+    if (before === undefined) delete process.env.CLAIMS_OPEN; else process.env.CLAIMS_OPEN = before;
+  });
+});
