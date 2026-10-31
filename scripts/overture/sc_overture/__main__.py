@@ -29,8 +29,29 @@ def main() -> None:
     mig = sub.add_parser("migrate", help="Apply missing supabase/migrations files, in order")
     mig.add_argument("--dry-run", action="store_true", help="list what would be applied; change nothing")
     mat = sub.add_parser("matches", help="Generate matches for one metro cluster")
-    mat.add_argument("cluster", help="metro cluster slug, e.g. dfw-weddings")
+    mat.add_argument("cluster", nargs="?", default="default", help="metro cluster slug (default: dfw-weddings)")
+    chk = sub.add_parser("check-inputs", help="Validate a workflow job/cluster pair; print the cluster to use")
+    chk.add_argument("--job", required=True)
+    chk.add_argument("--cluster", default="default")
     args = p.parse_args()
+
+    if args.cmd == "check-inputs":
+        from .inputs import InputError, resolve
+
+        try:
+            print(resolve(args.job, args.cluster) or "")
+        except InputError as e:
+            raise SystemExit(f"Invalid inputs: {e}")
+        return
+
+    if args.cmd == "matches":
+        # Reject a national or mistyped cluster before connecting to the database.
+        from .inputs import InputError, resolve
+
+        try:
+            args.cluster = resolve("matches", args.cluster, allow_unknown=True)
+        except InputError as e:
+            raise SystemExit(f"Invalid inputs: {e}")
 
     if args.cmd in ("seed", "import", "national", "matches"):
         # Every data job needs the full schema; fail with the fix, not a missing-column error.

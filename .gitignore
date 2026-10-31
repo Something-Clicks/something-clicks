@@ -163,3 +163,4 @@ __pycache__/
 .venv/
 scripts/overture/work/
 scripts/overture/report.txt
+scripts/overture/error.txt

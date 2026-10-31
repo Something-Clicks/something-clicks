@@ -96,8 +96,8 @@ All of these run from GitHub: **Actions** tab → **Overture import** (left list
 
 | Order | job | cluster | mode | What it does |
 |---|---|---|---|---|
-| 0 | `migrate` | (ignored) | `dry-run`, then `load` | Applies any missing database migrations (seconds) |
-| 1 | `national` | (ignored) | `dry-run`, then `load` | ZIP-by-category counts and the location lookup, so search works everywhere (~33 MB, ~15 min) |
+| 0 | `migrate` | `default` | `dry-run`, then `load` | Applies any missing database migrations (seconds) |
+| 1 | `national` | `default` | `dry-run`, then `load` | ZIP-by-category counts and the location lookup, so search works everywhere (~33 MB, ~15 min) |
 | 2 | `import` | `us-weddings` | `dry-run`, then `load` | Wedding-specific businesses across the US (~15 min) |
 | 3 | `import` | `dfw-weddings` | `dry-run`, then `load` | Adds the metro's broad categories (salons, bakeries…) for later AI review |
 | 4 | `matches` | `dfw-weddings` | (ignored) | Generates the metro's matches (wedding-specific only) |

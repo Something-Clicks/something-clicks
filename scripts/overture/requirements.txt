@@ -5,3 +5,4 @@ aiohttp>=3.9
 requests>=2.32
 psycopg[binary]>=3.2
 pytest>=8
+pyyaml>=6
