@@ -10,7 +10,7 @@ export function pageMeta({
   description: string;
   path: string;
 }): Metadata {
-  const fullTitle = path === "/" ? `${site.name} | ${site.tagline}` : `${title} | ${site.name}`;
+  const fullTitle = path === "/" ? `${site.name} | Wedding vendor referral network` : `${title} | ${site.name}`;
   return {
     title: { absolute: fullTitle },
     description,

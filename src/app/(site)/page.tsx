@@ -14,7 +14,7 @@ export const metadata = pageMeta({
   title: "Home",
   path: "/",
   description:
-    "Know who to know. Find local wedding businesses that serve the same couples you do: see who fits and why, request introductions, and grow through referrals. Free to claim your business.",
+    site.description,
 });
 
 // Live numbers on this page come from the database; refresh hourly.
@@ -51,12 +51,10 @@ export default async function HomePage() {
               counts={counts}
               fits={fits}
               partnershipLabels={partnershipLabels}
-              tagline={site.tagline}
             />
           ) : (
             <div className="mx-auto w-full max-w-4xl">
               <FindForm />
-              <p className="mt-3 text-center text-sm font-medium text-navy-soft">{site.tagline}</p>
             </div>
           )}
         </div>

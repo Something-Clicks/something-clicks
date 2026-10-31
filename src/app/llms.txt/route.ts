@@ -9,7 +9,7 @@ export function GET() {
   const body = [
     `# ${site.name}`,
     "",
-    `> ${site.tagline} ${site.about}`,
+    `> ${site.about}`,
     "",
     "Public pages show live counts of wedding businesses by category and city, and which kinds of businesses fit each other and why. They never show business names: owners see names once they claim their business.",
     "",

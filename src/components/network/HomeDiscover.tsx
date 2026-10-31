@@ -23,14 +23,12 @@ export function HomeDiscover({
   counts,
   fits,
   partnershipLabels,
-  tagline,
 }: {
   metros: DiscoverMetro[];
   categories: DiscoverCategory[];
   counts: Record<string, Record<string, number>>;
   fits: Record<string, DiscoverFit[]>;
   partnershipLabels: Record<string, string>;
-  tagline: string;
 }) {
   const [metroSlug, setMetroSlug] = useState(metros[0].slug);
   const [picked, setPicked] = useState<string | null>(null);
@@ -47,7 +45,6 @@ export function HomeDiscover({
     <>
       <div className="mx-auto w-full max-w-4xl">
         <FindForm key={`${metroSlug}-${picked ?? ""}`} what={pickedCat?.search ?? ""} where={metro.where} />
-        <p className="mt-3 text-center text-sm font-medium text-navy-soft">{tagline}</p>
       </div>
 
       <section aria-labelledby="discover-heading" className="mt-10 sm:mt-12">
