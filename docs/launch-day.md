@@ -104,8 +104,10 @@ Then **Deployments** → **⋯** on the latest Production deployment → **Redep
    - `…matching`, `…metro_and_national`, `…skip_unchanged_matches`
    - `…members_claims_introductions`
    - the phase 3 file (`…ai_review_and_outcomes`)
-3. Run it again with mode **load**. Each file should say **applied**.
+3. Run it again with job **migrate**, mode **load**. Each file should say **applied**. The dry run in step 1 only lists files; it changes nothing.
 4. Refresh **/admin/setup**: **Database migrations** and **GitHub Actions** are green.
+
+**Don't start step 8 until step 3 says "applied".** Every data job checks first and stops with "The database is missing N migration(s)" if any are pending.
 
 ## 8. Data loads (about 90 min, mostly waiting)
 

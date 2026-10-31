@@ -85,3 +85,36 @@ def test_refuses_out_of_order_history(db, tmp_path):
 def test_repo_migration_files_are_well_formed():
     names = [m.name for m in migration_files()]
     assert names[:2] == ["init", "network_foundation"] and len(names) == len(set(names))
+
+
+def test_require_migrated_names_the_fix_and_writes_nothing(db, tmp_path):
+    from sc_overture.migrate import require_migrated
+
+    fs = files(tmp_path, {"20260101000000_one.sql": "create table one (id int);", "20260102000000_two.sql": "create table two (id int);"})
+    with pytest.raises(SystemExit) as e:
+        require_migrated(db, fs)
+    assert "20260101000000_one.sql" in str(e.value) and "job migrate, mode load" in str(e.value)
+    with db.cursor() as cur:  # a check, not a write: no history table appears
+        cur.execute("select to_regclass('supabase_migrations.schema_migrations')")
+        assert cur.fetchone()[0] is None
+    apply(db, fs, dry_run=False, log=lambda *_: None)
+    require_migrated(db, fs)  # passes once everything is applied
+
+
+def test_real_migrations_apply_in_order_and_are_rerun_safe(db):
+    """The repo's migrations on a fresh database, then each one again as if run by hand a second time."""
+    with db.cursor() as cur:
+        for ext in ("postgis", "pg_trgm"):
+            cur.execute(f"create extension if not exists {ext}")
+    db.commit()
+    real = migration_files()
+    apply(db, real, dry_run=False, log=lambda *_: None)
+    for m in real[2:]:  # everything after the two production already had
+        with db.cursor() as cur:
+            cur.execute(m.path.read_text())
+        db.commit()
+    with db.cursor() as cur:
+        cur.execute("select column_name from information_schema.columns where table_name = 'clusters' and column_name in ('scope', 'include_broad', 'match_unconfirmed_broad') order by 1")
+        assert [r[0] for r in cur.fetchall()] == ["include_broad", "match_unconfirmed_broad", "scope"]
+        cur.execute("select to_regprocedure('compute_matches(bigint, integer, real, integer, integer)') is not null, to_regclass('members') is not null, to_regclass('ai_usage') is not null")
+        assert cur.fetchone() == (True, True, True)

@@ -32,6 +32,14 @@ def main() -> None:
     mat.add_argument("cluster", help="metro cluster slug, e.g. dfw-weddings")
     args = p.parse_args()
 
+    if args.cmd in ("seed", "import", "national", "matches"):
+        # Every data job needs the full schema; fail with the fix, not a missing-column error.
+        from .db import connect
+        from .migrate import require_migrated
+
+        with connect() as conn:
+            require_migrated(conn)
+
     if args.cmd == "seed":
         from .db import connect
         from .seed import seed

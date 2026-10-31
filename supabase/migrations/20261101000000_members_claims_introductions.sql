@@ -6,7 +6,7 @@
 -- Members and sign-in links
 -- ---------------------------------------------------------------------------
 
-create table members (
+create table if not exists members (
   id bigint generated always as identity primary key,
   email text not null unique check (email = lower(email)),
   created_at timestamptz not null default now(),
@@ -14,7 +14,7 @@ create table members (
 );
 
 -- Single-use magic links. Only a SHA-256 of the token is stored.
-create table auth_tokens (
+create table if not exists auth_tokens (
   token_hash text primary key,
   email text not null,
   next_path text not null default '/dashboard',
@@ -23,13 +23,13 @@ create table auth_tokens (
   created_at timestamptz not null default now()
 );
 
-create index auth_tokens_expires_idx on auth_tokens (expires_at);
+create index if not exists auth_tokens_expires_idx on auth_tokens (expires_at);
 
 -- ---------------------------------------------------------------------------
 -- Claims and profiles
 -- ---------------------------------------------------------------------------
 
-create table place_claims (
+create table if not exists place_claims (
   id bigint generated always as identity primary key,
   -- Null for "Add your business" until the claim is approved and the place is created.
   place_id bigint references places (id) on delete cascade,
@@ -49,12 +49,12 @@ create table place_claims (
   check (place_id is not null or new_business is not null)
 );
 
-create index place_claims_place_idx on place_claims (place_id);
-create index place_claims_queue_idx on place_claims (status, created_at) where status = 'pending';
+create index if not exists place_claims_place_idx on place_claims (place_id);
+create index if not exists place_claims_queue_idx on place_claims (status, created_at) where status = 'pending';
 -- One owner per business.
-create unique index place_claims_one_owner_idx on place_claims (place_id) where status = 'approved';
+create unique index if not exists place_claims_one_owner_idx on place_claims (place_id) where status = 'approved';
 
-create table profiles (
+create table if not exists profiles (
   place_id bigint primary key references places (id) on delete cascade,
   member_id bigint not null references members (id) on delete cascade,
   description text not null default '' check (length(description) <= 500),
@@ -68,13 +68,13 @@ create table profiles (
   updated_at timestamptz not null default now()
 );
 
-create index profiles_member_idx on profiles (member_id);
+create index if not exists profiles_member_idx on profiles (member_id);
 
 -- ---------------------------------------------------------------------------
 -- Introductions and partnerships
 -- ---------------------------------------------------------------------------
 
-create table introductions (
+create table if not exists introductions (
   id bigint generated always as identity primary key,
   from_place bigint not null references places (id) on delete cascade,
   to_place bigint not null references places (id) on delete cascade,
@@ -89,11 +89,11 @@ create table introductions (
 );
 
 -- One introduction per pair of businesses, whichever side asked first.
-create unique index introductions_pair_idx on introductions (least(from_place, to_place), greatest(from_place, to_place));
-create index introductions_to_idx on introductions (to_place, status);
-create index introductions_requested_by_idx on introductions (requested_by, created_at);
+create unique index if not exists introductions_pair_idx on introductions (least(from_place, to_place), greatest(from_place, to_place));
+create index if not exists introductions_to_idx on introductions (to_place, status);
+create index if not exists introductions_requested_by_idx on introductions (requested_by, created_at);
 
-create table partnerships (
+create table if not exists partnerships (
   id bigint generated always as identity primary key,
   introduction_id bigint not null references introductions (id) on delete cascade,
   proposed_by bigint not null references places (id) on delete cascade,
@@ -107,11 +107,11 @@ create table partnerships (
   updated_at timestamptz not null default now()
 );
 
-create index partnerships_intro_idx on partnerships (introduction_id);
+create index if not exists partnerships_intro_idx on partnerships (introduction_id);
 
 -- One tracking link per partner: /r/{code} sends visitors to the partnership
 -- link (or the business's website) and counts the visit for that partner.
-create table partnership_links (
+create table if not exists partnership_links (
   code text primary key,
   partnership_id bigint not null references partnerships (id) on delete cascade,
   place_id bigint not null references places (id) on delete cascade,
@@ -123,10 +123,10 @@ create table partnership_links (
 -- Triggers and lock down
 -- ---------------------------------------------------------------------------
 
-create trigger place_claims_updated_at before update on place_claims for each row execute function set_updated_at();
-create trigger profiles_updated_at before update on profiles for each row execute function set_updated_at();
-create trigger introductions_updated_at before update on introductions for each row execute function set_updated_at();
-create trigger partnerships_updated_at before update on partnerships for each row execute function set_updated_at();
+create or replace trigger place_claims_updated_at before update on place_claims for each row execute function set_updated_at();
+create or replace trigger profiles_updated_at before update on profiles for each row execute function set_updated_at();
+create or replace trigger introductions_updated_at before update on introductions for each row execute function set_updated_at();
+create or replace trigger partnerships_updated_at before update on partnerships for each row execute function set_updated_at();
 
 do $$
 declare t text;

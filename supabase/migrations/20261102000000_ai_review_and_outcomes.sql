@@ -4,7 +4,7 @@
 
 -- Every AI request, with its real token usage and cost. The monthly cap is
 -- checked against this table before each request.
-create table ai_usage (
+create table if not exists ai_usage (
   id bigint generated always as identity primary key,
   kind text not null check (kind in ('review', 'rationale')),
   model text not null,
@@ -17,10 +17,10 @@ create table ai_usage (
   created_at timestamptz not null default now()
 );
 
-create index ai_usage_month_idx on ai_usage (created_at) where not mocked;
+create index if not exists ai_usage_month_idx on ai_usage (created_at) where not mocked;
 
 -- One AI review per listing: does it serve weddings, and is its category right?
-create table ai_reviews (
+create table if not exists ai_reviews (
   place_id bigint primary key references places (id) on delete cascade,
   serves text not null check (serves in ('yes', 'no', 'unsure')),
   confidence real not null,
@@ -34,7 +34,7 @@ create table ai_reviews (
   created_at timestamptz not null default now()
 );
 
-create index ai_reviews_recent_idx on ai_reviews (created_at desc);
+create index if not exists ai_reviews_recent_idx on ai_reviews (created_at desc);
 
 do $$
 declare t text;
