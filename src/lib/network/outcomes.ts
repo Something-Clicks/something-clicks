@@ -50,3 +50,30 @@ export async function clusterOutcomes(): Promise<ClusterOutcome[]> {
       (select coalesce(sum(l.clicks), 0)::int from partnership_links l join part on part.id = l.partnership_id where part.slug = m.slug) as clicks
     from metro m order by m.name`;
 }
+
+export type CityClaims = { city: string; region: string; in_metro: boolean; claims: number; verified: number; pending: number };
+
+/**
+ * Claims (pending or approved) grouped by the business's city, inside or
+ * outside the active metros: where owners are asking to join.
+ */
+export async function claimsByCity(limit = 50): Promise<CityClaims[]> {
+  return sql()<CityClaims[]>`
+    with c as (
+      select pc.status,
+             coalesce(nullif(p.locality, ''), pc.new_business->>'locality', '') as city,
+             coalesce(nullif(p.region, ''), pc.new_business->>'region', '') as region,
+             coalesce(p.geog, st_setsrid(st_makepoint((pc.new_business->>'lng')::float, (pc.new_business->>'lat')::float), 4326)::geography) as geog
+      from place_claims pc left join places p on p.id = pc.place_id
+      where pc.status in ('pending', 'approved')
+    )
+    select initcap(city) as city, upper(region) as region,
+           exists (select 1 from clusters cl where cl.scope = 'metro' and cl.status = 'active' and st_intersects(c.geog, cluster_box(cl))) as in_metro,
+           count(*)::int as claims,
+           count(*) filter (where status = 'approved')::int as verified,
+           count(*) filter (where status = 'pending')::int as pending
+    from c
+    group by 1, 2, 3
+    order by in_metro, claims desc, city
+    limit ${limit}`;
+}
