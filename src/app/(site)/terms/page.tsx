@@ -11,7 +11,7 @@ export const metadata = pageMeta({
 
 export default function TermsPage() {
   return (
-    <LegalPage title="Terms of Use" version="1.0" effective="October 31, 2026" updated="October 31, 2026">
+    <LegalPage title="Terms of Use" version="1.0" effective="October 31, 2026" updated="November 1, 2026">
       <p>
         These terms are an agreement between you and {site.legalName} (&ldquo;Something Clicks,&rdquo; &ldquo;we&rdquo;
         or &ldquo;us&rdquo;) for using somethingclicks.com (the &ldquo;site&rdquo;). By using the site, creating an
@@ -87,10 +87,6 @@ export default function TermsPage() {
         <li>Refundable in full if you ask before we begin work on your campaign. Once work has begun, it isn&rsquo;t refundable.</li>
         <li>We&rsquo;ll confirm the campaign plan with you. Results depend on the businesses involved and aren&rsquo;t guaranteed.</li>
       </ul>
-      <p>
-        Referral links: if someone referred you through a referral link, we may share that a purchase was made with our
-        referral provider so the referrer can be credited. This doesn&rsquo;t change your price.
-      </p>
 
       <h2>7. Planner Partners</h2>
       <p>
