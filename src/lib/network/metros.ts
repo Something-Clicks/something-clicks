@@ -42,7 +42,7 @@ export async function metroCounts(clusterSlug: string): Promise<MetroCount[]> {
 }
 
 /** Totals for every metro at once, for the index page. */
-export async function metroTotals(): Promise<Record<string, number>> {
+export const metroTotals = shared("metro-totals", async (): Promise<Record<string, number>> => {
   const rows = await sql()<{ slug: string; n: number }[]>`
     select cl.slug, count(*)::int as n
     from clusters cl
@@ -52,7 +52,7 @@ export async function metroTotals(): Promise<Record<string, number>> {
       and not p.suppressed and not p.stale and (not c.broad or p.serves_journey)
     group by cl.slug`;
   return Object.fromEntries(rows.map((r) => [r.slug, r.n]));
-}
+});
 
 /** Counts by category for every active metro, keyed by cluster slug. One query for the homepage tiles. */
 export const allMetroCounts = shared("all-metro-counts", async (): Promise<Record<string, Record<string, number>>> => {

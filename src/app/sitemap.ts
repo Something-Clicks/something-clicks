@@ -5,8 +5,8 @@ import { site } from "@/content/site";
 import { dbConfigured } from "@/lib/db";
 import { allMetroCounts, categoryPageEligible, complementRules } from "@/lib/network/metros";
 
-// City × category pages come from live counts; refresh with them.
-export const revalidate = 3600;
+// City × category pages come from live counts. Rendered on request, never at build: data comes from the hourly cache in lib/network/metros.
+export const dynamic = "force-dynamic";
 
 const pages: { path: string; priority: number }[] = [
   { path: "/", priority: 1 },

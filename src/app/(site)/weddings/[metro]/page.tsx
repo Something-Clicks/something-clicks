@@ -16,10 +16,10 @@ import { resolveLocation, searchMatches, SEARCH_RADIUS_MILES } from "@/lib/netwo
 
 // Counts change when data is imported; refresh hourly (and redeploy after a load).
 export const revalidate = 3600;
-export const dynamicParams = false;
 
-export function generateStaticParams() {
-  return metros.map((m) => ({ metro: m.slug }));
+/** None at build (the database isn't queried during builds): each city renders on first visit, then is cached for an hour. Unknown slugs 404. */
+export function generateStaticParams(): { metro: string }[] {
+  return [];
 }
 
 type Params = { params: Promise<{ metro: string }> };
