@@ -30,8 +30,9 @@ export default function PricingPage() {
               ))}
             </ul>
             <Link href="/claim" className="mt-6 inline-flex h-12 items-center justify-center rounded-2xl bg-navy font-semibold text-white hover:bg-navy/90">
-              Claim your business
+              Get started free
             </Link>
+            <p className="mt-2 text-center text-xs text-navy-soft">Free · no payment required</p>
           </li>
           {order.map((k) => (
             <li key={k} className="flex flex-col rounded-3xl bg-white p-6 ring-1 ring-line">
