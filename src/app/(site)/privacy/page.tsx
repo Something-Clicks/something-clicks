@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { gaMeasurementId } from "@/components/GoogleAnalytics";
 import { LegalPage } from "@/components/LegalPage";
+import { privacyPolicy } from "@/content/legal";
 import { site } from "@/content/site";
 import { pageMeta } from "@/lib/metadata";
 
@@ -16,7 +17,7 @@ export default function PrivacyPage() {
   // Google Analytics wording appears only when GA is actually configured.
   const ga = Boolean(gaMeasurementId());
   return (
-    <LegalPage title="Privacy Policy" version="1.1" effective="November 1, 2026" updated="November 1, 2026">
+    <LegalPage title="Privacy Policy" updated={privacyPolicy.updated}>
       <p>
         This policy explains what information {site.legalName} (&ldquo;Something Clicks,&rdquo; &ldquo;we&rdquo; or
         &ldquo;us&rdquo;) collects through somethingclicks.com (the &ldquo;site&rdquo;), how we use it, who we share it
