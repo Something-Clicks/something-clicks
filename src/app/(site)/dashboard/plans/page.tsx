@@ -3,7 +3,6 @@ import { CircleCheck } from "lucide-react";
 import { DashboardShell } from "@/components/members/DashboardShell";
 import { NoBusiness } from "@/components/members/NoBusiness";
 import { Notice } from "@/components/members/fields";
-import { ReferralInput } from "@/components/members/ReferralInput";
 import { SubmitButton } from "@/components/members/SubmitButton";
 import { P } from "@/components/Placeholder";
 import { loadDashboard } from "@/lib/members/dashboard";
@@ -44,7 +43,6 @@ export default async function PlansPage({ searchParams }: { searchParams: Promis
     <form action={checkoutAction}>
       <input type="hidden" name="place_id" value={place.id} />
       <input type="hidden" name="kind" value={kind} />
-      <ReferralInput />
       <SubmitButton pendingLabel="Opening checkout…" className="w-full" disabled={!eligible || !configured}>{label}</SubmitButton>
     </form>
   );

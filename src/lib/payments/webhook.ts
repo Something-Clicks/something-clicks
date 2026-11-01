@@ -1,7 +1,7 @@
 import type Stripe from "stripe";
 import type { TransactionSql } from "postgres";
 import { sql } from "@/lib/db";
-import { cleanReferral, stripe } from "./plans";
+import { stripe } from "./plans";
 
 /**
  * Applies one verified Stripe event. Each event runs once (stripe_events),
@@ -44,9 +44,8 @@ async function checkoutCompleted(tx: TransactionSql, s: Stripe.Checkout.Session)
   const placeId = placeOf(s.metadata);
   if (!placeId) return "checkout without a business";
   const [purchase] = await tx<{ id: number }[]>`
-    insert into purchases (place_id, member_id, kind, checkout_session_id, payment_intent_id, amount_cents, currency, referral)
-    values (${placeId}, ${memberOf(s.metadata)}, 'campaign', ${s.id}, ${idOf(s.payment_intent)}, ${s.amount_total ?? 0}, ${s.currency ?? "usd"},
-            ${cleanReferral(s.metadata?.promotekit_referral)})
+    insert into purchases (place_id, member_id, kind, checkout_session_id, payment_intent_id, amount_cents, currency)
+    values (${placeId}, ${memberOf(s.metadata)}, 'campaign', ${s.id}, ${idOf(s.payment_intent)}, ${s.amount_total ?? 0}, ${s.currency ?? "usd"})
     on conflict (checkout_session_id) do nothing
     returning id::int`;
   if (!purchase) return "campaign already recorded";
@@ -72,9 +71,9 @@ async function invoicePaid(tx: TransactionSql, invoice: Stripe.Invoice): Promise
   const placeId = placeOf(metadata);
   if (!placeId || !invoice.id) return "invoice without a business";
   const [row] = await tx<{ id: number }[]>`
-    insert into purchases (place_id, member_id, kind, invoice_id, payment_intent_id, subscription_id, amount_cents, currency, referral)
+    insert into purchases (place_id, member_id, kind, invoice_id, payment_intent_id, subscription_id, amount_cents, currency)
     values (${placeId}, ${memberOf(metadata)}, 'membership', ${invoice.id}, ${await invoicePaymentIntent(invoice)}, ${idOf(details?.subscription)},
-            ${invoice.amount_paid}, ${invoice.currency}, ${cleanReferral(metadata.promotekit_referral)})
+            ${invoice.amount_paid}, ${invoice.currency})
     on conflict (invoice_id) do nothing
     returning id::int`;
   return row ? "membership payment recorded" : "membership payment already recorded";

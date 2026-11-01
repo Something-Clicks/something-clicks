@@ -44,11 +44,8 @@ export type CheckoutStart = { ok: true; url: string } | { ok: false; error: stri
 /**
  * A hosted Stripe Checkout session for one plan. The business and plan ride
  * in metadata (and on the subscription), so the webhook can link the payment.
- * The PromoteKit referral, when there is one, rides in metadata as
- * promotekit_referral on the session and on the subscription or payment, per
- * PromoteKit's Stripe docs.
  */
-export async function startCheckout(kind: PlanKind, place: OwnedPlace, member: MemberSession, referral: string | null): Promise<CheckoutStart> {
+export async function startCheckout(kind: PlanKind, place: OwnedPlace, member: MemberSession): Promise<CheckoutStart> {
   if (!canBuy(place)) return { ok: false, error: "Your business needs to be verified before you can buy a plan." };
   const price = priceId(kind);
   if (!price) return { ok: false, error: "Payments aren't set up yet." };
@@ -60,7 +57,7 @@ export async function startCheckout(kind: PlanKind, place: OwnedPlace, member: M
       return { ok: false, error: "You're already a member. Manage your membership from Billing." };
     }
   }
-  const metadata = { place_id: String(place.id), member_id: String(member.id), kind, ...(referral ? { promotekit_referral: referral } : {}) };
+  const metadata = { place_id: String(place.id), member_id: String(member.id), kind };
   const back = `${site.url}/dashboard/plans?place=${place.id}`;
   const session = await stripe().checkout.sessions.create({
     mode: plans[kind].mode,

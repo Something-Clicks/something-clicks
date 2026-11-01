@@ -52,9 +52,5 @@ export const setStripeForTests = (s: Stripe | null) => {
   client = s;
 };
 
-/** A PromoteKit referral id as it may be passed to Checkout: short, plain characters only. */
-export const cleanReferral = (v: unknown): string | null =>
-  typeof v === "string" && /^[A-Za-z0-9_-]{1,100}$/.test(v) ? v : null;
-
 /** Memberships Stripe still counts as live (past_due: a renewal failed and Stripe is retrying). */
 export const LIVE_MEMBERSHIP = ["active", "trialing", "past_due"] as const;

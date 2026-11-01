@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { requireMember } from "@/lib/members/auth";
 import { ownedPlaces } from "@/lib/members/network";
 import { portalUrl, startCheckout } from "@/lib/payments/billing";
-import { cleanReferral, isPlanKind } from "@/lib/payments/plans";
+import { isPlanKind } from "@/lib/payments/plans";
 
 function back(placeId: number, error: string): never {
   redirect(`/dashboard/plans?${new URLSearchParams({ place: String(placeId), error })}`);
@@ -17,7 +17,7 @@ export async function checkoutAction(formData: FormData) {
   const kind = formData.get("kind");
   const place = (await ownedPlaces(member.id)).find((p) => p.id === placeId);
   if (!place || !isPlanKind(kind)) redirect("/dashboard/plans");
-  const res = await startCheckout(kind, place, member, cleanReferral(formData.get("referral")));
+  const res = await startCheckout(kind, place, member);
   if (!res.ok) return back(placeId, res.error);
   redirect(res.url);
 }
