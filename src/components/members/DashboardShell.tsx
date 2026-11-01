@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { stateLabels } from "@/content/network";
 import type { OwnedPlace } from "@/lib/members/network";
 import { signOutMember } from "@/app/(site)/sign-in/actions";
+import { newInquiryCount } from "@/lib/couples/inquiries";
 import { billingFor, membershipLive } from "@/lib/payments/billing";
 import { paymentsConfigured } from "@/lib/payments/plans";
 import { acceptedVersion, currentAgreement, partnerFor, upcomingAgreement } from "@/lib/planner/partners";
@@ -11,6 +12,8 @@ const tabs = [
   { href: "/dashboard", label: "Matches" },
   { href: "/dashboard/requests", label: "Requests" },
   { href: "/dashboard/partnerships", label: "Partnerships" },
+  { href: "/dashboard/inquiries", label: "Inquiries" },
+  { href: "/dashboard/results", label: "Results" },
   { href: "/dashboard/profile", label: "Profile" },
   { href: "/dashboard/plans", label: "Plans" },
 ];
@@ -33,6 +36,7 @@ export async function DashboardShell({
   const member = paymentsConfigured() ? membershipLive((await billingFor(place.id).catch(() => null))?.membership ?? null) : false;
   // Planner Partners: shown on their own dashboard only. Never used for matching or ranking.
   const partner = await partnerFor(place.id);
+  const newInquiries = await newInquiryCount(place.id);
   const isPartner = Boolean(partner?.active);
   const accepted = isPartner ? await acceptedVersion(place.id).catch(() => null) : null;
   const agreement = currentAgreement();
@@ -83,6 +87,11 @@ export async function DashboardShell({
                   {t.href === "/dashboard/requests" && incoming > 0 && (
                     <span className="rounded-full bg-navy px-2 py-0.5 text-xs text-white">
                       <span className="sr-only">(</span>{incoming}<span className="sr-only"> new)</span>
+                    </span>
+                  )}
+                  {t.href === "/dashboard/inquiries" && newInquiries > 0 && (
+                    <span className="rounded-full bg-navy px-2 py-0.5 text-xs text-white">
+                      <span className="sr-only">(</span>{newInquiries}<span className="sr-only"> new)</span>
                     </span>
                   )}
                 </Link>

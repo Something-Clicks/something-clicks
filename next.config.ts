@@ -2,6 +2,8 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // Portfolio photos (up to 4 MB) are uploaded through a server action; the default limit is 1 MB.
+  experimental: { serverActions: { bodySizeLimit: "4.2mb" } },
   // Retired pages: the homepage now explains how it works, and claiming replaces applying.
   async redirects() {
     return [

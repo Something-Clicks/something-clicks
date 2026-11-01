@@ -3,6 +3,8 @@ import { categorySlug } from "@/content/journeys";
 import { metros } from "@/content/metros";
 import { site } from "@/content/site";
 import { dbConfigured } from "@/lib/db";
+import { couplesOpen } from "@/lib/couples/config";
+import { publicCounts } from "@/lib/couples/directory";
 import { allMetroCounts, categoryPageEligible, complementRules } from "@/lib/network/metros";
 
 // City × category pages come from live counts. Rendered on request, never at build: data comes from the hourly cache in lib/network/metros.
@@ -40,8 +42,15 @@ async function cityCategoryPages(): Promise<{ path: string; priority: number }[]
   }
 }
 
+/** Couple-facing market pages, once couples are open, for markets with at least one public vendor. */
+async function couplePages(): Promise<{ path: string; priority: number }[]> {
+  if (!couplesOpen() || !dbConfigured()) return [];
+  const counts = await publicCounts().catch(() => ({}) as Record<string, number>);
+  return metros.filter((m) => (counts[m.slug] ?? 0) > 0).map((m) => ({ path: `/find/${m.slug}`, priority: 0.7 }));
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = site.url.replace(/\/$/, "");
-  const all = [...pages, ...(await cityCategoryPages())];
+  const all = [...pages, ...(await cityCategoryPages()), ...(await couplePages())];
   return all.map(({ path, priority }) => ({ url: `${base}${path === "/" ? "" : path}`, changeFrequency: "weekly", priority }));
 }
