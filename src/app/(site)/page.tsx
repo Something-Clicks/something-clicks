@@ -1,5 +1,6 @@
 import { Faq } from "@/components/Faq";
 import { FindForm } from "@/components/network/FindForm";
+import { ConnectionHero } from "@/components/network/ConnectionHero";
 import { HomeDiscover, type DiscoverFit } from "@/components/network/HomeDiscover";
 import { faqJsonLd } from "@/content/faq";
 import { activeJourneys, partnershipLabels, reasonText } from "@/content/journeys";
@@ -39,8 +40,40 @@ export default async function HomePage() {
     (fits[r.a] ??= []).push({ b: r.b, reason: reasonText(journey?.id ?? "", r.reason_key), type: r.partnership_type, strength: r.strength });
   }
 
+  const discover = hasCounts && (
+    <HomeDiscover
+      metros={metros.map(({ slug, name, short, where, cluster }) => ({ slug, name, short, where, cluster }))}
+      categories={categories.map((c) => ({ id: c.id, label: TILE[c.id] ?? c.label, one: singular(c.label), search: c.label, plural: c.plural }))}
+      counts={counts}
+      fits={fits}
+      partnershipLabels={partnershipLabels}
+      search={rules.length === 0}
+      heading={rules.length ? "Live counts near you" : undefined}
+    />
+  );
+  const heroCats = HERO.flatMap(({ id, label }) => {
+    const c = categories.find((x) => x.id === id);
+    return c ? [{ id, label, search: c.label, plural: c.plural }] : [];
+  });
+
   return (
     <>
+      {rules.length > 0 && heroCats.length > 0 ? (
+        <>
+          <ConnectionHero
+            categories={heroCats}
+            names={Object.fromEntries(categories.map((c) => [c.id, TILE[c.id] ?? c.label]))}
+            fits={fits}
+            initial="photographers"
+            journey={JOURNEY}
+          />
+          {discover && (
+            <div className="bg-white">
+              <div className="container-page pb-12 sm:pb-16">{discover}</div>
+            </div>
+          )}
+        </>
+      ) : (
       <div className="bg-white">
         <div className="container-page pb-12 pt-6 sm:pb-16 sm:pt-10">
           <div className="mx-auto mb-6 w-full max-w-4xl sm:mb-8">
@@ -49,21 +82,14 @@ export default async function HomePage() {
               Find photographers, planners, florists and venues who could send business your way.
             </p>
           </div>
-          {hasCounts ? (
-            <HomeDiscover
-              metros={metros.map(({ slug, name, short, where, cluster }) => ({ slug, name, short, where, cluster }))}
-              categories={categories.map((c) => ({ id: c.id, label: TILE[c.id] ?? c.label, one: singular(c.label), search: c.label, plural: c.plural }))}
-              counts={counts}
-              fits={fits}
-              partnershipLabels={partnershipLabels}
-            />
-          ) : (
+          {discover || (
             <div className="mx-auto w-full max-w-4xl">
               <FindForm />
             </div>
           )}
         </div>
       </div>
+      )}
 
       <div className="bg-cloud py-12 sm:py-16">
         <div className="container-page grid gap-10 lg:grid-cols-[1fr_2fr]">
@@ -86,6 +112,30 @@ export default async function HomePage() {
     </>
   );
 }
+
+/** The hero's "What does your business do?" choices, in this order. */
+const HERO = [
+  { id: "photographers", label: "Photographer" },
+  { id: "florists", label: "Florist" },
+  { id: "wedding_venues", label: "Venue" },
+  { id: "wedding_planners", label: "Planner" },
+  { id: "caterers", label: "Caterer" },
+  { id: "djs_music", label: "DJ" },
+  { id: "videographers", label: "Videographer" },
+  { id: "hair_makeup", label: "Hair and makeup" },
+  { id: "event_rentals", label: "Wedding rentals" },
+];
+
+/** An illustrative couple's journey (not a rule): engagement and the wedding day are added around these. */
+const JOURNEY = [
+  { id: "wedding_venues", label: "Venue" },
+  { id: "wedding_planners", label: "Planner" },
+  { id: "bridal_shops", label: "Attire" },
+  { id: "photographers", label: "Photographer" },
+  { id: "florists", label: "Florist" },
+  { id: "cake_makers", label: "Cake" },
+  { id: "djs_music", label: "DJ" },
+];
 
 /** Short tile names; everything else (search, results) uses the category's own label and plural. */
 const TILE: Record<string, string> = {
