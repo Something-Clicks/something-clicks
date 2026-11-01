@@ -34,30 +34,30 @@ const columns = [
 
 export function Footer() {
   return (
-    <footer className="bg-navy text-white on-dark">
+    <footer className="border-t border-line bg-white text-navy">
       <div className="container-page grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
         <div>
-          <Logo tone="dark" />
-          <p className="mt-4 max-w-sm text-sm leading-relaxed text-mist">{site.about}</p>
+          <Logo tone="navy" />
+          <p className="mt-4 max-w-sm text-sm leading-relaxed text-navy-soft">{site.about}</p>
         </div>
         {columns.map((c) => (
           <nav key={c.title} aria-label={c.title === "Something Clicks" ? "Footer" : c.title}>
-            <h2 className="text-sm font-semibold text-white">{c.title}</h2>
+            <h2 className="text-sm font-semibold text-navy">{c.title}</h2>
             <ul className="mt-3 space-y-2 text-sm">
               {c.links.map((l) => (
                 <li key={l.href}>
-                  <Link href={l.href} className="text-mist hover:text-white">{l.label}</Link>
+                  <Link href={l.href} className="text-navy-soft hover:text-navy hover:underline">{l.label}</Link>
                 </li>
               ))}
             </ul>
           </nav>
         ))}
       </div>
-      <div className="border-t border-white/10">
-        <p className="container-page flex flex-wrap gap-x-3 py-5 text-xs text-mist">
+      <div className="border-t border-line">
+        <p className="container-page flex flex-wrap gap-x-3 py-5 text-xs text-navy-soft">
           <span>© {new Date().getFullYear()} {site.legalName}</span>
           {/* Full Overture Maps attribution lives on /data-sources. */}
-          <Link href="/data-sources" className="hover:text-white hover:underline">Data sources</Link>
+          <Link href="/data-sources" className="hover:text-navy hover:underline">Data sources</Link>
         </p>
       </div>
     </footer>
