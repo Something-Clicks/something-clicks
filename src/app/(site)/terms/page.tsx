@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { gaMeasurementId } from "@/components/GoogleAnalytics";
 import { LegalPage } from "@/components/LegalPage";
 import { site } from "@/content/site";
 import { pageMeta } from "@/lib/metadata";
@@ -7,114 +6,163 @@ import { pageMeta } from "@/lib/metadata";
 export const metadata = pageMeta({
   title: "Terms",
   path: "/terms",
-  description: "Terms of use for somethingclicks.com and the Something Clicks Network.",
+  description: "Terms of use for somethingclicks.com and the Something Clicks network.",
 });
 
 export default function TermsPage() {
-  const ga = Boolean(gaMeasurementId());
   return (
-    <LegalPage title="Terms of Use" updated="[PLACEHOLDER: date]">
+    <LegalPage title="Terms of Use" version="1.0" effective="October 31, 2026" updated="October 31, 2026">
       <p>
-        These terms govern your use of somethingclicks.com (the &ldquo;site&rdquo;), operated by {site.legalName}. By using the site or submitting a form, you agree to these terms and to our{" "}
-        <Link href="/privacy">Privacy Policy</Link>. Questions: use our <Link href="/contact">contact form</Link>.
+        These terms are an agreement between you and {site.legalName} (&ldquo;Something Clicks,&rdquo; &ldquo;we&rdquo;
+        or &ldquo;us&rdquo;) for using somethingclicks.com (the &ldquo;site&rdquo;). By using the site, creating an
+        account or buying a plan, you agree to these terms and to our <Link href="/privacy">Privacy Policy</Link>. If you
+        don&rsquo;t agree, please don&rsquo;t use the site.
       </p>
 
       <h2>1. What Something Clicks does</h2>
       <p>
-        Something Clicks shows independent businesses which local businesses fit theirs and helps them connect. We are
-        not a marketing agency, advertising seller, or influencer marketplace.{" "}
-        <strong>We do not guarantee any results</strong>, including customers, inquiries, bookings, or revenue.
+        Something Clicks helps wedding businesses find complementary local businesses, request introductions, and build
+        referral partnerships. We are not a marketing agency, an advertising seller or a booking service.
       </p>
 
-      <h2>2. Accounts, claims and submissions</h2>
+      <h2>2. Eligibility and accounts</h2>
       <ul>
-        <li>Claim only a business you own or are authorized to represent. A business has one owner on Something Clicks.</li>
-        <li>We may ask for more evidence, and we may decline or remove a claim, for example if another person shows a better right to the business.</li>
-        <li>Keep your sign-in links to yourself. You are responsible for activity on your account.</li>
-        <li>You confirm that what you submit is accurate and that you are authorized to submit it for your business.</li>
-        <li>Do not submit customer lists or any personal information about your customers.</li>
+        <li>You must be at least 18 and using the site for a business.</li>
+        <li>You sign in with links we email you. Keep your email account secure and don&rsquo;t share sign-in links.</li>
+        <li>You&rsquo;re responsible for activity on your account. Tell us through our <Link href="/contact">contact page</Link> if you think someone else has used it.</li>
+      </ul>
+
+      <h2>3. Claiming a business</h2>
+      <ul>
+        <li>Claim only a business you own or are authorized to represent. Each business has one owner on Something Clicks.</li>
+        <li>We may ask for evidence, and we may decline, transfer or remove a claim, for example if someone shows a better right to the business.</li>
+        <li>Keep your business information accurate and up to date. You confirm that what you submit is true and that you&rsquo;re allowed to submit it.</li>
+        <li>You let us use the business information you submit to run the service, including showing your business to the verified owners of businesses it fits.</li>
+      </ul>
+
+      <h2>4. Listings and matches</h2>
+      <ul>
         <li>
-          You allow us to use the business information you submit to review it, find potential partners, and share
-          business-level details with a proposed partner as described in the Privacy Policy.
+          Listings come from public data (see <Link href="/data-sources">Data sources</Link>) and may be incomplete or
+          out of date. A listed business isn&rsquo;t a member unless its owner has joined. Anyone can ask us to remove a
+          listing at <Link href="/remove-my-business">Remove my business</Link>.
         </li>
+        <li>Matches are suggestions based on business categories and distance. They are not endorsements of any business.</li>
+        <li><strong>We don&rsquo;t guarantee any referrals, introductions, bookings, customers or revenue.</strong></li>
+        <li>Paying for a plan never changes who you&rsquo;re matched with or how matches are ordered.</li>
       </ul>
-
-      <h2>3. How we communicate with you</h2>
-      <ul>
-        <li>By submitting a form, you agree that we may contact you about it using the contact method you chose.</li>
-        <li>We send occasional updates only if you opted in, and every update includes a way to unsubscribe.</li>
-        <li>We share your contact details with another business only when you have both accepted the introduction.</li>
-      </ul>
-
-      <h2>4. Analytics and cookies</h2>
-      <p>
-        {ga
-          ? "The site uses Google Analytics, which sets cookies, and Vercel Web Analytics, which does not, to understand how the site is used. "
-          : "The site uses Vercel Web Analytics, which does not set cookies, to understand how the site is used. "}
-        We also record anonymous form-activity counts and a short-lived hashed IP for spam prevention. We never send
-        what you type into a form to analytics providers. Details{ga ? " and opt-out options" : ""} are in the{" "}
-        <Link href="/privacy">Privacy Policy</Link>.
-      </p>
 
       <h2>5. Introductions and partnerships</h2>
       <ul>
-        <li>Free to claim your business and see your matches. Any paid feature would be explained in writing before you are asked to pay.</li>
-        <li>Matches are suggestions based on business categories and distance. They are not endorsements of any business.</li>
-        <li>Introductions and partnerships need the agreement of both businesses. Either may decline or end one at any time.</li>
-        <li>Partner tracking links count visits so both businesses can see what a partnership sends; we don&rsquo;t record who followed them.</li>
+        <li>An introduction needs both businesses to accept. Contact details are shared only after both accept.</li>
         <li>
-          Each business is responsible for its own offers, pricing, services, and compliance with the laws that apply to
-          it, including advertising and consumer-protection laws.
+          Partnerships are agreements between the businesses involved. We aren&rsquo;t a party to them and aren&rsquo;t
+          responsible for either business&rsquo;s offers, services, pricing or conduct.
         </li>
+        <li>Either business may decline or end an introduction or partnership at any time.</li>
         <li>
-          Partner promotions are disclosed relationships. Each business agrees to tell its customers clearly when it is
-          sharing a partner&rsquo;s offer.
+          When you promote a partner&rsquo;s offer, you must clearly disclose the relationship to your customers, as the
+          FTC&rsquo;s Endorsement Guides and similar laws require. Each business is responsible for following the
+          advertising, consumer-protection and privacy laws that apply to it.
         </li>
-        <li>Don&rsquo;t use contact details you receive through an introduction for anything other than working with that business.</li>
+        <li>Use contact details you receive through an introduction only to work with that business.</li>
       </ul>
 
-      <h2>6. Referral partners</h2>
+      <h2>6. Plans and payments</h2>
       <p>
-        Any reward or thank-you for introductions is possible only where permitted by law and applicable professional
-        rules, and only under an individual written agreement. Nothing on this site is an offer of any specific
-        commission or payment.
+        Claiming your business, seeing your matches, requesting introductions and using tracking links are free. Paid
+        plans are optional and are processed by Stripe. Prices are in U.S. dollars and don&rsquo;t include any taxes that
+        may apply.
+      </p>
+      <h3>Membership: $149 per month</h3>
+      <ul>
+        <li>Billed monthly through Stripe, starting the day you subscribe, and renews automatically until you cancel.</li>
+        <li>Cancel anytime from <strong>Manage billing</strong> on your dashboard&rsquo;s Plans page.</li>
+        <li>When you cancel, your membership continues until the end of the period you&rsquo;ve paid for, then stops. We don&rsquo;t refund partial months.</li>
+        <li>We&rsquo;ll give you at least 30 days&rsquo; notice by email before any price change applies to you.</li>
+      </ul>
+      <h3>Managed Campaign: $299</h3>
+      <ul>
+        <li>Paid in full in advance.</li>
+        <li>Refundable in full if you ask before we begin work on your campaign. Once work has begun, it isn&rsquo;t refundable.</li>
+        <li>We&rsquo;ll confirm the campaign plan with you. Results depend on the businesses involved and aren&rsquo;t guaranteed.</li>
+      </ul>
+      <p>
+        Referral links: if someone referred you through a referral link, we may share that a purchase was made with our
+        referral provider so the referrer can be credited. This doesn&rsquo;t change your price.
       </p>
 
-      <h2>7. Business listings</h2>
+      <h2>7. Planner Partners</h2>
       <p>
-        Listings come from public sources (see <Link href="/data-sources">Data sources</Link>) and may be incomplete or
-        out of date. A listed business is not a member unless its owner has joined. Anyone can ask us to remove a
-        listing at <Link href="/remove-my-business">Remove my business</Link>.
+        The Planner Partner program is governed by the{" "}
+        <Link href="/planner-partners/agreement">Planner Partner Agreement</Link>, which you accept separately when you
+        apply. If it conflicts with these terms, the Agreement controls for the program.
       </p>
 
-      <h2>8. Third-party services</h2>
+      <h2>8. Acceptable use</h2>
+      <p>Don&rsquo;t:</p>
+      <ul>
+        <li>submit false information, claim a business you aren&rsquo;t authorized to represent, or impersonate anyone;</li>
+        <li>send spam, or use the site to contact businesses that haven&rsquo;t accepted an introduction;</li>
+        <li>scrape, copy or resell listings, matches or other site data;</li>
+        <li>interfere with the site&rsquo;s security or operation, or try to access accounts or areas you aren&rsquo;t allowed to;</li>
+        <li>use the site for anything unlawful, deceptive or harmful.</li>
+      </ul>
+
+      <h2>9. Suspension and ending your account</h2>
       <p>
-        The site relies on service providers (Vercel, {ga ? "Google, " : ""}Supabase, Resend, and Cloudflare) as described in the
-        Privacy Policy. Their services are governed by their own terms, and we are not responsible for their
-        availability.
+        You can stop using the site and ask us to delete your account at any time. We may suspend or close an account,
+        remove a claim, or end a partnership on the site if you break these terms, if we&rsquo;re required to by law, or
+        to protect other users.
       </p>
 
-      <h2>9. Site content</h2>
+      <h2>10. Our content</h2>
       <p>
-        Examples on this site are illustrative and do not describe real members or results. Content is provided for
-        general information and may change without notice. The site&rsquo;s design and text belong to{" "}
-        {site.legalName}.
+        The site&rsquo;s design, text and software belong to {site.legalName} or its licensors. You keep ownership of the
+        information you submit. Examples on the site are illustrative and don&rsquo;t describe real members or results.
       </p>
 
-      <h2>10. Acceptable use</h2>
+      <h2>11. Disclaimers</h2>
       <p>
-        Do not misuse the site. That includes submitting spam, false information, or automated submissions; scraping
-        the site; interfering with its security; or attempting to access the admin area.
+        The site and all services are provided &ldquo;as is&rdquo; and &ldquo;as available.&rdquo; To the fullest extent
+        the law allows, we disclaim all warranties, express or implied, including warranties of merchantability, fitness
+        for a particular purpose and non-infringement. We don&rsquo;t promise the site will be uninterrupted, error-free
+        or that listings are accurate, and we don&rsquo;t vouch for any business on it.
       </p>
 
-      <h2>11. Disclaimers and limitation of liability</h2>
+      <h2>12. Limitation of liability</h2>
       <p>
-        [PLACEHOLDER: disclaimer of warranties, limitation of liability, indemnity, and governing law (Utah) to be
-        drafted by counsel.]
+        To the fullest extent the law allows, Something Clicks won&rsquo;t be liable for any indirect, incidental,
+        special, consequential or punitive damages, or for lost profits, revenue, bookings or data, arising from your use
+        of the site or from dealings between businesses. Our total liability for any claim relating to the site is
+        limited to the greater of the amount you paid us in the 12 months before the claim or $100. Some places
+        don&rsquo;t allow these limits, so they may not all apply to you.
       </p>
 
-      <h2>12. Changes</h2>
-      <p>We may update these terms. We will post changes on this page and update the date above.</p>
+      <h2>13. Indemnity</h2>
+      <p>
+        If someone brings a claim against us because of information you submitted, your partnerships or promotions, or
+        your breach of these terms, you agree to cover our reasonable costs and losses from that claim.
+      </p>
+
+      <h2>14. Governing law</h2>
+      <p>
+        These terms are governed by the laws of the State of Utah, without regard to its conflict-of-law rules. Any
+        dispute will be resolved in the state or federal courts located in Salt Lake County, Utah, and you and we consent
+        to their jurisdiction.
+      </p>
+
+      <h2>15. Changes to these terms</h2>
+      <p>
+        We may update these terms. We&rsquo;ll post the new version here with a new date, and for significant changes
+        we&rsquo;ll email account holders at least 30 days before they take effect. If you keep using the site after
+        changes take effect, you accept them. If you don&rsquo;t, you can cancel any plan and close your account.
+      </p>
+
+      <h2>16. Contact</h2>
+      <p>
+        {site.legalName}. Questions about these terms: our <Link href="/contact">contact page</Link>.
+      </p>
     </LegalPage>
   );
 }
