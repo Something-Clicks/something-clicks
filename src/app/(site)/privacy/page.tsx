@@ -115,10 +115,6 @@ export default function PrivacyPage() {
         <li>
           <strong>Session.</strong> When you sign in, a secure cookie keeps you signed in for up to 30 days.
         </li>
-        <li>
-          <strong>Referral.</strong> PromoteKit sets a cookie to remember which referral link, if any, brought you to the
-          site, so the referrer can be credited if you later buy a plan.
-        </li>
         {ga && (
           <li>
             <strong>Analytics.</strong> Google Analytics sets cookies (such as <code>_ga</code>) to recognize returning
@@ -184,7 +180,7 @@ export default function PrivacyPage() {
           To make introductions. <strong>Your contact details are shared with another business only after you both
           accept the introduction.</strong>
         </li>
-        <li>To process payments, manage memberships and campaigns, and credit referrals.</li>
+        <li>To process payments and manage memberships and campaigns.</li>
         <li>To show public vendor profiles, deliver each inquiry to the vendor it&rsquo;s meant for, and send the couple a confirmation.</li>
         <li>To show vendors counts of their profile views and inquiries, and where they came from.</li>
         <li>To answer your messages and requests.</li>
@@ -200,7 +196,6 @@ export default function PrivacyPage() {
         <li><strong>Supabase</strong>: our database, and storage for portfolio photos.</li>
         <li><strong>Resend</strong>: sends our email, including inquiries to vendors and confirmations to couples.</li>
         <li><strong>Stripe</strong>: processes payments and runs the billing portal. We never store card numbers.</li>
-        <li><strong>PromoteKit</strong>: tracks referral links and sets the referral cookie.</li>
         {ga && <li><strong>Google</strong>: Google Analytics.</li>}
         <li>
           <strong>Anthropic</strong>: when we turn it on, AI that helps us review business categories (for example, to
