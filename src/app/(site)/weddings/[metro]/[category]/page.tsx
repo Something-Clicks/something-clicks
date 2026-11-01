@@ -15,19 +15,9 @@ export const revalidate = 3600;
 
 type Params = { params: Promise<{ metro: string; category: string }> };
 
-/** Every city × category with enough real data. Empty when the database isn't reachable at build time. */
-export async function generateStaticParams() {
-  if (!dbConfigured()) return [];
-  try {
-    const [counts, rules] = await Promise.all([allMetroCounts(), complementRules()]);
-    return metros.flatMap((m) =>
-      Object.keys(counts[m.cluster] ?? {})
-        .filter((id) => categoryPageEligible(counts[m.cluster], rules, id))
-        .map((id) => ({ metro: m.slug, category: categorySlug(id) })),
-    );
-  } catch {
-    return [];
-  }
+/** None at build (the database isn't queried during builds): each page renders on first visit, then is cached for an hour. Pages without enough data 404. */
+export function generateStaticParams(): { metro: string; category: string }[] {
+  return [];
 }
 
 async function load(params: Params["params"]) {

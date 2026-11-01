@@ -1,5 +1,26 @@
+import { unstable_cache } from "next/cache";
 import { cache } from "react";
 import { sql } from "@/lib/db";
+
+/**
+ * The homepage and every city × category page (and its generateStaticParams)
+ * read the same two aggregates. React's cache() only dedupes within one
+ * render, so a build ran the heavy count once per page and timed out once the
+ * database was reachable. Keep one copy per process (concurrent callers share
+ * the in-flight query) on top of Next's data cache, both refreshed hourly.
+ */
+const HOUR = 3600;
+function shared<T>(key: string, load: () => Promise<T>): () => Promise<T> {
+  const cached = unstable_cache(load, [key], { revalidate: HOUR });
+  let memo: { at: number; value: Promise<T> } | null = null;
+  return cache(() => {
+    if (memo && Date.now() - memo.at < HOUR * 1000) return memo.value;
+    const value = cached();
+    memo = { at: Date.now(), value };
+    value.catch(() => { if (memo?.value === value) memo = null; }); // never keep a failure
+    return value;
+  });
+}
 
 export type MetroCount = { category_id: string; n: number };
 
@@ -21,7 +42,7 @@ export async function metroCounts(clusterSlug: string): Promise<MetroCount[]> {
 }
 
 /** Totals for every metro at once, for the index page. */
-export async function metroTotals(): Promise<Record<string, number>> {
+export const metroTotals = shared("metro-totals", async (): Promise<Record<string, number>> => {
   const rows = await sql()<{ slug: string; n: number }[]>`
     select cl.slug, count(*)::int as n
     from clusters cl
@@ -31,10 +52,10 @@ export async function metroTotals(): Promise<Record<string, number>> {
       and not p.suppressed and not p.stale and (not c.broad or p.serves_journey)
     group by cl.slug`;
   return Object.fromEntries(rows.map((r) => [r.slug, r.n]));
-}
+});
 
 /** Counts by category for every active metro, keyed by cluster slug. One query for the homepage tiles. */
-export const allMetroCounts = cache(async (): Promise<Record<string, Record<string, number>>> => {
+export const allMetroCounts = shared("all-metro-counts", async (): Promise<Record<string, Record<string, number>>> => {
   const rows = await sql()<{ slug: string; category_id: string; n: number }[]>`
     select cl.slug, p.category_id, count(*)::int as n
     from clusters cl
@@ -51,8 +72,8 @@ export const allMetroCounts = cache(async (): Promise<Record<string, Record<stri
 export type ComplementRule = { a: string; b: string; reason_key: string; partnership_type: string; strength: number };
 
 /** The matching rules between categories (no businesses), strongest first. Broad categories excluded. */
-export const complementRules = cache(async (): Promise<ComplementRule[]> => {
-  return sql()<ComplementRule[]>`
+export const complementRules = shared("complement-rules", async (): Promise<ComplementRule[]> => {
+  return await sql()<ComplementRule[]>`
     select cm.category_a as a, cm.category_b as b, cm.reason_key, cm.partnership_type, cm.strength::float as strength
     from complements cm
     join categories ca on ca.id = cm.category_a

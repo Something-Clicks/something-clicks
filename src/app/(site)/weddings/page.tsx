@@ -7,7 +7,8 @@ import { breadcrumbJsonLd, JsonLd } from "@/lib/jsonld";
 import { pageMeta } from "@/lib/metadata";
 import { metroTotals } from "@/lib/network/metros";
 
-export const revalidate = 3600;
+// Rendered on request, never at build: data comes from the hourly cache in lib/network/metros.
+export const dynamic = "force-dynamic";
 
 export const metadata = pageMeta({
   title: "Wedding businesses by city",

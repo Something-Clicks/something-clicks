@@ -61,6 +61,9 @@ async function check(): Promise<Readiness> {
 }
 
 export async function readiness(): Promise<Readiness> {
+  // Never touch the database while building: gated pages are rendered per request anyway, and a
+  // build that waits on the database can hang until Vercel gives up on it.
+  if (process.env.NEXT_PHASE === "phase-production-build") return { ...NONE, secret: sessionSecretSet(), claimsOpen: claimsOpen() };
   const hit = globalForReady.__scReady;
   if (hit && Date.now() - hit.at < hit.ttl) return hit.value;
   const value = await check();

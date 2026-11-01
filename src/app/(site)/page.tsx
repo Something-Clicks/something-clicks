@@ -17,8 +17,8 @@ export const metadata = pageMeta({
     site.description,
 });
 
-// Live numbers on this page come from the database; refresh hourly.
-export const revalidate = 3600;
+// Rendered on request, never at build: data comes from the hourly cache in lib/network/metros.
+export const dynamic = "force-dynamic";
 
 const steps = ["Claim your business", "See who fits", "Get introduced", "Send each other referrals and grow together."];
 

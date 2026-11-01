@@ -9,8 +9,8 @@ export const metadata = pageMeta({
   description: "Where Something Clicks business listings come from, their licenses, and how to remove a business.",
 });
 
-// Reflects the latest import; refresh hourly.
-export const revalidate = 3600;
+// Reflects the latest import. Rendered on request, never at build.
+export const dynamic = "force-dynamic";
 
 /** The Foursquare NOTICE.txt that Overture's attribution page links for the Foursquare places data. */
 const OVERTURE_NOTICE_URL = "https://opensource.foursquare.com/places-notice-txt/";
