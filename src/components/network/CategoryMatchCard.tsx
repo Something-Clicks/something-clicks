@@ -34,7 +34,10 @@ export function CategoryMatchCard({ r, radiusMiles, claimHref }: { r: CategoryRe
         href={claimHref}
         className="flex h-14 items-center justify-between border-t border-line px-5 font-semibold text-navy hover:bg-ice sm:px-6"
       >
-        Claim your business <ArrowRight aria-hidden="true" className="h-5 w-5" />
+        <span>
+          Get started free <span className="ml-1 text-xs font-normal text-navy-soft">Free · no payment required</span>
+        </span>
+        <ArrowRight aria-hidden="true" className="h-5 w-5 shrink-0" />
       </Link>
     </article>
   );

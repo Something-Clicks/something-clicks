@@ -109,10 +109,14 @@ async function Results({ what, where }: Search & { what: string; where: string }
           </li>
         ))}
       </ul>
+      <p className="mt-6 text-lg">Get started free to see who they are and request introductions.</p>
       <div className="sticky bottom-3 z-30 mt-8 flex items-center justify-between gap-4 rounded-3xl bg-navy p-3 pl-5 text-white shadow-[0_8px_30px_rgba(21,38,61,0.25)] on-dark sm:static sm:p-4 sm:pl-6 sm:shadow-none">
-        <p className="font-semibold">See who they are<span className="hidden font-normal text-mist sm:inline"> · free to claim</span></p>
+        <p className="font-semibold">
+          See who they are
+          <span className="block text-xs font-normal text-mist">Free · no payment required</span>
+        </p>
         <Link href={claimHref} className="shrink-0 rounded-2xl bg-white px-5 py-3 font-semibold text-navy hover:bg-ice">
-          Claim your business
+          Get started free
         </Link>
       </div>
     </>
