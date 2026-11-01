@@ -23,7 +23,12 @@ export function HomeDiscover({
   counts,
   fits,
   partnershipLabels,
+  search = true,
+  heading = "What do you do?",
 }: {
+  /** Show the search form above the tiles (off when the hero already has one). */
+  search?: boolean;
+  heading?: string;
   metros: DiscoverMetro[];
   categories: DiscoverCategory[];
   counts: Record<string, Record<string, number>>;
@@ -43,11 +48,13 @@ export function HomeDiscover({
 
   return (
     <>
-      <div className="mx-auto w-full max-w-4xl">
-        <FindForm key={`${metroSlug}-${picked ?? ""}`} what={pickedCat?.search ?? ""} where={metro.where} />
-      </div>
+      {search && (
+        <div className="mx-auto w-full max-w-4xl">
+          <FindForm key={`${metroSlug}-${picked ?? ""}`} what={pickedCat?.search ?? ""} where={metro.where} />
+        </div>
+      )}
 
-      <section aria-labelledby="discover-heading" className="mt-10 sm:mt-12">
+      <section aria-labelledby="discover-heading" className={search ? "mt-10 sm:mt-12" : ""}>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           {pickedCat ? (
             <div className="flex flex-wrap items-center gap-3">
@@ -63,7 +70,7 @@ export function HomeDiscover({
               </h2>
             </div>
           ) : (
-            <h2 id="discover-heading" className="text-xl font-bold sm:text-2xl">What do you do?</h2>
+            <h2 id="discover-heading" className="text-xl font-bold sm:text-2xl">{heading}</h2>
           )}
           <div role="group" aria-label="City" className="-mx-4 flex gap-1.5 overflow-x-auto px-4 pb-1 sm:mx-0 sm:px-0 sm:pb-0">
             {metros.map((m) => (
