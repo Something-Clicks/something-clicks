@@ -60,7 +60,6 @@ export const serviceAreas = [
 ] as const;
 
 export const consentCopy = {
-  // Draft wording — pending legal review.
   contact: "I agree to be contacted by Something Clicks about this submission, and I agree to the Privacy Policy and Terms.",
   updates: "Send me occasional updates about the Something Clicks Network. I can unsubscribe at any time.",
   disclosed:
