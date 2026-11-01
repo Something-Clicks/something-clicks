@@ -25,7 +25,9 @@ export type Readiness = {
 
 const NONE: Readiness = { search: false, listings: false, members: false, metros: false, db: false, secret: false, claimsOpen: false };
 const TTL_MS = 60_000;
-const globalForReady = globalThis as unknown as { __scReady?: { at: number; value: Readiness } };
+/** A failed check (database unreachable, wrong password) is retried soon instead of holding "coming soon" for a minute. */
+const FAILED_TTL_MS = 5_000;
+const globalForReady = globalThis as unknown as { __scReady?: { at: number; ttl: number; value: Readiness } };
 
 /** Claiming stays closed unless CLAIMS_OPEN is exactly "true". */
 export const claimsOpen = () => process.env.CLAIMS_OPEN === "true";
@@ -60,8 +62,8 @@ async function check(): Promise<Readiness> {
 
 export async function readiness(): Promise<Readiness> {
   const hit = globalForReady.__scReady;
-  if (hit && Date.now() - hit.at < TTL_MS) return hit.value;
+  if (hit && Date.now() - hit.at < hit.ttl) return hit.value;
   const value = await check();
-  globalForReady.__scReady = { at: Date.now(), value };
+  globalForReady.__scReady = { at: Date.now(), ttl: value.db ? TTL_MS : FAILED_TTL_MS, value };
   return value;
 }
