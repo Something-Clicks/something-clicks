@@ -16,7 +16,7 @@ export default function PrivacyPage() {
   // Google Analytics wording appears only when GA is actually configured.
   const ga = Boolean(gaMeasurementId());
   return (
-    <LegalPage title="Privacy Policy" version="1.0" effective="October 31, 2026" updated="October 31, 2026">
+    <LegalPage title="Privacy Policy" version="1.0" effective="October 31, 2026" updated="November 1, 2026">
       <p>
         This policy explains what information {site.legalName} (&ldquo;Something Clicks,&rdquo; &ldquo;we&rdquo; or
         &ldquo;us&rdquo;) collects through somethingclicks.com (the &ldquo;site&rdquo;), how we use it, who we share it
@@ -98,10 +98,6 @@ export default function PrivacyPage() {
         <li>
           <strong>Session.</strong> When you sign in, a secure cookie keeps you signed in for up to 30 days.
         </li>
-        <li>
-          <strong>Referral.</strong> PromoteKit sets a cookie to remember which referral link, if any, brought you to the
-          site, so the referrer can be credited if you later buy a plan.
-        </li>
         {ga && (
           <li>
             <strong>Analytics.</strong> Google Analytics sets cookies (such as <code>_ga</code>) to recognize returning
@@ -146,7 +142,7 @@ export default function PrivacyPage() {
           To make introductions. <strong>Your contact details are shared with another business only after you both
           accept the introduction.</strong>
         </li>
-        <li>To process payments, manage memberships and campaigns, and credit referrals.</li>
+        <li>To process payments and manage memberships and campaigns.</li>
         <li>To answer your messages and requests.</li>
         <li>To send occasional updates, only if you opted in. Every update has an unsubscribe link.</li>
         <li>To understand, in aggregate, how the site is used, and to keep it secure.</li>
@@ -160,7 +156,6 @@ export default function PrivacyPage() {
         <li><strong>Supabase</strong>: our database.</li>
         <li><strong>Resend</strong>: sends our email.</li>
         <li><strong>Stripe</strong>: processes payments and runs the billing portal. We never store card numbers.</li>
-        <li><strong>PromoteKit</strong>: tracks referral links and sets the referral cookie.</li>
         {ga && <li><strong>Google</strong>: Google Analytics.</li>}
         <li>
           <strong>Anthropic</strong>: when we turn it on, AI that helps us review business categories (for example, to
