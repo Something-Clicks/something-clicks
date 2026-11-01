@@ -16,4 +16,5 @@ export const MIGRATIONS = [
   { version: "20261106000000", name: "planner_partners" },
   { version: "20261107000000", name: "payments" },
   { version: "20261108000000", name: "service_role_grants" },
+  { version: "20261109000000", name: "couples" },
 ] as const;

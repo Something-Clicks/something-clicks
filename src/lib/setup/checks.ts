@@ -38,6 +38,8 @@ const later: [string, string][] = [
   ["PROMOTEKIT_SITE_ID", "PromoteKit → Settings → your site id for the tracking script (not the API key). Read server-side and passed to the script."],
   ["CRON_SECRET", "Any long random string. Lets the daily Planner Partner reminders run (Vercel sends it to the cron job)."],
   ["CLAIMS_OPEN", "Claiming is closed until this is set to true. Open it once listing quality is reviewed."],
+  ["COUPLES_OPEN", "Couple-facing pages (/find/…, /vendors/…, inquiries) are off until this is set to true. Turn on once Dallas–Fort Worth has enough public vendors, and after the Privacy Policy covers couple inquiries."],
+  ["MEMBERSHIP_GATING", "Leave unset. When true, the public profile, inquiries and results need a live membership."],
   ["ANTHROPIC_API_KEY", "Phase 3 AI review and match reasons. Off until set; capped at $10 a month."],
   ["MAILING_ADDRESS", "Needed before any invitation can be sent (CAN-SPAM)."],
   ["INVITE_EMAIL_FROM", "Invitation sender on hello.somethingclicks.com, verified in Resend."],
