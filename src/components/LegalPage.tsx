@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-/** Shared layout for the Privacy Policy and Terms of Use: title, version and dates, then the text. */
+/** Shared layout for the Privacy Policy and Terms of Use: title, then version and dates where a page shows them, then the text. */
 export function LegalPage({
   title,
   version,
@@ -9,8 +9,8 @@ export function LegalPage({
   children,
 }: {
   title: string;
-  version: string;
-  effective: string;
+  version?: string;
+  effective?: string;
   updated: string;
   children: ReactNode;
 }) {
@@ -18,7 +18,9 @@ export function LegalPage({
     <div className="container-page max-w-3xl py-14 sm:py-20">
       <h1 className="text-4xl">{title}</h1>
       <p className="mt-2 text-sm text-navy-soft">
-        Version {version} · Effective {effective} · Last updated {updated}
+        {version && <>Version {version} · </>}
+        {effective && <>Effective {effective} · </>}
+        Last updated {updated}
       </p>
       <div className="prose-site mt-8 text-navy">{children}</div>
     </div>
