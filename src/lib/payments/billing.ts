@@ -2,6 +2,7 @@ import { site } from "@/content/site";
 import { sql } from "@/lib/db";
 import type { OwnedPlace } from "@/lib/members/network";
 import type { MemberSession } from "@/lib/members/session";
+import { partnerFor } from "@/lib/planner/partners";
 import { LIVE_MEMBERSHIP, plans, priceId, stripe, type PlanKind } from "./plans";
 
 /** Only the verified owner of a claimed business can buy. Claimed-but-unverified businesses can't yet. */
@@ -43,22 +44,28 @@ export type CheckoutStart = { ok: true; url: string } | { ok: false; error: stri
 /**
  * A hosted Stripe Checkout session for one plan. The business and plan ride
  * in metadata (and on the subscription), so the webhook can link the payment.
- * client_reference_id carries the PromoteKit referral, when there is one.
+ * The PromoteKit referral, when there is one, rides in metadata as
+ * promotekit_referral on the session and on the subscription or payment, per
+ * PromoteKit's Stripe docs.
  */
 export async function startCheckout(kind: PlanKind, place: OwnedPlace, member: MemberSession, referral: string | null): Promise<CheckoutStart> {
   if (!canBuy(place)) return { ok: false, error: "Your business needs to be verified before you can buy a plan." };
   const price = priceId(kind);
   if (!price) return { ok: false, error: "Payments aren't set up yet." };
-  if (kind === "membership" && membershipLive((await billingFor(place.id)).membership)) {
-    return { ok: false, error: "You're already a member. Manage your membership from Billing." };
+  if (kind === "membership") {
+    // Planner Partners have complimentary membership (recorded in our database, never charged).
+    const partner = await partnerFor(place.id);
+    if (partner?.active) return { ok: false, error: `You're already a member as a Planner Partner, until ${partner.ends_on}.` };
+    if (membershipLive((await billingFor(place.id)).membership)) {
+      return { ok: false, error: "You're already a member. Manage your membership from Billing." };
+    }
   }
-  const metadata = { place_id: String(place.id), member_id: String(member.id), kind, ...(referral ? { referral } : {}) };
+  const metadata = { place_id: String(place.id), member_id: String(member.id), kind, ...(referral ? { promotekit_referral: referral } : {}) };
   const back = `${site.url}/dashboard/plans?place=${place.id}`;
   const session = await stripe().checkout.sessions.create({
     mode: plans[kind].mode,
     customer: await customerFor(place, member),
     line_items: [{ price, quantity: 1 }],
-    ...(referral ? { client_reference_id: referral } : {}),
     metadata,
     ...(kind === "campaign" ? { payment_intent_data: { metadata } } : { subscription_data: { metadata } }),
     success_url: `${back}&done=${kind}`,

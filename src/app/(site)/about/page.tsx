@@ -2,13 +2,14 @@ import { Eye, Handshake, Store } from "lucide-react";
 import { CtaBand } from "@/components/CtaBand";
 import { P } from "@/components/Placeholder";
 import { ButtonLink } from "@/components/ui";
+import { pricing, steps, summary } from "@/content/explainer";
 import { site } from "@/content/site";
 import { pageMeta } from "@/lib/metadata";
 
 export const metadata = pageMeta({
   title: "About",
   path: "/about",
-  description: "Something Clicks helps independent businesses grow through the businesses their customers already trust.",
+  description: summary,
 });
 
 const principles = [
@@ -23,17 +24,32 @@ export default function AboutPage() {
       <section className="bg-navy text-white on-dark">
         <div className="container-page py-20 sm:py-28">
           <h1 className="max-w-3xl text-5xl leading-[1.05] sm:text-6xl">The best referrals come from people you trust.</h1>
-          <p className="mt-6 max-w-xl text-xl text-mist">{site.mission}</p>
+          <p className="mt-6 max-w-xl text-xl text-mist">{summary}</p>
         </div>
       </section>
 
-      <section className="bg-white py-20 sm:py-28" aria-labelledby="why-heading">
-        <div className="container-page grid gap-10 md:grid-cols-2">
-          <h2 id="why-heading" className="text-4xl sm:text-5xl">Good partnerships shouldn&rsquo;t depend on luck.</h2>
-          <div className="space-y-5 text-xl text-navy-soft">
-            <p>The photographer knows the florist. The planner knows the venue. That&rsquo;s how most good work gets found.</p>
-            <p>Something Clicks shows you which local businesses fit yours, and makes the introduction easy.</p>
-          </div>
+      <section className="bg-white py-20 sm:py-28" aria-labelledby="how-heading">
+        <div className="container-page">
+          <h2 id="how-heading" className="text-4xl sm:text-5xl">How it works.</h2>
+          <ol className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {steps.map((s, i) => (
+              <li key={s.title} className="rounded-2xl bg-cloud p-6">
+                <span className="grid h-9 w-9 place-items-center rounded-full bg-navy text-sm font-bold text-white" aria-hidden="true">{i + 1}</span>
+                <h3 className="mt-4 text-xl">{s.title}</h3>
+                <p className="mt-2 text-navy-soft">{s.body}</p>
+              </li>
+            ))}
+          </ol>
+          <h2 className="mt-16 text-3xl">Pricing</h2>
+          <ul className="mt-6 grid gap-4 md:grid-cols-3">
+            {pricing.map((p) => (
+              <li key={p.name} className="rounded-2xl p-6 ring-1 ring-line">
+                <p className="font-semibold">{p.name} <span className="text-navy-soft">· {p.price}</span></p>
+                <p className="mt-2 text-navy-soft">{p.body}</p>
+              </li>
+            ))}
+          </ul>
+          <a href="/pricing" className="mt-6 inline-block font-semibold text-navy underline underline-offset-2">See pricing</a>
         </div>
       </section>
 

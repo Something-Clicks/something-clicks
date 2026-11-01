@@ -9,6 +9,7 @@ import { P } from "@/components/Placeholder";
 import { loadDashboard } from "@/lib/members/dashboard";
 import { billingFor, canBuy, membershipLive } from "@/lib/payments/billing";
 import { paymentsConfigured, plans, type PlanKind } from "@/lib/payments/plans";
+import { partnerFor } from "@/lib/planner/partners";
 import { readiness } from "@/lib/readiness";
 import { checkoutAction, portalAction } from "./actions";
 
@@ -34,6 +35,9 @@ export default async function PlansPage({ searchParams }: { searchParams: Promis
   const configured = paymentsConfigured();
   const billing = configured ? await billingFor(place.id).catch(() => null) : null;
   const member = membershipLive(billing?.membership ?? null);
+  // Planner Partners are members at no charge until their end date.
+  const partner = await partnerFor(place.id);
+  const complimentary = partner?.active ? partner : null;
   const eligible = canBuy(place);
 
   const buy = (kind: PlanKind, label: string) => (
@@ -69,7 +73,14 @@ export default async function PlansPage({ searchParams }: { searchParams: Promis
           <p className="mt-1"><span className="text-3xl font-bold">{plans.membership.price}</span> <span className="text-navy-soft">{plans.membership.cadence}</span></p>
           <p className="mt-3 flex-1 text-navy-soft"><P value={plans.membership.blurb} /></p>
           <div className="mt-5">
-            {member && billing?.membership ? (
+            {complimentary ? (
+              <p className="flex items-start gap-2 rounded-2xl bg-ice p-4 text-sm">
+                <CircleCheck aria-hidden="true" className="h-5 w-5 shrink-0 text-royal" />
+                <span>
+                  <strong>You&rsquo;re a member as a Planner Partner</strong> until {date(new Date(`${complimentary.ends_on}T12:00:00Z`))}. There&rsquo;s nothing to pay.
+                </span>
+              </p>
+            ) : member && billing?.membership ? (
               <p className="flex items-start gap-2 rounded-2xl bg-ice p-4 text-sm">
                 <CircleCheck aria-hidden="true" className="h-5 w-5 shrink-0 text-royal" />
                 <span>

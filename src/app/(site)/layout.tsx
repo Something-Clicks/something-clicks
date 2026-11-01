@@ -19,7 +19,7 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
       </main>
       <Footer />
       <AttributionCapture />
-      <PromoteKit siteId={process.env.NEXT_PUBLIC_PROMOTEKIT_SITE_ID} />
+      <PromoteKit siteId={process.env.PROMOTEKIT_SITE_ID} />
       {/* Read server-side here, not in the root layout, so GA never loads on admin pages. */}
       <GoogleAnalytics measurementId={gaMeasurementId()} />
     </>

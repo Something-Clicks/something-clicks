@@ -1,3 +1,4 @@
+import { pricing, steps, summary } from "@/content/explainer";
 import { faq } from "@/content/faq";
 import { metros } from "@/content/metros";
 import { site } from "@/content/site";
@@ -9,7 +10,17 @@ export function GET() {
   const body = [
     `# ${site.name}`,
     "",
-    `> ${site.about}`,
+    `> ${summary}`,
+    "",
+    site.about,
+    "",
+    "## How it works",
+    "",
+    ...steps.map((s, i) => `${i + 1}. ${s.title}: ${s.body}`),
+    "",
+    "## Pricing",
+    "",
+    ...pricing.map((p) => `- ${p.name} (${p.price}): ${p.body}`),
     "",
     "Public pages show live counts of wedding businesses by category and city, and which kinds of businesses fit each other and why. They never show business names: owners see names once they claim their business.",
     "",

@@ -49,7 +49,7 @@ export async function DashboardShell({
               <h1 className="truncate text-3xl sm:text-4xl">{place.name}</h1>
               <p className="mt-1 text-navy-soft">
                 {place.category_label} · <span className="font-semibold text-navy">{stateLabels[place.state]}</span>
-                {member && <> · <span className="rounded-full bg-ice px-2 py-0.5 text-sm font-semibold text-navy">Member</span></>}
+                {member && !isPartner && <> · <span className="rounded-full bg-ice px-2 py-0.5 text-sm font-semibold text-navy">Member</span></>}
               </p>
               {isPartner && (
                 <p className="mt-2 inline-flex rounded-full bg-ice px-3 py-1 text-sm font-semibold text-navy">Planner Partner · member until {until}</p>

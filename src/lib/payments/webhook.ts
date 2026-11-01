@@ -46,7 +46,7 @@ async function checkoutCompleted(tx: TransactionSql, s: Stripe.Checkout.Session)
   const [purchase] = await tx<{ id: number }[]>`
     insert into purchases (place_id, member_id, kind, checkout_session_id, payment_intent_id, amount_cents, currency, referral)
     values (${placeId}, ${memberOf(s.metadata)}, 'campaign', ${s.id}, ${idOf(s.payment_intent)}, ${s.amount_total ?? 0}, ${s.currency ?? "usd"},
-            ${cleanReferral(s.client_reference_id)})
+            ${cleanReferral(s.metadata?.promotekit_referral)})
     on conflict (checkout_session_id) do nothing
     returning id::int`;
   if (!purchase) return "campaign already recorded";
@@ -74,7 +74,7 @@ async function invoicePaid(tx: TransactionSql, invoice: Stripe.Invoice): Promise
   const [row] = await tx<{ id: number }[]>`
     insert into purchases (place_id, member_id, kind, invoice_id, payment_intent_id, subscription_id, amount_cents, currency, referral)
     values (${placeId}, ${memberOf(metadata)}, 'membership', ${invoice.id}, ${await invoicePaymentIntent(invoice)}, ${idOf(details?.subscription)},
-            ${invoice.amount_paid}, ${invoice.currency}, ${cleanReferral(metadata.referral)})
+            ${invoice.amount_paid}, ${invoice.currency}, ${cleanReferral(metadata.promotekit_referral)})
     on conflict (invoice_id) do nothing
     returning id::int`;
   return row ? "membership payment recorded" : "membership payment already recorded";
